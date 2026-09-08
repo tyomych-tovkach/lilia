@@ -206,10 +206,24 @@ export function Talk() {
           Ясно.
         </button>
       )}
-      {phase === 'lines' && !(loc === 'hub' || loc === 'kubgu' || loc === 'vkusno') && (
-        <button type="button" className="talk-btn" onClick={advanceLines}>
-          Дальше
-        </button>
+      {phase === 'lines' && loc !== 'letter' && !(loc === 'hub' || loc === 'kubgu' || loc === 'vkusno') && (
+        <>
+          <button type="button" className="talk-btn" onClick={advanceLines}>
+            Дальше
+          </button>
+          {(loc === 'japan' || loc === 'sport' || loc === 'secret') && (
+            <button
+              type="button"
+              className="talk-btn"
+              onClick={() => {
+                patch({ toast: 'Можно вернуться сюда позже.' })
+                close()
+              }}
+            >
+              Не сейчас
+            </button>
+          )}
+        </>
       )}
       {phase === 'lines' && loc === 'letter' && (
         <button type="button" className="talk-btn" onClick={advanceLines}>
@@ -259,6 +273,18 @@ export function Talk() {
               }}
             >
               Это всё
+            </button>
+          )}
+          {(loc === 'japan' || loc === 'sport' || loc === 'secret') && (
+            <button
+              type="button"
+              className="talk-btn"
+              onClick={() => {
+                patch({ toast: 'Можно вернуться сюда позже.' })
+                close()
+              }}
+            >
+              Не сейчас
             </button>
           )}
         </div>
