@@ -13,7 +13,7 @@ function loadState(): InviteState {
     const raw = sessionStorage.getItem(SESSION_KEY)
     if (!raw) return { ...INITIAL_STATE }
     const parsed = JSON.parse(raw) as Partial<InviteState>
-    return { ...INITIAL_STATE, ...parsed }
+    return { ...INITIAL_STATE, ...parsed, toast: '' }
   } catch {
     return { ...INITIAL_STATE }
   }
@@ -21,9 +21,9 @@ function loadState(): InviteState {
 
 function persist(state: InviteState) {
   try {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(state))
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...state, toast: '' }))
   } catch {
-    /* private mode / quota — играем дальше в памяти */
+    /* ignore */
   }
 }
 
@@ -46,7 +46,6 @@ export function InviteProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<Store>(() => ({ state, patch }), [state, patch])
-
   return <InviteContext.Provider value={value}>{children}</InviteContext.Provider>
 }
 

@@ -1,25 +1,18 @@
+export const SESSION_KEY = 'lilia-world-v2'
+
 export const DATE_MIN = '2026-09-12'
 export const DATE_MAX = '2026-10-03'
 export const MAIL_TO = 'tyomych.tovkach@tayviscon.com'
-export const SESSION_KEY = 'lilia-second-half-v1'
-export const PHONE_BREAKPOINT = 900
-
-export type Act =
-  | 'envelope'
-  | 'letter'
-  | 'arcade'
-  | 'scoreboard'
-  | 'portals'
-  | 'finale'
-  | 'sent'
 
 export type MachineId = 'japan' | 'sport' | 'secret'
 export type DoorId = 'kubgu' | 'vkusno'
 export type PortalId = 'calm' | 'play' | 'japan'
 export type Slot = 'day' | 'evening'
+export type Phase = 'letter' | 'explore' | 'match' | 'crash' | 'date' | 'mail' | 'sent'
 
 export type InviteState = {
-  act: Act
+  phase: Phase
+  letterOpen: boolean
   japanStickers: string[]
   japanCustom: string
   sportMarks: string[]
@@ -29,18 +22,19 @@ export type InviteState = {
   noAttempts: number
   crashed: boolean
   restored: boolean
+  saidYes: boolean
   portal: PortalId | 'custom' | null
   flavor: string
   customPlace: string
   date: string
   slot: Slot | null
   sentAt: string | null
-  force2d: boolean
-  phoneDismissed: boolean
+  toast: string
 }
 
 export const INITIAL_STATE: InviteState = {
-  act: 'envelope',
+  phase: 'letter',
+  letterOpen: false,
   japanStickers: [],
   japanCustom: '',
   sportMarks: [],
@@ -50,46 +44,61 @@ export const INITIAL_STATE: InviteState = {
   noAttempts: 0,
   crashed: false,
   restored: false,
+  saidYes: false,
   portal: null,
   flavor: '',
   customPlace: '',
   date: '',
   slot: null,
   sentAt: null,
-  force2d: false,
-  phoneDismissed: false,
+  toast: '',
 }
 
 export const JAPAN_STICKERS = [
-  'еда',
-  'поездки',
-  'аниме / манга',
-  'язык',
-  'эстетика',
-  'просто вайб',
+  { id: 'еда', shape: 'bowl' },
+  { id: 'поездки', shape: 'bag' },
+  { id: 'аниме / манга', shape: 'star' },
+  { id: 'язык', shape: 'glyph' },
+  { id: 'эстетика', shape: 'flower' },
+  { id: 'просто вайб', shape: 'orb' },
 ] as const
 
 export const SPORT_MARKS = [
-  'волейбол',
-  'баскетбол',
-  'теннис',
-  'смотрю',
-  'играю',
-  'давай научишь',
+  { id: 'волейбол', shape: 'volley' },
+  { id: 'баскетбол', shape: 'basket' },
+  { id: 'теннис', shape: 'racket' },
+  { id: 'смотрю', shape: 'lens' },
+  { id: 'играю', shape: 'shoe' },
+  { id: 'давай научишь', shape: 'whistle' },
 ] as const
 
 export const SECRET_MARKS = [
-  'танцы',
-  'музыка',
-  'кино',
-  'прогулки',
-  'сладкое',
+  { id: 'танцы', shape: 'disco' },
+  { id: 'музыка', shape: 'headphones' },
+  { id: 'кино', shape: 'reel' },
+  { id: 'прогулки', shape: 'boot' },
+  { id: 'сладкое', shape: 'cake' },
 ] as const
 
-export const PORTAL_FLAVORS: Record<PortalId, string[]> = {
-  calm: ['кофе с японским акцентом', 'ужин', 'прогулка', 'десерт'],
-  play: ['теннис', 'броски', 'волейбол', 'посмотреть игру'],
-  japan: ['рамен или изакая', 'караоке', 'тематическое кафе', 'вечер как мини-фестиваль'],
+export const PORTAL_FLAVORS: Record<PortalId, { id: string; hue: string }[]> = {
+  calm: [
+    { id: 'кофе с японским акцентом', hue: '#c4a574' },
+    { id: 'ужин', hue: '#ff7a59' },
+    { id: 'прогулка', hue: '#7ecbff' },
+    { id: 'десерт', hue: '#ffb6d9' },
+  ],
+  play: [
+    { id: 'теннис', hue: '#c8ff6a' },
+    { id: 'броски', hue: '#ff8a3d' },
+    { id: 'волейбол', hue: '#fff4a8' },
+    { id: 'посмотреть игру', hue: '#6ad0ff' },
+  ],
+  japan: [
+    { id: 'рамен или изакая', hue: '#ff6b6b' },
+    { id: 'караоке', hue: '#d46bff' },
+    { id: 'тематическое кафе', hue: '#ffd27a' },
+    { id: 'вечер как мини-фестиваль', hue: '#ff8ad4' },
+  ],
 }
 
 export const DATE_CHIPS = [
@@ -157,9 +166,7 @@ export function playerCardLines(card: PlayerCard): string[] {
 }
 
 export function meetingLine(state: InviteState): string {
-  if (state.portal === 'custom') {
-    return `своё место: ${state.customPlace.trim()}`
-  }
+  if (state.portal === 'custom') return `своё место: ${state.customPlace.trim()}`
   const names: Record<PortalId, string> = {
     calm: 'спокойно',
     play: 'поиграть',
