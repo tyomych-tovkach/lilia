@@ -229,6 +229,42 @@ export function Lilia({ walking }: { walking: { current: boolean } }) {
         <planeGeometry args={[0.26, 0.3]} />
         <meshStandardMaterial map={face} transparent depthWrite={false} roughness={0.45} side={THREE.DoubleSide} />
       </mesh>
+      <mesh position={[-0.048, 1.2, 0.175]}>
+        <sphereGeometry args={[0.028, 12, 10]} />
+        <meshStandardMaterial color="#fffaf5" />
+      </mesh>
+      <mesh position={[-0.048, 1.198, 0.198]}>
+        <sphereGeometry args={[0.016, 10, 8]} />
+        <meshStandardMaterial color="#5a2c18" />
+      </mesh>
+      <mesh position={[-0.048, 1.198, 0.21]}>
+        <sphereGeometry args={[0.008, 8, 8]} />
+        <meshStandardMaterial color="#140c08" />
+      </mesh>
+      <mesh position={[-0.04, 1.208, 0.216]}>
+        <sphereGeometry args={[0.005, 8, 8]} />
+        <meshStandardMaterial color="#fff" emissive="#fff" emissiveIntensity={0.7} />
+      </mesh>
+      <mesh position={[0.048, 1.2, 0.175]}>
+        <sphereGeometry args={[0.028, 12, 10]} />
+        <meshStandardMaterial color="#fffaf5" />
+      </mesh>
+      <mesh position={[0.048, 1.198, 0.198]}>
+        <sphereGeometry args={[0.016, 10, 8]} />
+        <meshStandardMaterial color="#5a2c18" />
+      </mesh>
+      <mesh position={[0.048, 1.198, 0.21]}>
+        <sphereGeometry args={[0.008, 8, 8]} />
+        <meshStandardMaterial color="#140c08" />
+      </mesh>
+      <mesh position={[0.056, 1.208, 0.216]}>
+        <sphereGeometry args={[0.005, 8, 8]} />
+        <meshStandardMaterial color="#fff" emissive="#fff" emissiveIntensity={0.7} />
+      </mesh>
+      <mesh position={[0, 1.155, 0.2]} rotation={[0.25, 0, 0]} scale={[0.7, 0.35, 0.45]}>
+        <sphereGeometry args={[0.022, 8, 8]} />
+        <meshStandardMaterial color="#e08a9a" />
+      </mesh>
       <mesh position={[-0.13, 1.2, 0.02]} rotation={[0, 0, 0.3]} scale={[0.45, 0.7, 0.5]}>
         <sphereGeometry args={[0.06, 8, 8]} />
         <meshStandardMaterial color={SKIN} />

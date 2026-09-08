@@ -2,7 +2,7 @@ import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode 
 import { copy } from './copy'
 import { Hud } from './game/Hud'
 import { TouchStick } from './game/TouchStick'
-import { detectWebGL, type ComposeField } from './logic'
+import { detectWebGL, type ComposeField, type InviteState } from './logic'
 import { InviteProvider, useInvite } from './state'
 
 const GameCanvas = lazy(() => import('./game/GameCanvas').then((m) => ({ default: m.GameCanvas })))
@@ -24,7 +24,7 @@ class Guard extends Component<{ children: ReactNode; onError: () => void }, { er
   }
 }
 
-function composeValue(compose: ComposeField, state: ReturnType<typeof useInvite>['state']) {
+function composeValue(compose: ComposeField, state: InviteState) {
   if (compose === 'japan') return state.japanCustom
   if (compose === 'sport') return state.sportCustom
   if (compose === 'secret') return state.secretCustom
@@ -52,10 +52,18 @@ function Shell() {
     }
   }, [state.toast, patch])
 
-  if (!webgl || broken) {
+  if (!webgl) {
     return (
       <main className="app fallback">
         <p>Нужен браузер с WebGL — открой на ноуте.</p>
+      </main>
+    )
+  }
+
+  if (broken) {
+    return (
+      <main className="app fallback">
+        <p>Сцена споткнулась. Обнови страницу.</p>
       </main>
     )
   }

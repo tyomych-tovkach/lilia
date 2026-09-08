@@ -31,7 +31,7 @@ export function WorldLabel({
     userSelect: 'none',
   }
   return (
-    <Html position={position} center distanceFactor={7} style={style} sprite>
+    <Html position={position} center distanceFactor={7} style={style} sprite wrapperClass="world-label">
       {children}
     </Html>
   )

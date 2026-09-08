@@ -158,6 +158,12 @@ body,
   overflow: hidden;
 }
 
+.world-label {
+  max-width: 160px !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
 .letter-title {
   font-weight: 700;
   font-size: 14px;
