@@ -145,8 +145,11 @@ export function meetingLine(s: InviteState): string {
 export function formatRuDate(iso: string): string {
   if (!iso) return ''
   if (iso === DATE_CHAT) return 'напишет в чате, когда свободна'
-  const [y, m, d] = iso.split('-')
-  return `${d}.${m}.${y}`
+  const [y, m, d] = iso.split('-').map(Number)
+  const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
+  const dow = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб']
+  const day = new Date(Date.UTC(y, m - 1, d)).getUTCDay()
+  return `${dow[day]}, ${d} ${months[m - 1]} ${y}`
 }
 
 export function slotLabel(slot: SlotId | null): string {
@@ -172,15 +175,20 @@ export function formatEmailBody(s: InviteState, sentAt: string): string {
     `Дата: ${formatRuDate(s.date)}`,
     `Время дня: ${slotLabel(s.slot)}`,
     `Отправлено: ${sentAt}`,
+    '',
+    'Почта театра: Лилия нажала отправить сама.',
   ].join('\n')
 }
 
 export function summaryLines(s: InviteState): string[] {
+  const japan = labelFor(japanOptions, s.japanIds, s.japanCustom)
+  const sport = `${labelFor(sportKindOptions, s.sportIds, s.sportCustom)}${s.sportModeIds.length ? ` · ${labelFor(sportModeOptions, s.sportModeIds, '')}` : ''}`
+  const extra = labelFor(secretOptions, s.secretIds, s.secretCustom)
   return [
-    'Он будет рад этому письму.',
-    `Япония: ${labelFor(japanOptions, s.japanIds, s.japanCustom)}`,
-    `Спорт: ${labelFor(sportKindOptions, s.sportIds, s.sportCustom)}${s.sportModeIds.length ? ` · ${labelFor(sportModeOptions, s.sportModeIds, '')}` : ''}`,
-    `Ещё: ${labelFor(secretOptions, s.secretIds, s.secretCustom)}`,
+    'Вот как я это слышу — своими словами, не полями.',
+    japan === '—' ? 'Японию оставила в стороне. Так и уйдёт — тоже ответ.' : `Про Японию: ${japan}`,
+    sport === '—' ? 'Спорт не отмечала.' : `Спорт: ${sport}`,
+    extra === '—' ? 'Про «ещё люблю» — тишина. Нормально.' : `Ещё любит: ${extra}`,
     `Встреча: ${meetingLine(s)}`,
     `Когда: ${formatRuDate(s.date) || '—'} · ${slotLabel(s.slot)}`,
   ]

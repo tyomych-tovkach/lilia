@@ -21,6 +21,7 @@ import {
   sportCustom,
   sportKindOptions,
   sportModeOptions,
+  dateAsk,
 } from '../content/evening'
 import type { DateFormatId, LocationId } from '../content/types'
 import { formatRuDate, japanDone, secretDone, sportDone, summaryLines, toggleLimited } from '../logic'
@@ -65,11 +66,13 @@ export function Talk() {
   const [busy, setBusy] = useState(false)
   const [react, setReact] = useState('')
   const [sendError, setSendError] = useState('')
+  const [otherDay, setOtherDay] = useState(false)
 
   const close = () => {
     setOpen(false)
     setReact('')
     setSendError('')
+    setOtherDay(false)
     talkLock.current = false
     document.exitPointerLock?.()
   }
@@ -82,6 +85,7 @@ export function Talk() {
       setPhase('lines')
       setReact('')
       setSendError('')
+      setOtherDay(false)
       talkLock.current = true
       document.exitPointerLock?.()
     })
@@ -108,17 +112,19 @@ export function Talk() {
                   : phase === 'multi' && loc === 'secret'
                     ? greetings.secret[1]
                     : phase === 'format'
-                      ? greetings.date[0]
+                      ? dateAsk.format
                       : phase === 'flavor'
-                        ? 'Что ближе из этого?'
+                        ? state.format && state.format !== 'custom'
+                          ? dateAsk.flavor[state.format]
+                          : ''
                         : phase === 'place'
                           ? placeCustom.npcAsk
                           : phase === 'when'
-                            ? 'Какой день удобен? Можно свой в окне дат или написать в чате.'
+                            ? dateAsk.when
                             : phase === 'slot'
-                              ? 'День или вечер? Точный час — уже в чате.'
+                              ? dateAsk.slot
                               : phase === 'send'
-                                ? greetings.send[0]
+                                ? greetings.send[greetings.send.length - 1]
                                 : phase === 'custom'
                                   ? loc === 'japan'
                                     ? japanCustom.npcAsk
@@ -469,19 +475,28 @@ export function Talk() {
               {formatRuDate(iso)}
             </button>
           ))}
-          <input
-            className="talk-input"
-            type="date"
-            min={DATE_MIN}
-            max={DATE_MAX}
-            value={state.date !== DATE_CHAT && state.date && !(DATE_CHIPS as readonly string[]).includes(state.date) ? state.date : ''}
-            onChange={(e) => {
-              const v = e.target.value
-              if (!v) return
-              patch({ date: v })
-              setPhase('slot')
-            }}
-          />
+          {otherDay || (state.date !== DATE_CHAT && state.date && !(DATE_CHIPS as readonly string[]).includes(state.date)) ? (
+            <>
+              <p className="talk-hint">{dateAsk.otherDayHint}</p>
+              <input
+                className="talk-input"
+                type="date"
+                min={DATE_MIN}
+                max={DATE_MAX}
+                value={state.date !== DATE_CHAT && state.date && !(DATE_CHIPS as readonly string[]).includes(state.date) ? state.date : ''}
+                onChange={(e) => {
+                  const v = e.target.value
+                  if (!v) return
+                  patch({ date: v })
+                  setPhase('slot')
+                }}
+              />
+            </>
+          ) : (
+            <button type="button" className="talk-btn" onClick={() => setOtherDay(true)}>
+              {dateAsk.otherDay}
+            </button>
+          )}
           <button
             type="button"
             className={`talk-btn ${state.date === DATE_CHAT ? 'is-on' : ''}`}

@@ -57,6 +57,8 @@ assert(isDateAllowed('chat'), 'chat date ok')
 assert(isDateAllowed('2026-09-12'), 'window start')
 assert(!isDateAllowed('2026-09-11'), 'before window')
 assert(formatRuDate('chat').includes('чате'), 'chat label')
+assert(formatRuDate('2026-09-12').includes('сентября'), 'human date')
+assert(formatRuDate('2026-09-12').includes('сб'), 'weekday')
 
 const mail = formatEmailBody({ ...dated, noAttempts: 2 }, '2026-09-08T12:00:00.000Z')
 assert(!mail.includes('Жала'), 'no refusal report')
@@ -64,6 +66,7 @@ assert(!mail.includes('Нет'), 'no no-attempts line')
 assert(!mail.includes('Слот:'), 'no slot jargon')
 assert(mail.includes('Время дня: вечер'), 'daypart label')
 assert(mail.includes('Письмо от Лилии'), 'subject voice')
+assert(mail.includes('нажала отправить сама'), 'consent stamp')
 
 assert(lockedToast(s0).includes('САД'), 'lock names current act')
 

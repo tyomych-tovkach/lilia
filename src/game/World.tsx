@@ -116,7 +116,7 @@ export function World() {
     return (
       <TeaSet half={half}>
         <Back half={half} />
-        <Npc loc="japan" position={[0, 0, -0.6]} />
+        <Npc loc="japan" position={[1.45, 0, -0.35]} />
       </TeaSet>
     )
   }
@@ -152,7 +152,7 @@ export function World() {
     return (
       <TableSet half={half}>
         <Back half={half} />
-        <Npc loc="date" position={[0.9, 0, -1.1]} />
+        <Npc loc="date" position={[1.55, 0, -1.05]} />
       </TableSet>
     )
   }
@@ -161,7 +161,7 @@ export function World() {
     return (
       <PostSet half={half}>
         <Back half={half} />
-        <Npc loc="send" position={[0, 0, -1]} />
+        <Npc loc="send" position={[-0.35, 0, -1.05]} />
       </PostSet>
     )
   }

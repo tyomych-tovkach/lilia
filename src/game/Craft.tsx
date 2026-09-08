@@ -2,6 +2,43 @@ import type { ReactNode } from 'react'
 import { Text } from '@react-three/drei'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import { FONT, RU_FONT } from './layout'
+import { skin, type SkinKind } from './skin'
+
+export function Mat({
+  color,
+  kind,
+  repeat = [2, 2],
+  roughness = 0.86,
+  metalness = 0,
+  transparent,
+  opacity,
+  emissive,
+  emissiveIntensity,
+}: {
+  color: string
+  kind?: SkinKind
+  repeat?: [number, number]
+  roughness?: number
+  metalness?: number
+  transparent?: boolean
+  opacity?: number
+  emissive?: string
+  emissiveIntensity?: number
+}) {
+  const map = kind ? skin(kind, color, repeat) : undefined
+  return (
+    <meshStandardMaterial
+      color={kind ? '#ffffff' : color}
+      map={map}
+      roughness={roughness}
+      metalness={metalness}
+      transparent={transparent}
+      opacity={opacity}
+      emissive={emissive}
+      emissiveIntensity={emissiveIntensity}
+    />
+  )
+}
 
 export const FONT_CJK = FONT
 
@@ -175,7 +212,7 @@ export function Lantern({ position }: { position: [number, number, number] }) {
     <group position={position}>
       <mesh>
         <cylinderGeometry args={[0.04, 0.04, 0.16, 8]} />
-        <meshStandardMaterial color="#5a3a22" />
+        <Mat color="#5a3a22" kind="wood" repeat={[1, 1]} />
       </mesh>
       <mesh position={[0, 0.22, 0]}>
         <sphereGeometry args={[0.14, 12, 12]} />
@@ -191,15 +228,15 @@ export function Bench({ position, rotationY = 0 }: { position: [number, number, 
     <group position={position} rotation={[0, rotationY, 0]}>
       <mesh position={[0, 0.32, 0]}>
         <boxGeometry args={[1.15, 0.08, 0.36]} />
-        <meshStandardMaterial color="#6a4a32" />
+        <Mat color="#6a4a32" kind="wood" repeat={[1, 1]} roughness={0.7} />
       </mesh>
       <mesh position={[-0.48, 0.16, 0]}>
         <boxGeometry args={[0.08, 0.32, 0.32]} />
-        <meshStandardMaterial color="#4a3224" />
+        <Mat color="#4a3224" kind="wood" repeat={[1, 1]} />
       </mesh>
       <mesh position={[0.48, 0.16, 0]}>
         <boxGeometry args={[0.08, 0.32, 0.32]} />
-        <meshStandardMaterial color="#4a3224" />
+        <Mat color="#4a3224" kind="wood" repeat={[1, 1]} />
       </mesh>
     </group>
   )
@@ -210,15 +247,15 @@ export function Planter({ position }: { position: [number, number, number] }) {
     <group position={position}>
       <mesh position={[0, 0.18, 0]}>
         <boxGeometry args={[0.42, 0.36, 0.42]} />
-        <meshStandardMaterial color="#6a3a2a" />
+        <Mat color="#6a3a2a" kind="wood" repeat={[1, 1]} />
       </mesh>
       <mesh position={[0, 0.4, 0]}>
         <sphereGeometry args={[0.16, 10, 8]} />
-        <meshStandardMaterial color="#2a6a3a" />
+        <Mat color="#2a6a3a" kind="grass" repeat={[1, 1]} />
       </mesh>
       <mesh position={[0.08, 0.52, 0.04]}>
         <sphereGeometry args={[0.1, 8, 8]} />
-        <meshStandardMaterial color="#3a8a44" />
+        <Mat color="#3a8a44" kind="grass" repeat={[1, 1]} />
       </mesh>
     </group>
   )
