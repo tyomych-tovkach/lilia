@@ -4,6 +4,7 @@ import { useInvite } from '../../state'
 import { Interactable } from '../Interactable'
 import { Kit } from '../Kit'
 import { SPOTS } from '../layout'
+import { WorldLabel } from '../WorldLabel'
 
 export function DoorStations() {
   const { state, patch } = useInvite()
@@ -12,13 +13,13 @@ export function DoorStations() {
   return (
     <>
       <RigidBody type="fixed" colliders={false} position={SPOTS.kubgu}>
-        <CuboidCollider args={[0.6, 1.3, 0.2]} position={[0, 1.2, 0]} />
+        <CuboidCollider args={[0.28, 0.95, 0.12]} position={[0, 0.95, 0]} />
       </RigidBody>
       <RigidBody type="fixed" colliders={false} position={SPOTS.vkusno}>
-        <CuboidCollider args={[0.6, 1.3, 0.2]} position={[0, 1.2, 0]} />
+        <CuboidCollider args={[0.28, 0.95, 0.12]} position={[0, 0.95, 0]} />
       </RigidBody>
-      <Kit file="wall-door-rotate.glb" position={SPOTS.kubgu} scale={1.7} rotation={[0, Math.PI / 2, 0]} />
-      <Kit file="wall-door-rotate.glb" position={SPOTS.vkusno} scale={1.7} rotation={[0, -Math.PI / 2, 0]} />
+      <Kit file="wall-door-rotate.glb" position={SPOTS.kubgu} scale={0.9} rotation={[0, Math.PI / 2, 0]} />
+      <Kit file="wall-door-rotate.glb" position={SPOTS.vkusno} scale={0.9} rotation={[0, -Math.PI / 2, 0]} />
 
       <Interactable
         id="door-kubgu"
@@ -28,6 +29,9 @@ export function DoorStations() {
         onInteract={() => patch({ toast: copy.easterKubsu })}
       >
         <mesh />
+        <WorldLabel position={[0, 1.7, 0]} color="#c9b48a">
+          КубГУ
+        </WorldLabel>
       </Interactable>
       <Interactable
         id="door-vkusno"
@@ -37,6 +41,9 @@ export function DoorStations() {
         onInteract={() => patch({ toast: copy.easterVkusno })}
       >
         <mesh />
+        <WorldLabel position={[0, 1.7, 0]} color="#c9b48a">
+          Вкусно и точка
+        </WorldLabel>
       </Interactable>
     </>
   )

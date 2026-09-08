@@ -1,4 +1,4 @@
-export const SESSION_KEY = 'lilia-world-v2'
+export const SESSION_KEY = 'lilia-town-v4'
 
 export const DATE_MIN = '2026-09-12'
 export const DATE_MAX = '2026-10-03'
@@ -9,6 +9,7 @@ export type DoorId = 'kubgu' | 'vkusno'
 export type PortalId = 'calm' | 'play' | 'japan'
 export type Slot = 'day' | 'evening'
 export type Phase = 'letter' | 'explore' | 'match' | 'crash' | 'date' | 'mail' | 'sent'
+export type ComposeField = 'japan' | 'sport' | 'secret' | 'place' | null
 
 export type InviteState = {
   phase: Phase
@@ -30,6 +31,7 @@ export type InviteState = {
   slot: Slot | null
   sentAt: string | null
   toast: string
+  compose: ComposeField
 }
 
 export const INITIAL_STATE: InviteState = {
@@ -52,6 +54,7 @@ export const INITIAL_STATE: InviteState = {
   slot: null,
   sentAt: null,
   toast: '',
+  compose: null,
 }
 
 export const JAPAN_STICKERS = [
@@ -180,6 +183,20 @@ export function canSend(state: InviteState): boolean {
   if (!isDateAllowed(state.date) || !state.slot) return false
   if (state.portal === 'custom') return state.customPlace.trim().length > 0
   return state.portal !== null && state.flavor.length > 0
+}
+
+export type District = 0 | 1 | 2 | 3 | 4
+
+export function maxDistrict(state: InviteState): District {
+  if (state.phase === 'sent' || canSend(state)) return 4
+  if (state.saidYes) return 3
+  if (arcadeComplete(state)) return 2
+  if (state.letterOpen) return 1
+  return 0
+}
+
+export function districtOpen(state: InviteState, district: District): boolean {
+  return maxDistrict(state) >= district
 }
 
 export function formatEmailBody(state: InviteState, sentAt: string): string {

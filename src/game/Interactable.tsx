@@ -48,7 +48,6 @@ export function Interactable({
   rec.current.onInteract = onInteract
 
   const [hot, setHot] = useState(false)
-  rec.current as Rec & { setHot?: (v: boolean) => void }
   const extra = rec.current as Rec & { setHot: (v: boolean) => void }
   extra.setHot = setHot
 
@@ -83,12 +82,14 @@ export function Interactable({
       )}
       {hot && enabled && (
         <Text
-          position={[0, 2.2, 0]}
-          fontSize={0.32}
+          position={[0, 1.55, 0]}
+          fontSize={0.2}
           color={color}
           anchorX="center"
-          outlineWidth={0.02}
+          outlineWidth={0.015}
           outlineColor="#050414"
+          overflowWrap="break-word"
+          maxWidth={0.8}
         >
           E
         </Text>

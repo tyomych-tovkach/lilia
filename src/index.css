@@ -78,8 +78,97 @@ body,
   bottom: 28px;
 }
 
+.hud {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  width: min(640px, calc(100vw - 24px));
+  pointer-events: none;
+  display: grid;
+  gap: 8px;
+}
+
+.hud-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hud-steps li {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(244, 228, 193, 0.18);
+  background: rgba(7, 6, 26, 0.55);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hud-steps .is-on {
+  color: #ffd27a;
+  border-color: rgba(255, 210, 122, 0.55);
+}
+
+.hud-steps .is-next {
+  color: #f7f0e4;
+}
+
+.hud-steps .is-lock {
+  color: #8a8074;
+}
+
+.hud-lock {
+  margin: 0 auto;
+  max-width: min(420px, 90vw);
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(7, 6, 26, 0.62);
+  border: 1px solid rgba(255, 210, 122, 0.25);
+  font-size: 12px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.letter-card,
+.summary-card {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 14px 12px;
+  background: #f4ead8;
+  color: #3a2418;
+  font-family: Manrope, 'Noto Sans JP', sans-serif;
+  font-size: 12px;
+  line-height: 1.35;
+  box-sizing: border-box;
+}
+
+.letter-card p,
+.summary-card p {
+  margin: 0 0 7px;
+  overflow: hidden;
+}
+
+.letter-title {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.summary-card {
+  background: rgba(244, 234, 216, 0.94);
+}
+
 .toast {
-  top: 24px;
+  top: 78px;
   max-width: min(520px, 90vw);
   text-align: center;
 }

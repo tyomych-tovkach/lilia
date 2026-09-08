@@ -1,7 +1,9 @@
 import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
-import { detectWebGL } from './logic'
-import { InviteProvider, useInvite } from './state'
+import { copy } from './copy'
+import { Hud } from './game/Hud'
 import { TouchStick } from './game/TouchStick'
+import { detectWebGL, type ComposeField } from './logic'
+import { InviteProvider, useInvite } from './state'
 
 const GameCanvas = lazy(() => import('./game/GameCanvas').then((m) => ({ default: m.GameCanvas })))
 
@@ -22,6 +24,14 @@ class Guard extends Component<{ children: ReactNode; onError: () => void }, { er
   }
 }
 
+function composeValue(compose: ComposeField, state: ReturnType<typeof useInvite>['state']) {
+  if (compose === 'japan') return state.japanCustom
+  if (compose === 'sport') return state.sportCustom
+  if (compose === 'secret') return state.secretCustom
+  if (compose === 'place') return state.customPlace
+  return ''
+}
+
 function Shell() {
   const { state, patch } = useInvite()
   const [webgl] = useState(() => detectWebGL())
@@ -31,7 +41,7 @@ function Shell() {
   const readyRef = useRef(false)
 
   useEffect(() => {
-    const t = window.setTimeout(() => setHint(false), 7000)
+    const t = window.setTimeout(() => setHint(false), 8000)
     return () => window.clearTimeout(t)
   }, [])
 
@@ -49,6 +59,18 @@ function Shell() {
       </main>
     )
   }
+
+  const compose = state.compose
+  const placeholder =
+    compose === 'japan'
+      ? copy.japanCustom
+      : compose === 'sport'
+        ? copy.sportCustom
+        : compose === 'secret'
+          ? copy.secretCustom
+          : compose === 'place'
+            ? copy.portalsCustomPh
+            : ''
 
   return (
     <main className={`app ${state.crashed ? 'is-crash' : ''}`}>
@@ -72,16 +94,26 @@ function Shell() {
           <p>собираем аркаду…</p>
         </div>
       )}
-      {ready && hint && <p className="hint">WASD · мышь крутит камеру · E взять</p>}
+      {ready && <Hud />}
+      {ready && hint && <p className="hint">W вглубь экрана · A/D в стороны · мышь — взгляд · E взять</p>}
       {state.toast && <p className="toast">{state.toast}</p>}
-      {state.portal === 'custom' && state.saidYes && (
+      {compose && (
         <input
           className="custom"
           autoFocus
           maxLength={80}
-          placeholder="своё место…"
-          value={state.customPlace.trimStart()}
-          onChange={(e) => patch({ customPlace: e.target.value, portal: 'custom', flavor: '' })}
+          placeholder={placeholder}
+          value={composeValue(compose, state)}
+          onChange={(e) => {
+            const v = e.target.value
+            if (compose === 'japan') patch({ japanCustom: v, compose: 'japan' })
+            if (compose === 'sport') patch({ sportCustom: v, compose: 'sport' })
+            if (compose === 'secret') patch({ secretCustom: v, compose: 'secret' })
+            if (compose === 'place') patch({ customPlace: v, portal: 'custom', flavor: '', compose: 'place' })
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === 'Escape') patch({ compose: null })
+          }}
         />
       )}
       <TouchStick />

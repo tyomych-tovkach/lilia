@@ -46,4 +46,8 @@ export function Kit({
   'pinball.glb',
   'air-hockey.glb',
   'ticket-machine.glb',
+  'castle/gate.glb',
+  'castle/flag-banner-long.glb',
+  'castle/tower-hexagon-base.glb',
+  'castle/tower-hexagon-roof.glb',
 ].forEach((f) => useGLTF.preload(`${BASE}/${f}`))

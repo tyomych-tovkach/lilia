@@ -4,7 +4,7 @@ import { Suspense, useEffect } from 'react'
 import { bindInput } from './input'
 import { InteractionDriver } from './Interactable'
 import { Player } from './Player'
-import { Plaza } from './Plaza'
+import { Town } from './Town'
 import { ArcadeStations } from './stations/Arcade'
 import { BoardStation } from './stations/Board'
 import { DoorStations } from './stations/Doors'
@@ -18,7 +18,7 @@ export function GameCanvas({ onReady }: { onReady: () => void }) {
   return (
     <Canvas
       dpr={[1, 1.5]}
-      camera={{ fov: 50, position: [0, 4.2, 18], near: 0.1, far: 90 }}
+      camera={{ fov: 48, position: [1.68, 3.05, 22.95], near: 0.1, far: 90 }}
       onCreated={({ gl }) => {
         gl.setClearColor('#07061a')
         onReady()
@@ -27,7 +27,7 @@ export function GameCanvas({ onReady }: { onReady: () => void }) {
     >
       <Suspense fallback={null}>
         <Physics gravity={[0, -16, 0]}>
-          <Plaza />
+          <Town />
           <Player />
           <EnvelopeStation />
           <ArcadeStations />
