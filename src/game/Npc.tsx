@@ -1,5 +1,6 @@
 import { copy, npcs } from '../content/evening'
 import type { LocationId } from '../content/types'
+import { RuSign } from './Craft'
 import { Interactable } from './Interactable'
 import { emitTalk } from './talkBus'
 
@@ -181,6 +182,7 @@ export function Npc({
           <meshStandardMaterial color="#1a0c08" />
         </mesh>
         <Prop loc={loc} />
+        <RuSign text={cast.name} position={[0, 1.98, 0]} size={0.14} color={cast.accent} />
       </group>
     </Interactable>
   )

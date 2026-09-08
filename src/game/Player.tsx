@@ -14,8 +14,8 @@ export function Player() {
   const walking = useRef(false)
   const { camera } = useThree()
   const { state } = useInvite()
-  const camYaw = useRef(0.35)
-  const camPitch = useRef(-0.22)
+  const camYaw = useRef(0)
+  const camPitch = useRef(-0.16)
   const booted = useRef(false)
   const look = useRef(new THREE.Vector3())
   const coyote = useRef(0)
@@ -31,6 +31,8 @@ export function Player() {
     }
     playerPos.set(...spawn)
     playerYaw.current = Math.PI
+    camYaw.current = 0
+    camPitch.current = -0.16
     booted.current = false
   }, [loc, spawn])
 

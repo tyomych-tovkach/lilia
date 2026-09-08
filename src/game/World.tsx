@@ -89,7 +89,7 @@ export function World() {
     const easter = easterUnlocked(state)
     return (
       <FoyerSet half={half}>
-        <Npc loc="hub" position={[1.05, 0, 1.85]} />
+        <Npc loc="hub" position={[0, 0, 1.55]} />
         <Gate to="letter" position={[-4.6, 0, -half + 1.25]} open={open('letter')} now={now === 'letter'} done={chip('letter') === 'done'} />
         <Gate to="yesno" position={[-1.55, 0, -half + 1.25]} open={open('yesno')} now={now === 'yesno'} done={chip('yesno') === 'done'} />
         <Gate to="date" position={[1.55, 0, -half + 1.25]} open={open('date')} now={now === 'date'} done={chip('date') === 'done'} />
