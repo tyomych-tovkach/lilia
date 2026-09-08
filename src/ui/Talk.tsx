@@ -102,7 +102,7 @@ export function Talk() {
         : phase === 'lines'
           ? lines[Math.min(line, lines.length - 1)]
           : phase === 'yesno'
-            ? greetings.yesno[1]
+            ? copy.yesAsk
             : phase === 'multi' && loc === 'japan'
               ? greetings.japan[1]
               : phase === 'multi' && loc === 'sport'
@@ -532,7 +532,12 @@ export function Talk() {
             ))}
           </div>
           {state.sentAt ? (
-            <p className="talk-note">{copy.sendAlready}</p>
+            <>
+              <p className="talk-note">{copy.sendAlready}</p>
+              <button type="button" className="talk-btn" onClick={close}>
+                Ясно.
+              </button>
+            </>
           ) : (
             <>
               {sendError && <p className="talk-error">{sendError}</p>}
@@ -556,6 +561,9 @@ export function Talk() {
                 }}
               >
                 {busy ? copy.sending : 'Отправить Темычу'}
+              </button>
+              <button type="button" className="talk-btn" onClick={close} disabled={busy}>
+                {copy.sendLater}
               </button>
             </>
           )}

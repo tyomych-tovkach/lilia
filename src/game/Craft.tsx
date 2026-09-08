@@ -322,14 +322,26 @@ export function RoomBounds({ half, wallH = 3.4 }: { half: number; wallH?: number
   )
 }
 
-export function RoomLights({ sky, fog }: { sky: string; fog: [string, number, number] }) {
+export function RoomLights({
+  sky,
+  fog,
+  ambient = 0.72,
+  dirIntensity = 1.2,
+  dirColor = '#ffe2c4',
+}: {
+  sky: string
+  fog: [string, number, number]
+  ambient?: number
+  dirIntensity?: number
+  dirColor?: string
+}) {
   return (
     <>
       <color attach="background" args={[sky]} />
       <fog attach="fog" args={fog} />
-      <ambientLight intensity={0.72} />
-      <hemisphereLight args={['#c8d4f0', '#4a3020', 0.75]} />
-      <directionalLight position={[6, 14, 8]} intensity={1.2} color="#ffe2c4" />
+      <ambientLight intensity={ambient} />
+      <hemisphereLight args={['#c8d4f0', '#4a3020', 0.55]} />
+      <directionalLight position={[6, 14, 8]} intensity={dirIntensity} color={dirColor} />
     </>
   )
 }

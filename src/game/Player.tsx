@@ -14,8 +14,8 @@ export function Player() {
   const walking = useRef(false)
   const { camera } = useThree()
   const { state } = useInvite()
-  const camYaw = useRef(0)
-  const camPitch = useRef(-0.16)
+  const camYaw = useRef(0.32)
+  const camPitch = useRef(-0.28)
   const booted = useRef(false)
   const look = useRef(new THREE.Vector3())
   const coyote = useRef(0)
@@ -31,8 +31,8 @@ export function Player() {
     }
     playerPos.set(...spawn)
     playerYaw.current = Math.PI
-    camYaw.current = 0
-    camPitch.current = -0.16
+    camYaw.current = loc === 'hub' ? 0.32 : 0.18
+    camPitch.current = -0.28
     booted.current = false
   }, [loc, spawn])
 
@@ -81,7 +81,7 @@ export function Player() {
     const speed = 2.85
     let vy = v.y
     if (!locked && control.jumpQueued && coyote.current > 0) {
-      vy = 8.1
+      vy = 5.1
       control.jumpQueued = false
       coyote.current = 0
     }
@@ -89,14 +89,14 @@ export function Player() {
     rb.setLinvel({ x: wish.x * speed, y: Math.max(vy, -22), z: wish.z * speed }, true)
     if (walking.current) playerYaw.current = Math.atan2(wish.x, wish.z)
 
-    const boom = 6.4
+    const boom = 3.7
     const lookY = 1.18
     const desired = new THREE.Vector3(
       x + Math.sin(camYaw.current) * Math.cos(camPitch.current) * boom,
-      t.y + lookY + Math.sin(-camPitch.current) * boom * 0.62 + 1.35,
+      t.y + lookY + Math.sin(-camPitch.current) * boom * 0.55 + 0.72,
       z + Math.cos(camYaw.current) * Math.cos(camPitch.current) * boom,
     )
-    desired.y = THREE.MathUtils.clamp(desired.y, 1.6, 9.5)
+    desired.y = THREE.MathUtils.clamp(desired.y, 1.5, 6.2)
     if (!booted.current) {
       camera.position.copy(desired)
       booted.current = true

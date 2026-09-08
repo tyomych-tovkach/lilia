@@ -90,10 +90,10 @@ export function World() {
     return (
       <FoyerSet half={half}>
         <Npc loc="hub" position={[0, 0, 1.55]} />
-        <Gate to="letter" position={[-4.6, 0, -half + 1.25]} open={open('letter')} now={now === 'letter'} done={chip('letter') === 'done'} />
-        <Gate to="yesno" position={[-1.55, 0, -half + 1.25]} open={open('yesno')} now={now === 'yesno'} done={chip('yesno') === 'done'} />
-        <Gate to="date" position={[1.55, 0, -half + 1.25]} open={open('date')} now={now === 'date'} done={chip('date') === 'done'} />
-        <Gate to="send" position={[4.6, 0, -half + 1.25]} open={open('send')} now={now === 'send'} done={chip('send') === 'done'} />
+        <Gate to="yesno" position={[-4.4, 0, -half + 1.25]} open={open('yesno')} now={now === 'yesno'} done={chip('yesno') === 'done'} />
+        <Gate to="letter" position={[0, 0, -half + 1.25]} open={open('letter')} now={now === 'letter'} done={chip('letter') === 'done'} />
+        <Gate to="date" position={[3.2, 0, -half + 1.25]} open={open('date')} now={now === 'date'} done={chip('date') === 'done'} />
+        <Gate to="send" position={[6.2, 0, -half + 1.25]} open={open('send')} now={now === 'send'} done={chip('send') === 'done'} />
         <Gate to="japan" position={[half - 1.25, 0, -3.1]} rotationY={-Math.PI / 2} open={open('japan')} now={false} done={chip('japan') === 'done'} />
         <Gate to="sport" position={[half - 1.25, 0, 0]} rotationY={-Math.PI / 2} open={open('sport')} now={false} done={chip('sport') === 'done'} />
         <Gate to="secret" position={[half - 1.25, 0, 3.1]} rotationY={-Math.PI / 2} open={open('secret')} now={false} done={chip('secret') === 'done'} />

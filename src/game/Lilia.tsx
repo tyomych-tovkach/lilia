@@ -152,12 +152,8 @@ export function Lilia({
             <meshStandardMaterial color="#2a1810" />
           </mesh>
         </group>
-        <mesh position={[0, 0.44, 0.02]} scale={[1.2, 0.72, 0.98]}>
-          <sphereGeometry args={[0.2, 20, 16]} />
-          <meshStandardMaterial color={YUKATA} roughness={0.4} />
-        </mesh>
-        <mesh position={[0, 0.4, 0.02]}>
-          <cylinderGeometry args={[0.23, 0.3, 0.48, 16]} />
+        <mesh position={[0, 0.38, 0.02]} rotation={[0, 0, 0]}>
+          <cylinderGeometry args={[0.28, 0.18, 0.46, 14]} />
           <meshStandardMaterial color={YUKATA} roughness={0.42} />
         </mesh>
         <mesh position={[0, 0.66, 0.01]} scale={[0.78, 0.52, 0.7]}>
@@ -216,9 +212,13 @@ export function Lilia({
           <planeGeometry args={[0.3, 0.34]} />
           <meshStandardMaterial map={face} transparent depthWrite={false} roughness={0.42} side={THREE.DoubleSide} />
         </mesh>
-        <mesh position={[0, 1.4, 0.02]} scale={[1.22, 0.72, 1.2]}>
+        <mesh position={[0, 1.42, -0.04]} scale={[1.18, 0.7, 0.9]}>
           <sphereGeometry args={[0.18, 22, 16]} />
           <meshStandardMaterial color={HAIR} roughness={0.3} />
+        </mesh>
+        <mesh position={[0, 1.12, 0.01]}>
+          <torusGeometry args={[0.075, 0.018, 8, 16]} />
+          <meshStandardMaterial color={YUKATA} roughness={0.4} />
         </mesh>
         <mesh position={[-0.11, 1.32, 0.12]} rotation={[0.4, 0.4, 0.15]} scale={[0.55, 1, 0.32]}>
           <sphereGeometry args={[0.12, 12, 10]} />

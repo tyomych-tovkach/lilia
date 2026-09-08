@@ -12,9 +12,9 @@ export function GameCanvas({ onReady }: { onReady: () => void }) {
   return (
     <Canvas
       dpr={[1, 1.6]}
-      camera={{ fov: 46, position: [2.2, 3.4, 11], near: 0.12, far: 80 }}
+      camera={{ fov: 40, position: [1.4, 2.8, 6.2], near: 0.12, far: 80 }}
       onCreated={({ gl }) => {
-        gl.toneMappingExposure = 1.32
+        gl.toneMappingExposure = 1.08
         gl.setClearColor('#1c1428')
         onReady()
       }}

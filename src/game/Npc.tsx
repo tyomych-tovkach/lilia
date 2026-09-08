@@ -138,12 +138,12 @@ export function Npc({
           <meshStandardMaterial color={cast.cloth} roughness={0.45} />
         </mesh>
         <mesh position={[-0.22, 0.78, 0]} rotation={[0, 0, 0.5]}>
-          <capsuleGeometry args={[0.04, 0.28, 4, 8]} />
-          <meshStandardMaterial color={cast.skin} />
+          <capsuleGeometry args={[0.055, 0.22, 4, 8]} />
+          <meshStandardMaterial color={cast.cloth} />
         </mesh>
         <mesh position={[0.22, 0.78, 0]} rotation={[0, 0, -0.5]}>
-          <capsuleGeometry args={[0.04, 0.28, 4, 8]} />
-          <meshStandardMaterial color={cast.skin} />
+          <capsuleGeometry args={[0.055, 0.22, 4, 8]} />
+          <meshStandardMaterial color={cast.cloth} />
         </mesh>
         <mesh position={[0, 1.08, 0.02]}>
           <sphereGeometry args={[0.15, 16, 14]} />

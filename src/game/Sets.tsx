@@ -131,11 +131,11 @@ function Place({ position }: { position: [number, number, number] }) {
 export function FoyerSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#1a1020" fog={['#1a1020', 16, 38]} />
+      <RoomLights sky="#1a1020" fog={['#1a1020', 10, 28]} ambient={0.3} dirIntensity={0.4} dirColor="#8a90c8" />
       <Floor half={half} color="#3a2a28" kind="carpet" />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0.4]}>
         <planeGeometry args={[2.4, half * 1.7]} />
-        <meshStandardMaterial color="#7a2030" roughness={0.7} />
+        <Mat color="#7a2030" kind="carpet" repeat={[1, 6]} roughness={0.78} />
       </mesh>
       <mesh position={[0, 4.4, 0]}>
         <boxGeometry args={[half * 2, 0.2, half * 2]} />
@@ -146,6 +146,14 @@ export function FoyerSet({ half, children }: { half: number; children?: ReactNod
         <meshStandardMaterial color="#ffd27a" emissive="#ffb020" emissiveIntensity={1.6} />
       </mesh>
       <pointLight position={[0, 3.8, 0]} color="#ffc070" intensity={1.1} distance={14} />
+      <mesh position={[-2.4, 1.8, -half + 1.1]}>
+        <cylinderGeometry args={[0.18, 0.22, 3.6, 12]} />
+        <Mat color="#efe6d2" kind="plaster" repeat={[1, 3]} />
+      </mesh>
+      <mesh position={[2.4, 1.8, -half + 1.1]}>
+        <cylinderGeometry args={[0.18, 0.22, 3.6, 12]} />
+        <Mat color="#efe6d2" kind="plaster" repeat={[1, 3]} />
+      </mesh>
       <WallRing half={half} color="#e8d5b8" />
       <mesh position={[0, 2.6, -half + 0.22]}>
         <boxGeometry args={[11, 3.4, 0.08]} />
@@ -193,7 +201,7 @@ export function FoyerSet({ half, children }: { half: number; children?: ReactNod
 export function GardenSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#c8dce8" fog={['#c8dce8', 18, 36]} />
+      <RoomLights sky="#c8dce8" fog={['#c8dce8', 22, 40]} ambient={0.5} dirIntensity={1.25} dirColor="#fff4d8" />
       <Floor half={half} color="#3a6a3a" kind="grass" />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0.4]}>
         <planeGeometry args={[1.6, half * 1.6]} />
@@ -234,7 +242,7 @@ export function GardenSet({ half, children }: { half: number; children?: ReactNo
 export function TeaSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#2a1818" fog={['#2a1818', 10, 22]} />
+      <RoomLights sky="#2a1818" fog={['#2a1818', 6, 16]} ambient={0.22} dirIntensity={0.14} dirColor="#ffc070" />
       <Floor half={half} color="#8a6a3a" kind="tatami" />
       <WallRing half={half} color="#f0e0d0" height={3.2} kind="plaster" />
       <mesh position={[0, 3.3, 0]}>
@@ -352,7 +360,7 @@ export function TeaSet({ half, children }: { half: number; children?: ReactNode 
 export function CourtSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#8ec8f0" fog={['#8ec8f0', 22, 40]} />
+      <RoomLights sky="#8ec8f0" fog={['#8ec8f0', 22, 40]} ambient={0.55} dirIntensity={1.3} dirColor="#e8f0ff" />
       <Floor half={half} color="#4a8a4a" kind="grass" />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, -0.4]}>
         <planeGeometry args={[5.4, 9.2]} />
@@ -388,7 +396,7 @@ export function CourtSet({ half, children }: { half: number; children?: ReactNod
 export function RoofSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#12122a" fog={['#12122a', 12, 28]} />
+      <RoomLights sky="#12122a" fog={['#12122a', 8, 22]} ambient={0.16} dirIntensity={0.4} dirColor="#a0b0ff" />
       <Floor half={half} color="#3a3450" kind="stone" />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
         <planeGeometry args={[half * 1.6, half * 1.6]} />
@@ -432,23 +440,23 @@ export function RoofSet({ half, children }: { half: number; children?: ReactNode
 export function BridgeSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#1c2438" fog={['#1c2438', 12, 26]} />
-      <Floor half={half} color="#2a4050" kind="stone" />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+      <RoomLights sky="#1c2438" fog={['#1c2438', 8, 20]} ambient={0.18} dirIntensity={0.3} dirColor="#7090c8" />
+      <Floor half={half} color="#1a3850" kind="stone" />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.06, 0]}>
         <planeGeometry args={[half * 2, half * 2]} />
-        <meshStandardMaterial color="#1a3850" />
+        <meshStandardMaterial color="#16344c" roughness={0.18} metalness={0.28} transparent opacity={0.72} />
       </mesh>
-      <mesh position={[0, 0.28, 0]}>
-        <boxGeometry args={[2.1, 0.16, 8.4]} />
-        <meshStandardMaterial color="#6a5a48" />
+      <mesh position={[0, 0.04, 0]}>
+        <boxGeometry args={[2.2, 0.1, 8.6]} />
+        <Mat color="#6a5a48" kind="wood" repeat={[2, 6]} roughness={0.7} />
       </mesh>
-      <mesh position={[-1.05, 0.7, 0]}>
-        <boxGeometry args={[0.08, 0.7, 8.4]} />
-        <meshStandardMaterial color="#4a3a2c" />
+      <mesh position={[-1.05, 0.55, 0]}>
+        <boxGeometry args={[0.08, 0.9, 8.4]} />
+        <Mat color="#4a3a2c" kind="wood" repeat={[1, 6]} />
       </mesh>
-      <mesh position={[1.05, 0.7, 0]}>
-        <boxGeometry args={[0.08, 0.7, 8.4]} />
-        <meshStandardMaterial color="#4a3a2c" />
+      <mesh position={[1.05, 0.55, 0]}>
+        <boxGeometry args={[0.08, 0.9, 8.4]} />
+        <Mat color="#4a3a2c" kind="wood" repeat={[1, 6]} />
       </mesh>
       {[-3, -1, 1, 3].map((z) => (
         <group key={z}>
@@ -479,7 +487,7 @@ export function BridgeSet({ half, children }: { half: number; children?: ReactNo
 export function TableSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#241818" fog={['#241818', 10, 20]} />
+      <RoomLights sky="#241818" fog={['#241818', 8, 16]} ambient={0.22} dirIntensity={0.12} dirColor="#ffc070" />
       <Floor half={half} color="#5a4034" kind="wood" />
       <WallRing half={half} color="#f0e4d0" height={3.3} kind="plaster" />
       <mesh position={[0, 0.46, -half + 0.22]}>
@@ -609,7 +617,7 @@ export function TableSet({ half, children }: { half: number; children?: ReactNod
 export function PostSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#1c1824" fog={['#1c1824', 10, 20]} />
+      <RoomLights sky="#1c1824" fog={['#1c1824', 8, 18]} ambient={0.24} dirIntensity={0.25} dirColor="#6070a0" />
       <Floor half={half} color="#6a6258" kind="tile" />
       <WallRing half={half} color="#d8d0c0" height={3.2} kind="plaster" />
       <mesh position={[0, 3.28, 0]}>
