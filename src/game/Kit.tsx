@@ -30,24 +30,7 @@ export function Kit({
 }
 
 ;[
-  'arcade-machine.glb',
-  'claw-machine.glb',
-  'dance-machine.glb',
-  'gambling-machine.glb',
   'basketball-game.glb',
   'vending-machine.glb',
-  'prize-wheel.glb',
-  'column.glb',
-  'wall.glb',
-  'wall-door-rotate.glb',
-  'character-gamer.glb',
-  'character-employee.glb',
-  'prizes.glb',
-  'pinball.glb',
-  'air-hockey.glb',
   'ticket-machine.glb',
-  'castle/gate.glb',
-  'castle/flag-banner-long.glb',
-  'castle/tower-hexagon-base.glb',
-  'castle/tower-hexagon-roof.glb',
 ].forEach((f) => useGLTF.preload(`${BASE}/${f}`))

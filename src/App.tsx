@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
+import { Component, lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from 'react'
 import { ACT_ORDER, copy, OPTIONAL_ACTS, signs } from './content/evening'
 import { actChipStatus, detectWebGL, locationObjective } from './logic'
 import { InviteProvider, useInvite } from './state'
@@ -30,6 +30,12 @@ function Shell() {
   const [broken, setBroken] = useState(false)
   const [hint, setHint] = useState(true)
   const [narrow, setNarrow] = useState(() => window.matchMedia('(max-width: 820px)').matches)
+  const onReady = useCallback(() => setReady(true), [])
+
+  useEffect(() => {
+    const t = window.setTimeout(() => setReady(true), 2200)
+    return () => window.clearTimeout(t)
+  }, [])
 
   useEffect(() => {
     const t = window.setTimeout(() => setHint(false), 14000)
@@ -77,7 +83,7 @@ function Shell() {
     <main className="app">
       <Guard onError={() => setBroken(true)}>
         <Suspense fallback={null}>
-          <GameCanvas onReady={() => setReady(true)} />
+          <GameCanvas onReady={onReady} />
         </Suspense>
       </Guard>
       {!ready && (
