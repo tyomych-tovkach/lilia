@@ -354,7 +354,7 @@ export function Talk() {
         <div className="talk-choices">
           <button
             type="button"
-            className="talk-btn is-on"
+            className="talk-btn"
             onClick={() => {
               patch({ saidYes: true, toast: farewells.yesno })
               close()
@@ -365,12 +365,7 @@ export function Talk() {
           <button
             type="button"
             className="talk-btn"
-            style={state.noAttempts === 1 ? { transform: 'translate(48px, 12px)' } : undefined}
             onClick={() => {
-              if (state.noAttempts === 0) {
-                patch({ noAttempts: 1, toast: copy.noDodge })
-                return
-              }
               patch({ noAttempts: state.noAttempts + 1, toast: copy.noClose })
               close()
             }}
