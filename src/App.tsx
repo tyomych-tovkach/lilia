@@ -1,9 +1,9 @@
-import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
-import { copy } from './copy'
-import { Hud } from './game/Hud'
+import { Component, lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
+import { copy, signs } from './content/evening'
 import { TouchStick } from './game/TouchStick'
-import { detectWebGL, type ComposeField, type InviteState } from './logic'
+import { detectWebGL, currentAct, actDone } from './logic'
 import { InviteProvider, useInvite } from './state'
+import { Talk } from './ui/Talk'
 
 const GameCanvas = lazy(() => import('./game/GameCanvas').then((m) => ({ default: m.GameCanvas })))
 
@@ -24,24 +24,15 @@ class Guard extends Component<{ children: ReactNode; onError: () => void }, { er
   }
 }
 
-function composeValue(compose: ComposeField, state: InviteState) {
-  if (compose === 'japan') return state.japanCustom
-  if (compose === 'sport') return state.sportCustom
-  if (compose === 'secret') return state.secretCustom
-  if (compose === 'place') return state.customPlace
-  return ''
-}
-
 function Shell() {
   const { state, patch } = useInvite()
   const [webgl] = useState(() => detectWebGL())
   const [ready, setReady] = useState(false)
   const [broken, setBroken] = useState(false)
   const [hint, setHint] = useState(true)
-  const readyRef = useRef(false)
 
   useEffect(() => {
-    const t = window.setTimeout(() => setHint(false), 8000)
+    const t = window.setTimeout(() => setHint(false), 9000)
     return () => window.clearTimeout(t)
   }, [])
 
@@ -68,64 +59,52 @@ function Shell() {
     )
   }
 
-  const compose = state.compose
-  const placeholder =
-    compose === 'japan'
-      ? copy.japanCustom
-      : compose === 'sport'
-        ? copy.sportCustom
-        : compose === 'secret'
-          ? copy.secretCustom
-          : compose === 'place'
-            ? copy.portalsCustomPh
-            : ''
+  const sign = signs[state.location]
+  const now = currentAct(state)
 
   return (
     <main className={`app ${state.crashed ? 'is-crash' : ''}`}>
-      <Guard
-        onError={() => {
-          setBroken(true)
-        }}
-      >
+      <Guard onError={() => setBroken(true)}>
         <Suspense fallback={null}>
-          <GameCanvas
-            onReady={() => {
-              readyRef.current = true
-              setReady(true)
-            }}
-          />
+          <GameCanvas onReady={() => setReady(true)} />
         </Suspense>
       </Guard>
       {!ready && (
         <div className="loader" role="status">
           <span className="loader-orb" />
-          <p>собираем аркаду…</p>
+          <p>{copy.loader}</p>
         </div>
       )}
-      {ready && <Hud />}
-      {ready && hint && <p className="hint">W вглубь экрана · A/D в стороны · мышь — взгляд · E взять</p>}
-      {state.toast && <p className="toast">{state.toast}</p>}
-      {compose && (
-        <input
-          className="custom"
-          autoFocus
-          maxLength={80}
-          placeholder={placeholder}
-          value={composeValue(compose, state)}
-          onChange={(e) => {
-            const v = e.target.value
-            if (compose === 'japan') patch({ japanCustom: v, compose: 'japan' })
-            if (compose === 'sport') patch({ sportCustom: v, compose: 'sport' })
-            if (compose === 'secret') patch({ secretCustom: v, compose: 'secret' })
-            if (compose === 'place') patch({ customPlace: v, portal: 'custom', flavor: '', compose: 'place' })
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === 'Escape') patch({ compose: null })
-          }}
-        />
+      {ready && (
+        <div className="hud">
+          <p className="hud-title">{sign.uiTitle}</p>
+          <p className="hud-obj">{sign.uiObjective}</p>
+          <ol className="hud-steps">
+            {(['letter', 'japan', 'sport', 'secret', 'yesno', 'date', 'send'] as const).map((id) => (
+              <li key={id} className={actDone(state, id) || id === now ? 'is-on' : 'is-lock'}>
+                {signs[id].arch.replace(/^АКТ [IVX]+ · /, '')}
+              </li>
+            ))}
+          </ol>
+        </div>
       )}
+      {ready && hint && <p className="hint">{copy.hint}</p>}
+      {state.toast && <p className="toast">{state.toast}</p>}
+      <Talk />
       <TouchStick />
-      {state.crashed && <div className="glitch" aria-hidden />}
+      {state.crashed && (
+        <div className="crash-card">
+          <h2>{copy.crashTitle}</h2>
+          <p>{copy.crashBody}</p>
+          <button
+            type="button"
+            className="talk-btn is-on"
+            onClick={() => patch({ crashed: false, restored: true, saidYes: true, toast: copy.restoreCta })}
+          >
+            {copy.restoreCta}
+          </button>
+        </div>
+      )}
     </main>
   )
 }

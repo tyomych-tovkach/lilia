@@ -87,7 +87,7 @@ body,
 
 .hud-steps {
   position: absolute;
-  top: 16px;
+  top: 62px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -263,4 +263,110 @@ body,
   .loader-orb {
     animation: none;
   }
+}
+
+.hud-title {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffd27a;
+}
+
+.hud-obj {
+  position: absolute;
+  top: 36px;
+  left: 18px;
+  margin: 0;
+  max-width: 42vw;
+  font-size: 13px;
+  color: #f7f0e4;
+  overflow: hidden;
+}
+
+.talk {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+  z-index: 20;
+  width: min(420px, 46vw);
+  max-height: 46vh;
+  overflow: auto;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(12, 10, 24, 0.88);
+  border: 1px solid rgba(255, 210, 122, 0.35);
+  color: var(--ink);
+}
+
+.talk-name {
+  margin: 0 0 6px;
+  color: #ffd27a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.talk-body {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+
+.talk-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.talk-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 210, 122, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+
+.talk-btn.is-on {
+  border-color: #7dffb3;
+  color: #7dffb3;
+}
+
+.talk-input {
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 210, 122, 0.35);
+  background: rgba(8, 6, 20, 0.8);
+  color: var(--ink);
+}
+
+.talk-summary p {
+  margin: 0 0 4px;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.crash-card {
+  position: absolute;
+  inset: 18% 18% auto;
+  z-index: 24;
+  padding: 22px;
+  border-radius: 18px;
+  background: rgba(40, 6, 16, 0.94);
+  border: 1px solid #ff4d6d;
+  text-align: center;
+}
+
+.crash-card h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
 }

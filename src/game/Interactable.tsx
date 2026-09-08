@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import * as THREE from 'three'
 import { consumeInteract } from './input'
 import { playerPos } from './playerRef'
+import { talkLock } from './playerRef'
 
 type Rec = {
   id: string
@@ -119,6 +120,7 @@ export function InteractionDriver() {
       prev.current = id
     }
     const pressed = consumeInteract()
+    if (talkLock.current) return
     if (pressed && best) best.onInteract()
   })
   return null

@@ -6,24 +6,15 @@ export async function sendInvite(state: InviteState): Promise<SendResult> {
   const sentAt = new Date().toISOString()
   const message = formatEmailBody(state, sentAt)
   const key = import.meta.env.VITE_WEB3FORMS_KEY
-
-  if (!key) {
-    return {
-      ok: false,
-      reason: 'no-key',
-    }
-  }
+  if (!key) return { ok: false, reason: 'no-key' }
 
   const payload = {
     access_key: key,
-    subject: 'Лилия собрала второй тайм',
+    subject: 'Лилия собрала вечер по актам',
     from_name: 'Письмо для Лилии',
     to: MAIL_TO,
     botcheck: '',
     message,
-    'Карточка': formatEmailBody(state, sentAt).split('\n').slice(0, 6).join(' | '),
-    'Жала Нет': state.noAttempts > 0 ? `да (${state.noAttempts})` : 'нет',
-    'Встреча': message,
   }
 
   try {

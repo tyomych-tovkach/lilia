@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react'
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import { INITIAL_STATE, SESSION_KEY, type InviteState } from './logic'
 
 function loadState(): InviteState {
@@ -13,7 +6,7 @@ function loadState(): InviteState {
     const raw = sessionStorage.getItem(SESSION_KEY)
     if (!raw) return { ...INITIAL_STATE }
     const parsed = JSON.parse(raw) as Partial<InviteState>
-    return { ...INITIAL_STATE, ...parsed, toast: '' }
+    return { ...INITIAL_STATE, ...parsed, toast: '', crashed: parsed.crashed ?? false }
   } catch {
     return { ...INITIAL_STATE }
   }
@@ -21,7 +14,7 @@ function loadState(): InviteState {
 
 function persist(state: InviteState) {
   try {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...state, toast: '' }))
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...state, toast: '', crashed: false }))
   } catch {
     /* ignore */
   }
@@ -36,7 +29,6 @@ const InviteContext = createContext<Store | null>(null)
 
 export function InviteProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<InviteState>(loadState)
-
   const patch = useCallback((partial: Partial<InviteState>) => {
     setState((prev) => {
       const next = { ...prev, ...partial }
@@ -44,7 +36,6 @@ export function InviteProvider({ children }: { children: ReactNode }) {
       return next
     })
   }, [])
-
   const value = useMemo<Store>(() => ({ state, patch }), [state, patch])
   return <InviteContext.Provider value={value}>{children}</InviteContext.Provider>
 }

@@ -1,16 +1,24 @@
 export const control = {
   x: 0,
   z: 0,
-  interact: 0,
-  lookX: 0,
-  lookY: 0.28,
+  jump: false,
+  jumpQueued: false,
 }
 
-let consumed = 0
+let jumpConsumed = false
+let interactTick = 0
+let interactSeen = 0
 
 export function consumeInteract() {
-  if (control.interact === consumed) return false
-  consumed = control.interact
+  if (interactTick === interactSeen) return false
+  interactSeen = interactTick
+  return true
+}
+
+export function consumeJump() {
+  if (!control.jumpQueued || jumpConsumed) return false
+  jumpConsumed = true
+  control.jumpQueued = false
   return true
 }
 
@@ -33,16 +41,22 @@ export function bindInput() {
   const onKey = (e: KeyboardEvent, pressed: boolean) => {
     if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return
     down[pressed ? 'add' : 'delete'](e.code)
-    if (pressed && (e.code === 'KeyE' || e.code === 'Space')) {
+    if (pressed && e.code === 'KeyE') {
       e.preventDefault()
-      control.interact += 1
+      interactTick += 1
     }
+    if (pressed && (e.code === 'Space' || e.code === 'KeyJ')) {
+      e.preventDefault()
+      control.jump = true
+      control.jumpQueued = true
+      jumpConsumed = false
+    }
+    if (!pressed && (e.code === 'Space' || e.code === 'KeyJ')) control.jump = false
     syncWalk()
   }
 
   const onKeyDown = (e: KeyboardEvent) => onKey(e, true)
   const onKeyUp = (e: KeyboardEvent) => onKey(e, false)
-
   window.addEventListener('keydown', onKeyDown)
   window.addEventListener('keyup', onKeyUp)
   return () => {

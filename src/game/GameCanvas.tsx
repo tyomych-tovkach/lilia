@@ -4,42 +4,29 @@ import { Suspense, useEffect } from 'react'
 import { bindInput } from './input'
 import { InteractionDriver } from './Interactable'
 import { Player } from './Player'
-import { Town } from './Town'
-import { ArcadeStations } from './stations/Arcade'
-import { BoardStation } from './stations/Board'
-import { DoorStations } from './stations/Doors'
-import { EnvelopeStation } from './stations/Envelope'
-import { MailboxStation } from './stations/Mailbox'
-import { PortalStation } from './stations/Portals'
+import { World } from './World'
 
 export function GameCanvas({ onReady }: { onReady: () => void }) {
   useEffect(() => bindInput(), [])
 
   return (
     <Canvas
-      dpr={[1, 1.5]}
-      camera={{ fov: 48, position: [1.68, 3.05, 22.95], near: 0.1, far: 90 }}
+      dpr={[1, 1.6]}
+      camera={{ fov: 46, position: [2.2, 3.4, 11], near: 0.12, far: 80 }}
       onCreated={({ gl }) => {
-        gl.toneMappingExposure = 1.35
-        gl.setClearColor('#1a1028')
+        gl.toneMappingExposure = 1.32
+        gl.setClearColor('#1c1428')
         onReady()
       }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
     >
       <Suspense fallback={null}>
-        <Physics gravity={[0, -16, 0]}>
-          <Town />
+        <Physics gravity={[0, -22, 0]}>
+          <World />
           <Player />
-          <EnvelopeStation />
-          <ArcadeStations />
-          <DoorStations />
-          <BoardStation />
-          <PortalStation />
-          <MailboxStation />
         </Physics>
         <InteractionDriver />
       </Suspense>
     </Canvas>
   )
 }
-
