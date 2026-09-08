@@ -80,17 +80,16 @@ body,
 
 .hud {
   position: absolute;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  inset: 0;
   z-index: 12;
-  width: min(640px, calc(100vw - 24px));
   pointer-events: none;
-  display: grid;
-  gap: 8px;
 }
 
 .hud-steps {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -98,6 +97,7 @@ body,
   margin: 0;
   padding: 0;
   list-style: none;
+  width: min(640px, calc(100vw - 24px));
 }
 
 .hud-steps li {
@@ -127,7 +127,11 @@ body,
 }
 
 .hud-lock {
-  margin: 0 auto;
+  position: absolute;
+  top: 54px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
   max-width: min(420px, 90vw);
   padding: 6px 12px;
   border-radius: 12px;
@@ -167,6 +171,29 @@ body,
 .letter-title {
   font-weight: 700;
   font-size: 14px;
+}
+
+.letter-hud {
+  position: absolute;
+  right: 16px;
+  bottom: 22px;
+  z-index: 12;
+  width: min(280px, 44vw);
+  max-height: 230px;
+  overflow: hidden;
+  padding: 12px 14px;
+  background: #f4ead8;
+  color: #3a2418;
+  border: 1px solid #c9b48a;
+  border-radius: 4px 4px 10px 10px;
+  font-size: 12px;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.letter-hud p {
+  margin: 0 0 6px;
+  overflow: hidden;
 }
 
 .summary-card {

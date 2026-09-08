@@ -56,11 +56,11 @@ export function Machiya({
       </RigidBody>
       <mesh position={[0, h / 2, 0]}>
         <boxGeometry args={[2.28, h, 2.18]} />
-        <meshStandardMaterial color="#3a241c" roughness={0.72} />
+        <meshStandardMaterial color="#6b4636" roughness={0.72} />
       </mesh>
       <mesh position={[0, h / 2 - 0.05, 1.1]}>
         <boxGeometry args={[2.05, h - 0.35, 0.06]} />
-        <meshStandardMaterial color="#efe6d2" roughness={0.88} />
+        <meshStandardMaterial color="#f3e6d0" roughness={0.88} />
       </mesh>
       <mesh position={[0, 0.58, 1.14]}>
         <boxGeometry args={[0.95, 1.15, 0.08]} />
@@ -68,21 +68,21 @@ export function Machiya({
       </mesh>
       <mesh position={[-0.58, 1.85, 1.14]}>
         <boxGeometry args={[0.52, 0.62, 0.05]} />
-        <meshStandardMaterial color="#6a3824" emissive={accent} emissiveIntensity={0.12} />
+        <meshStandardMaterial color="#8a4a28" emissive={accent} emissiveIntensity={0.45} />
       </mesh>
       <mesh position={[0.58, 1.85, 1.14]}>
         <boxGeometry args={[0.52, 0.62, 0.05]} />
-        <meshStandardMaterial color="#6a3824" emissive={accent} emissiveIntensity={0.12} />
+        <meshStandardMaterial color="#8a4a28" emissive={accent} emissiveIntensity={0.45} />
       </mesh>
       {stories === 3 && (
         <>
           <mesh position={[-0.5, 2.7, 1.14]}>
             <boxGeometry args={[0.5, 0.5, 0.05]} />
-            <meshStandardMaterial color="#5a3020" emissive="#ffb020" emissiveIntensity={0.08} />
+            <meshStandardMaterial color="#5a3020" emissive="#ffb020" emissiveIntensity={0.55} />
           </mesh>
           <mesh position={[0.5, 2.7, 1.14]}>
             <boxGeometry args={[0.5, 0.5, 0.05]} />
-            <meshStandardMaterial color="#5a3020" />
+            <meshStandardMaterial color="#5a3020" emissive="#ffd27a" emissiveIntensity={0.4} />
           </mesh>
         </>
       )}

@@ -1,11 +1,12 @@
+import { Text } from '@react-three/drei'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import { districtOpen, formatRuDate, meetingLine, playerCardLines, buildPlayerCard } from '../../logic'
 import { sendInvite } from '../../mail'
 import { useInvite } from '../../state'
 import { Interactable } from '../Interactable'
 import { Kit } from '../Kit'
-import { SPOTS } from '../layout'
-import { FramedHtml, WorldLabel } from '../WorldLabel'
+import { RU_FONT, SPOTS } from '../layout'
+import { WorldLabel } from '../WorldLabel'
 import { useRef } from 'react'
 
 export function MailboxStation() {
@@ -13,6 +14,10 @@ export function MailboxStation() {
   const busy = useRef(false)
   const ready = districtOpen(state, 4) && state.phase !== 'sent'
   const card = buildPlayerCard(state)
+  const lines =
+    state.phase === 'sent'
+      ? 'Второй тайм назначен.\nТемыч уже читает сводку.'
+      : ['сводка', ...playerCardLines(card), meetingLine(state), `${formatRuDate(state.date)} · ${state.slot === 'day' ? 'день' : 'вечер'}`, 'E — отправить'].join('\n')
 
   return (
     <>
@@ -44,27 +49,29 @@ export function MailboxStation() {
       </Interactable>
       {districtOpen(state, 4) && (
         <group position={[SPOTS.mailbox[0], 0, SPOTS.mailbox[2] + 1.15]}>
-          <mesh position={[0, 1.15, 0]}>
-            <boxGeometry args={[1.35, 1.55, 0.06]} />
+          <mesh position={[0, 1.12, 0]}>
+            <boxGeometry args={[1.28, 1.5, 0.06]} />
             <meshStandardMaterial color="#2a2018" />
           </mesh>
-          <FramedHtml position={[0, 1.15, 0.05]} className="summary-card" width={220} height={250}>
-            {state.phase === 'sent' ? (
-              <p>Второй тайм назначен. Темыч уже читает сводку.</p>
-            ) : (
-              <>
-                <p className="letter-title">сводка</p>
-                {playerCardLines(card).map((line) => (
-                  <p key={line}>{line}</p>
-                ))}
-                <p>{meetingLine(state)}</p>
-                <p>
-                  {formatRuDate(state.date)} · {state.slot === 'day' ? 'день' : 'вечер'}
-                </p>
-                <p>E — отправить Темычу</p>
-              </>
-            )}
-          </FramedHtml>
+          <mesh position={[0, 1.12, 0.04]}>
+            <planeGeometry args={[1.14, 1.36]} />
+            <meshStandardMaterial color="#f4ead8" />
+          </mesh>
+          <Text
+            font={RU_FONT}
+            position={[0, 1.7, 0.05]}
+            fontSize={0.065}
+            color="#3a2418"
+            maxWidth={1.02}
+            lineHeight={1.25}
+            anchorX="center"
+            anchorY="top"
+            overflowWrap="break-word"
+            clipRect={[-0.52, -1.22, 0.52, 0.05]}
+            textAlign="center"
+          >
+            {lines}
+          </Text>
         </group>
       )}
       {!ready && state.phase !== 'sent' && (

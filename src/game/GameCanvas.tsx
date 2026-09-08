@@ -20,7 +20,8 @@ export function GameCanvas({ onReady }: { onReady: () => void }) {
       dpr={[1, 1.5]}
       camera={{ fov: 48, position: [1.68, 3.05, 22.95], near: 0.1, far: 90 }}
       onCreated={({ gl }) => {
-        gl.setClearColor('#07061a')
+        gl.toneMappingExposure = 1.35
+        gl.setClearColor('#1a1028')
         onReady()
       }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}

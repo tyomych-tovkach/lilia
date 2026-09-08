@@ -33,6 +33,14 @@ export function Hud() {
         ))}
       </ol>
       {lock && <p className="hud-lock">{lock}</p>}
+      {state.letterOpen && z > GATES.toArcade && (
+        <article className="letter-hud">
+          <p className="letter-title">{copy.letterTitle}</p>
+          {copy.letterBody.map((line) => (
+            <p key={line}>{line}</p>
+          ))}
+        </article>
+      )}
     </div>
   )
 }

@@ -80,11 +80,16 @@ export function Town() {
 
   return (
     <>
-      <color attach="background" args={['#0b0614']} />
-      <fog attach="fog" args={['#0b0614', 12, 32]} />
-      <ambientLight intensity={0.3} />
-      <hemisphereLight args={['#7a90c8', '#1a1020', 0.5]} />
-      <directionalLight position={[3, 11, 6]} intensity={0.48} color="#ffd7a8" />
+      <color attach="background" args={['#1a1028']} />
+      <fog attach="fog" args={['#1a1028', 22, 48]} />
+      <ambientLight intensity={0.72} />
+      <hemisphereLight args={['#c4d0f0', '#3a2818', 0.85]} />
+      <directionalLight position={[4, 14, 8]} intensity={1.15} color="#ffe2c4" />
+      <pointLight position={[0, 4.2, 16]} intensity={1.6} distance={14} color="#ffc878" />
+      <pointLight position={[0, 4.2, 6]} intensity={1.3} distance={12} color="#ffb070" />
+      <pointLight position={[0, 4.2, -4]} intensity={1.2} distance={12} color="#ffc090" />
+      <pointLight position={[0, 4.2, -12]} intensity={1.2} distance={12} color="#ffa8c8" />
+      <pointLight position={[0, 4.2, -19]} intensity={1.1} distance={11} color="#ffd27a" />
       <Stars radius={55} depth={22} count={260} factor={2.3} fade speed={0.22} />
       <mesh position={[7, 13.5, -8]}>
         <sphereGeometry args={[1.35, 16, 16]} />
@@ -93,11 +98,11 @@ export function Town() {
 
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -1.2]}>
         <planeGeometry args={[7.2, 46]} />
-        <meshStandardMaterial color="#2c241c" roughness={0.92} />
+        <meshStandardMaterial color="#4a3c32" roughness={0.92} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.012, -1.2]}>
         <planeGeometry args={[1.7, 46]} />
-        <meshStandardMaterial color="#3a3228" />
+        <meshStandardMaterial color="#6a5848" />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-1.05, 0.02, -1.2]}>
         <planeGeometry args={[0.12, 46]} />

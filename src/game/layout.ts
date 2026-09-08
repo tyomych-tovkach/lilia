@@ -1,4 +1,5 @@
 export const FONT = './fonts/cjk.ttf'
+export const RU_FONT = './fonts/ru.ttf'
 
 export const SPAWN: [number, number, number] = [0, 1.02, 19.15]
 export const STREET_X = 2.62
@@ -12,7 +13,7 @@ export const GATES = {
 
 export const SPOTS = {
   envelope: [0, 0, 17.35] as [number, number, number],
-  letter: [1.42, 0, 16.15] as [number, number, number],
+  letter: [0, 0, 16.55] as [number, number, number],
   dance: [-2.05, 0, 8.15] as [number, number, number],
   japan: [-1.55, 0, 7.15] as [number, number, number],
   sport: [1.55, 0, 5.55] as [number, number, number],
