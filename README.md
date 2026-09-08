@@ -32,12 +32,14 @@ npm run preview
 
 ## GitHub Pages
 
-1. Создай репозиторий и запушь эту ветку в `main`.
-2. Settings → Pages → Source: **GitHub Actions**.
-3. Settings → Secrets and variables → Actions → `VITE_WEB3FORMS_KEY` = ключ с [web3forms.com](https://web3forms.com). При создании ключа укажи почту `tyomych.tovkach@tayviscon.com`.
-4. Дождись workflow **Deploy GitHub Pages**.
-5. Открой боевой URL, пройди путь до отправки и проверь почту (и спам).
-6. Кинь Лилии ссылку в чат: «открой на ноутбуке, лучше в полный экран».
+Репозиторий: [tyomych-tovkach/lilia](https://github.com/tyomych-tovkach/lilia)  
+Боевая ссылка после деплоя: [tyomych-tovkach.github.io/lilia](https://tyomych-tovkach.github.io/lilia/)
+
+1. Settings → Pages → Source: **GitHub Actions**.
+2. Settings → Secrets and variables → Actions → `VITE_WEB3FORMS_KEY` = ключ с [web3forms.com](https://web3forms.com). При создании ключа укажи почту `tyomych.tovkach@tayviscon.com`.
+3. Дождись workflow **Deploy GitHub Pages**.
+4. Открой боевой URL, пройди путь до отправки и проверь почту (и спам).
+5. Кинь Лилии ссылку в чат: «открой на ноутбуке, лучше в полный экран».
 
 `vite.config.ts` ставит `base: './'`, поэтому ассеты живут и как project site (`username.github.io/repo/`), и как user site.
 
