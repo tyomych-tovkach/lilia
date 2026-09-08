@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { useInvite } from '../state'
 import { control } from './input'
 import { Lilia } from './Lilia'
+import { nearInteract } from './Interactable'
 import { wishXZ } from './move'
 import { groundedRef, PLACE, playerPos, playerYaw, talkLock, vyRef } from './playerRef'
 
@@ -15,7 +16,6 @@ export function Player() {
   const { state } = useInvite()
   const camYaw = useRef(0.35)
   const camPitch = useRef(-0.22)
-  const dragging = useRef(false)
   const booted = useRef(false)
   const look = useRef(new THREE.Vector3())
   const coyote = useRef(0)
@@ -36,23 +36,22 @@ export function Player() {
 
   useEffect(() => {
     const down = (e: PointerEvent) => {
-      if ((e.target as HTMLElement).closest?.('.stick, input, textarea, .custom, .hud, .talk')) return
-      dragging.current = true
-    }
-    const up = () => {
-      dragging.current = false
+      const el = e.target as HTMLElement
+      if (el.closest?.('input, textarea, button, .talk')) return
+      if (talkLock.current || nearInteract.current) return
+      if (el.tagName === 'CANVAS') el.requestPointerLock()
     }
     const move = (e: PointerEvent) => {
-      if (!dragging.current || talkLock.current) return
-      camYaw.current -= e.movementX * 0.005
-      camPitch.current = THREE.MathUtils.clamp(camPitch.current - e.movementY * 0.004, -0.48, 0.55)
+      if (talkLock.current) return
+      if (document.pointerLockElement) {
+        camYaw.current -= e.movementX * 0.0028
+        camPitch.current = THREE.MathUtils.clamp(camPitch.current - e.movementY * 0.0022, -0.42, 0.38)
+      }
     }
     window.addEventListener('pointerdown', down)
-    window.addEventListener('pointerup', up)
     window.addEventListener('pointermove', move)
     return () => {
       window.removeEventListener('pointerdown', down)
-      window.removeEventListener('pointerup', up)
       window.removeEventListener('pointermove', move)
     }
   }, [])
@@ -88,16 +87,14 @@ export function Player() {
     rb.setLinvel({ x: wish.x * speed, y: Math.max(vy, -22), z: wish.z * speed }, true)
     if (walking.current) playerYaw.current = Math.atan2(wish.x, wish.z)
 
-    const boom = 6.1
+    const boom = 6.4
     const lookY = 1.18
     const desired = new THREE.Vector3(
       x + Math.sin(camYaw.current) * Math.cos(camPitch.current) * boom,
-      t.y + lookY + Math.sin(-camPitch.current) * boom * 0.65 + 1.1,
+      t.y + lookY + Math.sin(-camPitch.current) * boom * 0.62 + 1.35,
       z + Math.cos(camYaw.current) * Math.cos(camPitch.current) * boom,
     )
-    desired.x = THREE.MathUtils.clamp(desired.x, -half + 0.3, half - 0.3)
-    desired.z = THREE.MathUtils.clamp(desired.z, -half + 0.3, half - 0.3)
-    desired.y = Math.max(1.4, desired.y)
+    desired.y = THREE.MathUtils.clamp(desired.y, 1.6, 9.5)
     if (!booted.current) {
       camera.position.copy(desired)
       booted.current = true

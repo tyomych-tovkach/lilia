@@ -1,7 +1,25 @@
-import { ACT_ORDER, DATE_MAX, DATE_MIN, MAIL_TO as CONTENT_MAIL, farewells, flavors, formatOptions, japanOptions, limits, secretOptions, sportOptions } from './content/evening'
-import type { ActId, DateFormatId, LocationId, SlotId } from './content/types'
+import {
+  ACT_ORDER,
+  DATE_CHAT,
+  DATE_MAX,
+  DATE_MIN,
+  MAIL_TO as CONTENT_MAIL,
+  OPTIONAL_ACTS,
+  REQUIRED_ACTS,
+  copy,
+  farewells,
+  flavors,
+  formatOptions,
+  japanOptions,
+  limits,
+  secretOptions,
+  signs,
+  sportKindOptions,
+  sportModeOptions,
+} from './content/evening.ts'
+import type { ActId, DateFormatId, LocationId, SlotId } from './content/types.ts'
 
-export const SESSION_KEY = 'lilia-evening-v5'
+export const SESSION_KEY = 'lilia-evening-v6'
 export const DATE_MIN_ISO = DATE_MIN
 export const DATE_MAX_ISO = DATE_MAX
 export const MAIL_TO = CONTENT_MAIL
@@ -12,12 +30,11 @@ export type InviteState = {
   japanIds: string[]
   japanCustom: string
   sportIds: string[]
+  sportModeIds: string[]
   sportCustom: string
   secretIds: string[]
   secretCustom: string
   noAttempts: number
-  crashed: boolean
-  restored: boolean
   saidYes: boolean
   format: DateFormatId | null
   flavorId: string
@@ -34,12 +51,11 @@ export const INITIAL_STATE: InviteState = {
   japanIds: [],
   japanCustom: '',
   sportIds: [],
+  sportModeIds: [],
   sportCustom: '',
   secretIds: [],
   secretCustom: '',
   noAttempts: 0,
-  crashed: false,
-  restored: false,
   saidYes: false,
   format: null,
   flavorId: '',
@@ -51,6 +67,7 @@ export const INITIAL_STATE: InviteState = {
 }
 
 export function isDateAllowed(date: string): boolean {
+  if (date === DATE_CHAT) return true
   return date >= DATE_MIN && date <= DATE_MAX
 }
 
@@ -85,21 +102,32 @@ export function actDone(s: InviteState, id: ActId): boolean {
   return s.sentAt !== null
 }
 
+export function isOptionalAct(id: ActId): boolean {
+  return OPTIONAL_ACTS.includes(id)
+}
+
 export function actUnlocked(s: InviteState, id: ActId): boolean {
-  const i = ACT_ORDER.indexOf(id)
-  if (i <= 0) return true
-  return actDone(s, ACT_ORDER[i - 1])
+  if (id === 'letter') return true
+  if (id === 'japan' || id === 'sport' || id === 'secret') return s.letterDone
+  if (id === 'yesno') return s.letterDone
+  if (id === 'date') return s.saidYes
+  if (id === 'send') return dateDone(s)
+  return false
+}
+
+export function easterUnlocked(s: InviteState): boolean {
+  return s.letterDone
 }
 
 export function currentAct(s: InviteState): ActId {
-  for (const id of ACT_ORDER) {
+  for (const id of REQUIRED_ACTS) {
     if (!actDone(s, id)) return id
   }
   return 'send'
 }
 
 export function canSend(s: InviteState): boolean {
-  return ACT_ORDER.every((id) => (id === 'send' ? true : actDone(s, id))) && dateDone(s) && s.saidYes
+  return s.letterDone && s.saidYes && dateDone(s)
 }
 
 export function labelFor(list: { id: string; playerLine: string }[], ids: string[], extra: string): string {
@@ -116,37 +144,71 @@ export function meetingLine(s: InviteState): string {
 
 export function formatRuDate(iso: string): string {
   if (!iso) return ''
+  if (iso === DATE_CHAT) return 'напишет в чате, когда свободна'
   const [y, m, d] = iso.split('-')
   return `${d}.${m}.${y}`
 }
 
+export function slotLabel(slot: SlotId | null): string {
+  if (slot === 'day') return 'день'
+  if (slot === 'evening') return 'вечер'
+  return '—'
+}
+
 export function formatEmailBody(s: InviteState, sentAt: string): string {
-  const noLine =
-    s.noAttempts > 0
-      ? `да, попыток: ${s.noAttempts}${s.crashed || s.restored ? ' (занавес падал)' : ''}`
-      : 'нет'
+  const sport = [
+    labelFor(sportKindOptions, s.sportIds, s.sportCustom),
+    s.sportModeIds.length ? `как: ${labelFor(sportModeOptions, s.sportModeIds, '')}` : '',
+  ]
+    .filter(Boolean)
+    .join('; ')
   return [
-    'Лилия собрала вечер по актам.',
+    'Письмо от Лилии.',
     '',
     `Япония: ${labelFor(japanOptions, s.japanIds, s.japanCustom)}`,
-    `Спорт: ${labelFor(sportOptions, s.sportIds, s.sportCustom)}`,
-    `А ещё: ${labelFor(secretOptions, s.secretIds, s.secretCustom)}`,
-    `Жала «Нет»: ${noLine}`,
+    `Спорт: ${sport || '—'}`,
+    `Ещё любит: ${labelFor(secretOptions, s.secretIds, s.secretCustom)}`,
     `Встреча: ${meetingLine(s)}`,
     `Дата: ${formatRuDate(s.date)}`,
-    `Слот: ${s.slot === 'day' ? 'день' : s.slot === 'evening' ? 'вечер' : '—'}`,
+    `Время дня: ${slotLabel(s.slot)}`,
     `Отправлено: ${sentAt}`,
   ].join('\n')
 }
 
 export function summaryLines(s: InviteState): string[] {
   return [
+    'Он будет рад этому письму.',
     `Япония: ${labelFor(japanOptions, s.japanIds, s.japanCustom)}`,
-    `Спорт: ${labelFor(sportOptions, s.sportIds, s.sportCustom)}`,
-    `А ещё: ${labelFor(secretOptions, s.secretIds, s.secretCustom)}`,
+    `Спорт: ${labelFor(sportKindOptions, s.sportIds, s.sportCustom)}${s.sportModeIds.length ? ` · ${labelFor(sportModeOptions, s.sportModeIds, '')}` : ''}`,
+    `Ещё: ${labelFor(secretOptions, s.secretIds, s.secretCustom)}`,
     `Встреча: ${meetingLine(s)}`,
-    `Когда: ${formatRuDate(s.date) || '—'} · ${s.slot === 'day' ? 'день' : s.slot === 'evening' ? 'вечер' : '—'}`,
+    `Когда: ${formatRuDate(s.date) || '—'} · ${slotLabel(s.slot)}`,
   ]
+}
+
+export type ActChipStatus = 'done' | 'now' | 'wait' | 'optional'
+
+export function actChipStatus(s: InviteState, id: ActId): ActChipStatus {
+  if (actDone(s, id)) return 'done'
+  if (isOptionalAct(id)) return actUnlocked(s, id) ? 'optional' : 'wait'
+  if (id === currentAct(s)) return 'now'
+  return 'wait'
+}
+
+export function locationObjective(s: InviteState): string {
+  const loc = s.location
+  if (loc === 'hub') {
+    if (s.sentAt) return 'Письмо ушло. Можно ещё погулять по фойе.'
+    return `Сейчас: ${signs[currentAct(s)].arch}`
+  }
+  if (loc === 'kubgu' || loc === 'vkusno') return signs[loc].uiObjective
+  if (actDone(s, loc)) return copy.backPrompt
+  return signs[loc].uiObjective
+}
+
+export function lockedToast(s: InviteState): string {
+  const now = currentAct(s)
+  return `${copy.locked} Сначала ${signs[now].arch}.`
 }
 
 export function detectWebGL(): boolean {
@@ -158,4 +220,4 @@ export function detectWebGL(): boolean {
   }
 }
 
-export { flavors, farewells }
+export { ACT_ORDER, OPTIONAL_ACTS, REQUIRED_ACTS, flavors, farewells }

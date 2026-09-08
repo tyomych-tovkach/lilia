@@ -1,7 +1,6 @@
 import { Component, lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
-import { copy, signs } from './content/evening'
-import { TouchStick } from './game/TouchStick'
-import { detectWebGL, currentAct, actDone } from './logic'
+import { ACT_ORDER, copy, OPTIONAL_ACTS, signs } from './content/evening'
+import { actChipStatus, detectWebGL, locationObjective } from './logic'
 import { InviteProvider, useInvite } from './state'
 import { Talk } from './ui/Talk'
 
@@ -30,15 +29,27 @@ function Shell() {
   const [ready, setReady] = useState(false)
   const [broken, setBroken] = useState(false)
   const [hint, setHint] = useState(true)
+  const [narrow, setNarrow] = useState(() => window.matchMedia('(max-width: 820px)').matches)
 
   useEffect(() => {
-    const t = window.setTimeout(() => setHint(false), 9000)
-    return () => window.clearTimeout(t)
+    const t = window.setTimeout(() => setHint(false), 14000)
+    const onKey = (e: KeyboardEvent) => {
+      if (e.code === 'KeyH') setHint((v) => !v)
+    }
+    const mq = window.matchMedia('(max-width: 820px)')
+    const onMq = () => setNarrow(mq.matches)
+    mq.addEventListener('change', onMq)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.clearTimeout(t)
+      window.removeEventListener('keydown', onKey)
+      mq.removeEventListener('change', onMq)
+    }
   }, [])
 
   useEffect(() => {
     if (state.toast) {
-      const t = window.setTimeout(() => patch({ toast: '' }), 4200)
+      const t = window.setTimeout(() => patch({ toast: '' }), 5200)
       return () => window.clearTimeout(t)
     }
   }, [state.toast, patch])
@@ -46,7 +57,7 @@ function Shell() {
   if (!webgl) {
     return (
       <main className="app fallback">
-        <p>Нужен браузер с WebGL — открой на ноуте.</p>
+        <p>Нужен браузер с WebGL — открой на ноутбуке, лучше в полный экран.</p>
       </main>
     )
   }
@@ -60,10 +71,10 @@ function Shell() {
   }
 
   const sign = signs[state.location]
-  const now = currentAct(state)
+  const objective = locationObjective(state)
 
   return (
-    <main className={`app ${state.crashed ? 'is-crash' : ''}`}>
+    <main className="app">
       <Guard onError={() => setBroken(true)}>
         <Suspense fallback={null}>
           <GameCanvas onReady={() => setReady(true)} />
@@ -78,33 +89,26 @@ function Shell() {
       {ready && (
         <div className="hud">
           <p className="hud-title">{sign.uiTitle}</p>
-          <p className="hud-obj">{sign.uiObjective}</p>
-          <ol className="hud-steps">
-            {(['letter', 'japan', 'sport', 'secret', 'yesno', 'date', 'send'] as const).map((id) => (
-              <li key={id} className={actDone(state, id) || id === now ? 'is-on' : 'is-lock'}>
-                {signs[id].arch.replace(/^АКТ [IVX]+ · /, '')}
-              </li>
-            ))}
+          <p className="hud-obj">{objective}</p>
+          <ol className="hud-playbill">
+            {ACT_ORDER.map((id) => {
+              const st = actChipStatus(state, id)
+              const mark =
+                st === 'done' ? copy.doneMark : st === 'now' ? copy.nowMark : st === 'optional' ? copy.optionalMark : copy.waitMark
+              return (
+                <li key={id} className={`is-${st} ${OPTIONAL_ACTS.includes(id) ? 'is-side' : ''}`}>
+                  <span>{signs[id].arch.replace(/^АКТ [IVX]+ · /, '')}</span>
+                  <em>{mark}</em>
+                </li>
+              )
+            })}
           </ol>
         </div>
       )}
       {ready && hint && <p className="hint">{copy.hint}</p>}
+      {narrow && <p className="pc-note">{copy.pcNote}</p>}
       {state.toast && <p className="toast">{state.toast}</p>}
       <Talk />
-      <TouchStick />
-      {state.crashed && (
-        <div className="crash-card">
-          <h2>{copy.crashTitle}</h2>
-          <p>{copy.crashBody}</p>
-          <button
-            type="button"
-            className="talk-btn is-on"
-            onClick={() => patch({ crashed: false, restored: true, saidYes: true, toast: copy.restoreCta })}
-          >
-            {copy.restoreCta}
-          </button>
-        </div>
-      )}
     </main>
   )
 }

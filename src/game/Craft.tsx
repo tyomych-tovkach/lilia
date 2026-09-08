@@ -224,39 +224,76 @@ export function Planter({ position }: { position: [number, number, number] }) {
   )
 }
 
+export type DoorStatus = 'locked' | 'now' | 'done' | 'open' | 'staff'
+
 export function Archway({
   position,
   rotationY = 0,
   label,
-  open,
+  status = 'open',
+  staff = false,
 }: {
   position: [number, number, number]
   rotationY?: number
   label: string
-  open: boolean
+  status?: DoorStatus
+  staff?: boolean
 }) {
+  const frame = status === 'now' ? '#d4a017' : status === 'done' ? '#8a6a48' : staff || status === 'staff' ? '#4a4038' : '#7a3030'
+  const scale = staff || status === 'staff' ? 0.72 : 1
+  const lit = status === 'now'
   return (
-    <group position={position} rotation={[0, rotationY, 0]}>
+    <group position={position} rotation={[0, rotationY, 0]} scale={scale}>
       <mesh position={[-1.15, 1.45, 0]}>
         <boxGeometry args={[0.22, 2.9, 0.28]} />
-        <meshStandardMaterial color="#c44536" />
+        <meshStandardMaterial color={frame} emissive={lit ? '#ffd27a' : '#000'} emissiveIntensity={lit ? 0.35 : 0} />
       </mesh>
       <mesh position={[1.15, 1.45, 0]}>
         <boxGeometry args={[0.22, 2.9, 0.28]} />
-        <meshStandardMaterial color="#c44536" />
+        <meshStandardMaterial color={frame} emissive={lit ? '#ffd27a' : '#000'} emissiveIntensity={lit ? 0.35 : 0} />
       </mesh>
       <mesh position={[0, 2.95, 0]}>
         <boxGeometry args={[2.7, 0.22, 0.4]} />
-        <meshStandardMaterial color="#c44536" />
+        <meshStandardMaterial color={frame} />
       </mesh>
-      <Kanji text={label} position={[0, 3.35, 0.05]} size={0.14} color="#ffd27a" />
-      {!open && (
+      <RuSign text={label} position={[0, 3.38, 0.08]} size={staff ? 0.11 : 0.13} color={lit ? '#ffd27a' : '#f4ead8'} />
+      {status === 'locked' && (
         <mesh position={[0, 1.35, 0]}>
           <boxGeometry args={[2.15, 2.5, 0.08]} />
           <meshStandardMaterial color="#2a1814" />
         </mesh>
       )}
+      {status === 'now' && (
+        <mesh position={[0, 3.55, 0.12]}>
+          <sphereGeometry args={[0.08, 10, 8]} />
+          <meshStandardMaterial color="#ffd27a" emissive="#ffb020" emissiveIntensity={1.4} />
+        </mesh>
+      )}
     </group>
+  )
+}
+
+export function RoomBounds({ half, wallH = 3.4 }: { half: number; wallH?: number }) {
+  return (
+    <RigidBody type="fixed" colliders={false}>
+      <CuboidCollider args={[half + 2, 0.2, half + 2]} position={[0, -0.2, 0]} />
+      <CuboidCollider args={[half + 2, wallH, 0.35]} position={[0, wallH / 2, half + 0.4]} />
+      <CuboidCollider args={[half + 2, wallH, 0.35]} position={[0, wallH / 2, -half - 0.4]} />
+      <CuboidCollider args={[0.35, wallH, half + 2]} position={[half + 0.4, wallH / 2, 0]} />
+      <CuboidCollider args={[0.35, wallH, half + 2]} position={[-half - 0.4, wallH / 2, 0]} />
+    </RigidBody>
+  )
+}
+
+export function RoomLights({ sky, fog }: { sky: string; fog: [string, number, number] }) {
+  return (
+    <>
+      <color attach="background" args={[sky]} />
+      <fog attach="fog" args={fog} />
+      <ambientLight intensity={0.72} />
+      <hemisphereLight args={['#c8d4f0', '#4a3020', 0.75]} />
+      <directionalLight position={[6, 14, 8]} intensity={1.2} color="#ffe2c4" />
+    </>
   )
 }
 

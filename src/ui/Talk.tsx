@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import {
   copy,
   DATE_CHIPS,
+  DATE_MAX,
+  DATE_MIN,
+  DATE_CHAT,
   farewells,
   flavors,
   formatOptions,
@@ -16,7 +19,8 @@ import {
   secretOptions,
   slotOptions,
   sportCustom,
-  sportOptions,
+  sportKindOptions,
+  sportModeOptions,
 } from '../content/evening'
 import type { DateFormatId, LocationId } from '../content/types'
 import { formatRuDate, japanDone, secretDone, sportDone, summaryLines, toggleLimited } from '../logic'
@@ -38,17 +42,36 @@ function npcName(loc: LocationId) {
   return npcs.lena.name
 }
 
+type Phase =
+  | 'lines'
+  | 'paper'
+  | 'multi'
+  | 'sportMode'
+  | 'custom'
+  | 'yesno'
+  | 'format'
+  | 'flavor'
+  | 'place'
+  | 'when'
+  | 'slot'
+  | 'send'
+
 export function Talk() {
   const { state, patch } = useInvite()
   const [open, setOpen] = useState(false)
   const [loc, setLoc] = useState<LocationId>('hub')
   const [line, setLine] = useState(0)
-  const [phase, setPhase] = useState<'lines' | 'paper' | 'multi' | 'custom' | 'yesno' | 'format' | 'flavor' | 'place' | 'when' | 'slot' | 'send'>('lines')
+  const [phase, setPhase] = useState<Phase>('lines')
   const [busy, setBusy] = useState(false)
+  const [react, setReact] = useState('')
+  const [sendError, setSendError] = useState('')
 
   const close = () => {
     setOpen(false)
+    setReact('')
+    setSendError('')
     talkLock.current = false
+    document.exitPointerLock?.()
   }
 
   useEffect(() => {
@@ -57,7 +80,10 @@ export function Talk() {
       setOpen(true)
       setLine(0)
       setPhase('lines')
+      setReact('')
+      setSendError('')
       talkLock.current = true
+      document.exitPointerLock?.()
     })
   }, [])
 
@@ -66,36 +92,42 @@ export function Talk() {
   const lines = greetings[loc]
   const text =
     phase === 'paper'
-      ? letterPaper.join('\n')
-      : phase === 'lines'
-        ? lines[Math.min(line, lines.length - 1)]
-        : phase === 'yesno'
-          ? greetings.yesno[1]
-          : phase === 'multi' && loc === 'japan'
-            ? greetings.japan[1]
-            : phase === 'multi' && loc === 'sport'
-              ? greetings.sport[1]
-              : phase === 'multi' && loc === 'secret'
-                ? greetings.secret[1]
-                : phase === 'format'
-                  ? greetings.date[0]
-                  : phase === 'flavor'
-                    ? 'Один вкус.'
-                    : phase === 'place'
-                      ? placeCustom.npcAsk
-                      : phase === 'when'
-                        ? 'День. Только с 12.09 по 03.10.'
-                        : phase === 'slot'
-                          ? 'День или вечер? Точный час — в чате.'
-                          : phase === 'send'
-                            ? greetings.send[0]
-                            : phase === 'custom'
-                              ? loc === 'japan'
-                                ? japanCustom.npcAsk
-                                : loc === 'sport'
-                                  ? sportCustom.npcAsk
-                                  : secretCustom.npcAsk
-                              : lines[0]
+      ? ''
+      : react
+        ? react
+        : phase === 'lines'
+          ? lines[Math.min(line, lines.length - 1)]
+          : phase === 'yesno'
+            ? greetings.yesno[1]
+            : phase === 'multi' && loc === 'japan'
+              ? greetings.japan[1]
+              : phase === 'multi' && loc === 'sport'
+                ? greetings.sport[0]
+                : phase === 'sportMode'
+                  ? greetings.sport[1]
+                  : phase === 'multi' && loc === 'secret'
+                    ? greetings.secret[1]
+                    : phase === 'format'
+                      ? greetings.date[0]
+                      : phase === 'flavor'
+                        ? 'Что ближе из этого?'
+                        : phase === 'place'
+                          ? placeCustom.npcAsk
+                          : phase === 'when'
+                            ? 'Какой день удобен? Можно свой в окне дат или написать в чате.'
+                            : phase === 'slot'
+                              ? 'День или вечер? Точный час — уже в чате.'
+                              : phase === 'send'
+                                ? greetings.send[0]
+                                : phase === 'custom'
+                                  ? loc === 'japan'
+                                    ? japanCustom.npcAsk
+                                    : loc === 'sport'
+                                      ? sportCustom.npcAsk
+                                      : loc === 'date'
+                                        ? placeCustom.npcAsk
+                                        : secretCustom.npcAsk
+                                  : lines[0]
 
   const advanceLines = () => {
     if (line + 1 < lines.length) {
@@ -136,26 +168,39 @@ export function Talk() {
   }
 
   const pickMulti = (id: string) => {
+    const opt =
+      loc === 'japan' ? japanOptions.find((o) => o.id === id) : loc === 'sport' ? sportKindOptions.find((o) => o.id === id) : secretOptions.find((o) => o.id === id)
+    if (opt) setReact(opt.npcReact)
     if (loc === 'japan') patch({ japanIds: toggleLimited(state.japanIds, id, limits.japan.max) })
     if (loc === 'sport') patch({ sportIds: toggleLimited(state.sportIds, id, limits.sport.max) })
     if (loc === 'secret') patch({ secretIds: toggleLimited(state.secretIds, id, limits.secret.max) })
   }
 
   const doneMulti = loc === 'japan' ? japanDone(state) : loc === 'sport' ? sportDone(state) : secretDone(state)
-  const options = loc === 'japan' ? japanOptions : loc === 'sport' ? sportOptions : secretOptions
+  const options = loc === 'japan' ? japanOptions : loc === 'sport' ? sportKindOptions : secretOptions
   const selected = loc === 'japan' ? state.japanIds : loc === 'sport' ? state.sportIds : state.secretIds
   const customVal =
     loc === 'japan' ? state.japanCustom : loc === 'sport' ? state.sportCustom : loc === 'secret' ? state.secretCustom : state.customPlace
+  const customOk = customVal.trim().length > 0
 
   return (
-    <div className="talk">
-      <p className="talk-name">{npcName(loc)}</p>
-      <p className="talk-body">{text}</p>
-      {phase === 'paper' && (
-        <button type="button" className="talk-btn" onClick={finishLetter}>
-          Пойду дальше.
-        </button>
+    <div className={`talk ${phase === 'paper' ? 'is-letter' : ''}`}>
+      {phase === 'paper' ? (
+        <div className="letter-sheet">
+          {letterPaper.map((p) => (
+            <p key={p}>{p}</p>
+          ))}
+          <button type="button" className="talk-btn is-on" onClick={finishLetter}>
+            Пойду дальше.
+          </button>
+        </div>
+      ) : (
+        <>
+          <p className="talk-name">{npcName(loc)}</p>
+          <p className="talk-body">{text}</p>
+        </>
       )}
+
       {phase === 'lines' && loc !== 'letter' && line >= lines.length - 1 && (loc === 'hub' || loc === 'kubgu' || loc === 'vkusno') && (
         <button type="button" className="talk-btn" onClick={close}>
           Ясно.
@@ -189,7 +234,14 @@ export function Talk() {
               {o.playerLine}
             </button>
           ))}
-          <button type="button" className="talk-btn" onClick={() => setPhase('custom')}>
+          <button
+            type="button"
+            className="talk-btn"
+            onClick={() => {
+              setReact('')
+              setPhase('custom')
+            }}
+          >
             {loc === 'secret' ? secretCustom.playerLine : loc === 'sport' ? sportCustom.playerLine : japanCustom.playerLine}
           </button>
           {doneMulti && (
@@ -197,13 +249,46 @@ export function Talk() {
               type="button"
               className="talk-btn is-on"
               onClick={() => {
+                if (loc === 'sport') {
+                  setReact('')
+                  setPhase('sportMode')
+                  return
+                }
                 patch({ toast: farewells[loc] })
                 close()
               }}
             >
-              Хватит.
+              Это всё
             </button>
           )}
+        </div>
+      )}
+
+      {phase === 'sportMode' && (
+        <div className="talk-choices">
+          {sportModeOptions.map((o) => (
+            <button
+              key={o.id}
+              type="button"
+              className={`talk-btn ${state.sportModeIds.includes(o.id) ? 'is-on' : ''}`}
+              onClick={() => {
+                setReact(o.npcReact)
+                patch({ sportModeIds: toggleLimited(state.sportModeIds, o.id, limits.sportMode.max) })
+              }}
+            >
+              {o.playerLine}
+            </button>
+          ))}
+          <button
+            type="button"
+            className="talk-btn is-on"
+            onClick={() => {
+              patch({ toast: farewells.sport })
+              close()
+            }}
+          >
+            Это всё
+          </button>
         </div>
       )}
 
@@ -226,7 +311,10 @@ export function Talk() {
           <button
             type="button"
             className="talk-btn"
+            disabled={!customOk}
             onClick={() => {
+              if (!customOk) return
+              setReact(loc === 'japan' ? japanCustom.npcReact : loc === 'sport' ? sportCustom.npcReact : loc === 'date' ? placeCustom.npcReact : secretCustom.npcReact)
               if (loc === 'date') setPhase('when')
               else setPhase('multi')
             }}
@@ -242,7 +330,7 @@ export function Talk() {
             type="button"
             className="talk-btn is-on"
             onClick={() => {
-              patch({ saidYes: true, crashed: false, toast: farewells.yesno })
+              patch({ saidYes: true, toast: farewells.yesno })
               close()
             }}
           >
@@ -251,16 +339,27 @@ export function Talk() {
           <button
             type="button"
             className="talk-btn"
-            style={state.noAttempts === 1 ? { transform: 'translate(70px, 18px)' } : undefined}
+            style={state.noAttempts === 1 ? { transform: 'translate(48px, 12px)' } : undefined}
             onClick={() => {
               if (state.noAttempts === 0) {
                 patch({ noAttempts: 1, toast: copy.noDodge })
                 return
               }
-              patch({ noAttempts: state.noAttempts + 1, crashed: true })
+              patch({ noAttempts: state.noAttempts + 1, toast: copy.noClose })
+              close()
             }}
           >
             Нет.
+          </button>
+          <button
+            type="button"
+            className="talk-btn"
+            onClick={() => {
+              patch({ toast: copy.laterClose })
+              close()
+            }}
+          >
+            Пока не знаю.
           </button>
         </div>
       )}
@@ -273,6 +372,7 @@ export function Talk() {
               type="button"
               className="talk-btn"
               onClick={() => {
+                setReact(o.npcReact)
                 patch({ format: o.id as DateFormatId, flavorId: '', customPlace: o.id === 'custom' ? state.customPlace : '' })
                 if (o.id === 'custom') setPhase('place')
                 else setPhase('flavor')
@@ -292,6 +392,7 @@ export function Talk() {
               type="button"
               className="talk-btn"
               onClick={() => {
+                setReact(o.npcReact)
                 patch({ flavorId: o.id })
                 setPhase('when')
               }}
@@ -300,6 +401,31 @@ export function Talk() {
             </button>
           ))}
         </div>
+      )}
+
+      {phase === 'place' && (
+        <>
+          <input
+            className="talk-input"
+            autoFocus
+            maxLength={80}
+            placeholder={placeCustom.placeholder}
+            value={state.customPlace}
+            onChange={(e) => patch({ customPlace: e.target.value, format: 'custom', flavorId: '' })}
+          />
+          <button
+            type="button"
+            className="talk-btn"
+            disabled={!state.customPlace.trim()}
+            onClick={() => {
+              if (!state.customPlace.trim()) return
+              setReact(placeCustom.npcReact)
+              setPhase('when')
+            }}
+          >
+            Запомнить
+          </button>
+        </>
       )}
 
       {phase === 'when' && (
@@ -317,6 +443,29 @@ export function Talk() {
               {formatRuDate(iso)}
             </button>
           ))}
+          <input
+            className="talk-input"
+            type="date"
+            min={DATE_MIN}
+            max={DATE_MAX}
+            value={state.date !== DATE_CHAT && state.date && !(DATE_CHIPS as readonly string[]).includes(state.date) ? state.date : ''}
+            onChange={(e) => {
+              const v = e.target.value
+              if (!v) return
+              patch({ date: v })
+              setPhase('slot')
+            }}
+          />
+          <button
+            type="button"
+            className={`talk-btn ${state.date === DATE_CHAT ? 'is-on' : ''}`}
+            onClick={() => {
+              patch({ date: DATE_CHAT })
+              setPhase('slot')
+            }}
+          >
+            Напишу в чате, когда свободна
+          </button>
         </div>
       )}
 
@@ -328,6 +477,7 @@ export function Talk() {
               type="button"
               className="talk-btn"
               onClick={() => {
+                setReact(o.npcReact)
                 patch({ slot: o.id as 'day' | 'evening', toast: farewells.date })
                 close()
               }}
@@ -345,26 +495,34 @@ export function Talk() {
               <p key={s}>{s}</p>
             ))}
           </div>
-          <button
-            type="button"
-            className="talk-btn is-on"
-            disabled={busy}
-            onClick={() => {
-              if (busy || state.sentAt) return
-              setBusy(true)
-              void sendInvite(state).then((res) => {
-                setBusy(false)
-                if (res.ok) {
-                  patch({ sentAt: new Date().toISOString(), toast: farewells.send })
-                  close()
-                  return
-                }
-                patch({ toast: copy.sendFail })
-              })
-            }}
-          >
-            {busy ? copy.sending : 'Отправить Темычу'}
-          </button>
+          {state.sentAt ? (
+            <p className="talk-note">{copy.sendAlready}</p>
+          ) : (
+            <>
+              {sendError && <p className="talk-error">{sendError}</p>}
+              <button
+                type="button"
+                className="talk-btn is-on"
+                disabled={busy}
+                onClick={() => {
+                  if (busy || state.sentAt) return
+                  setBusy(true)
+                  setSendError('')
+                  void sendInvite(state).then((res) => {
+                    setBusy(false)
+                    if (res.ok) {
+                      patch({ sentAt: new Date().toISOString(), toast: farewells.send })
+                      close()
+                      return
+                    }
+                    setSendError(copy.sendFail)
+                  })
+                }}
+              >
+                {busy ? copy.sending : 'Отправить Темычу'}
+              </button>
+            </>
+          )}
         </>
       )}
     </div>

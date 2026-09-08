@@ -6,7 +6,7 @@ function loadState(): InviteState {
     const raw = sessionStorage.getItem(SESSION_KEY)
     if (!raw) return { ...INITIAL_STATE }
     const parsed = JSON.parse(raw) as Partial<InviteState>
-    return { ...INITIAL_STATE, ...parsed, toast: '', crashed: parsed.crashed ?? false }
+    return { ...INITIAL_STATE, ...parsed, toast: '' }
   } catch {
     return { ...INITIAL_STATE }
   }
@@ -14,7 +14,7 @@ function loadState(): InviteState {
 
 function persist(state: InviteState) {
   try {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...state, toast: '', crashed: false }))
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...state, toast: '' }))
   } catch {
     /* ignore */
   }

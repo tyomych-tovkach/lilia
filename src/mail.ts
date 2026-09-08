@@ -10,7 +10,7 @@ export async function sendInvite(state: InviteState): Promise<SendResult> {
 
   const payload = {
     access_key: key,
-    subject: 'Лилия собрала вечер по актам',
+    subject: 'Письмо от Лилии',
     from_name: 'Письмо для Лилии',
     to: MAIL_TO,
     botcheck: '',

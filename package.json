@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning src/game/move.test.ts",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning src/game/move.test.ts && node --experimental-strip-types --disable-warning=ExperimentalWarning src/logic.test.ts",
     "lint": "oxlint",
     "preview": "vite preview"
   },

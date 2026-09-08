@@ -3,8 +3,8 @@ import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import * as THREE from 'three'
 import { consumeInteract } from './input'
-import { playerPos } from './playerRef'
-import { talkLock } from './playerRef'
+import { playerPos, talkLock } from './playerRef'
+import { RU_FONT } from './layout'
 
 type Rec = {
   id: string
@@ -12,10 +12,12 @@ type Rec = {
   radius: number
   enabled: boolean
   color: string
+  prompt: string
   onInteract: () => void
 }
 
 const registry = new Map<string, Rec>()
+export const nearInteract = { current: false }
 
 export function Interactable({
   id,
@@ -23,6 +25,7 @@ export function Interactable({
   radius = 1.75,
   enabled = true,
   color = '#2de2ff',
+  prompt = 'E',
   onInteract,
   children,
 }: {
@@ -31,6 +34,7 @@ export function Interactable({
   radius?: number
   enabled?: boolean
   color?: string
+  prompt?: string
   onInteract: () => void
   children: ReactNode
 }) {
@@ -40,12 +44,14 @@ export function Interactable({
     radius,
     enabled,
     color,
+    prompt,
     onInteract,
   })
   rec.current.position.set(...position)
   rec.current.radius = radius
   rec.current.enabled = enabled
   rec.current.color = color
+  rec.current.prompt = prompt
   rec.current.onInteract = onInteract
 
   const [hot, setHot] = useState(false)
@@ -66,6 +72,7 @@ export function Interactable({
           e.stopPropagation()
           if (enabled && playerPos.distanceTo(rec.current.position) < radius + 0.5) onInteract()
         }}
+        onPointerDown={(e) => e.stopPropagation()}
       >
         {children}
       </group>
@@ -81,18 +88,19 @@ export function Interactable({
           />
         </mesh>
       )}
-      {hot && enabled && (
+      {hot && enabled && prompt && (
         <Text
-          position={[0, 1.55, 0]}
-          fontSize={0.2}
+          font={RU_FONT}
+          position={[0, 1.62, 0]}
+          fontSize={0.14}
           color={color}
           anchorX="center"
-          outlineWidth={0.015}
+          outlineWidth={0.012}
           outlineColor="#050414"
           overflowWrap="break-word"
-          maxWidth={0.8}
+          maxWidth={2.4}
         >
-          E
+          {prompt}
         </Text>
       )}
     </group>
@@ -112,6 +120,7 @@ export function InteractionDriver() {
         bestD = d
       }
     }
+    nearInteract.current = Boolean(best)
     const id = best?.id ?? null
     if (id !== prev.current) {
       for (const rec of registry.values()) {

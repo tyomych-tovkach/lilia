@@ -186,13 +186,21 @@ export function Lilia({
         </mesh>
         <group ref={lArm} position={[-0.22, 0.92, 0.02]}>
           <mesh rotation={[0.12, 0, 0.55]}>
-            <capsuleGeometry args={[0.042, 0.36, 6, 10]} />
+            <capsuleGeometry args={[0.07, 0.28, 6, 10]} />
+            <meshStandardMaterial color={YUKATA} roughness={0.42} />
+          </mesh>
+          <mesh position={[-0.14, -0.22, 0.04]} rotation={[0.12, 0, 0.55]}>
+            <capsuleGeometry args={[0.038, 0.1, 4, 8]} />
             <meshStandardMaterial color={SKIN} roughness={0.48} />
           </mesh>
         </group>
         <group ref={rArm} position={[0.22, 0.92, 0.02]}>
           <mesh rotation={[0.12, 0, -0.55]}>
-            <capsuleGeometry args={[0.042, 0.36, 6, 10]} />
+            <capsuleGeometry args={[0.07, 0.28, 6, 10]} />
+            <meshStandardMaterial color={YUKATA} roughness={0.42} />
+          </mesh>
+          <mesh position={[0.14, -0.22, 0.04]} rotation={[0.12, 0, -0.55]}>
+            <capsuleGeometry args={[0.038, 0.1, 4, 8]} />
             <meshStandardMaterial color={SKIN} roughness={0.48} />
           </mesh>
         </group>
@@ -204,29 +212,9 @@ export function Lilia({
           <sphereGeometry args={[0.16, 28, 22]} />
           <meshStandardMaterial color={SKIN} roughness={0.45} />
         </mesh>
-        <mesh position={[0, 1.26, 0.16]}>
-          <planeGeometry args={[0.28, 0.32]} />
+        <mesh position={[0, 1.27, 0.155]}>
+          <planeGeometry args={[0.3, 0.34]} />
           <meshStandardMaterial map={face} transparent depthWrite={false} roughness={0.42} side={THREE.DoubleSide} />
-        </mesh>
-        <mesh position={[-0.05, 1.28, 0.19]}>
-          <sphereGeometry args={[0.03, 12, 10]} />
-          <meshStandardMaterial color="#fffaf5" />
-        </mesh>
-        <mesh position={[-0.05, 1.278, 0.214]}>
-          <sphereGeometry args={[0.016, 10, 8]} />
-          <meshStandardMaterial color="#5a2c18" />
-        </mesh>
-        <mesh position={[0.05, 1.28, 0.19]}>
-          <sphereGeometry args={[0.03, 12, 10]} />
-          <meshStandardMaterial color="#fffaf5" />
-        </mesh>
-        <mesh position={[0.05, 1.278, 0.214]}>
-          <sphereGeometry args={[0.016, 10, 8]} />
-          <meshStandardMaterial color="#5a2c18" />
-        </mesh>
-        <mesh position={[0, 1.22, 0.21]} rotation={[0.3, 0, 0]} scale={[0.7, 0.32, 0.45]}>
-          <sphereGeometry args={[0.024, 8, 8]} />
-          <meshStandardMaterial color="#e08a9a" />
         </mesh>
         <mesh position={[0, 1.4, 0.02]} scale={[1.22, 0.72, 1.2]}>
           <sphereGeometry args={[0.18, 22, 16]} />
