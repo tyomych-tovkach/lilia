@@ -20,11 +20,10 @@ import {
   slotOptions,
   sportCustom,
   sportKindOptions,
-  sportModeOptions,
   dateAsk,
 } from '../content/evening'
 import type { DateFormatId, LocationId } from '../content/types'
-import { formatRuDate, japanDone, onSayLater, onSayNo, onSayYes, secretDone, sportDone, summaryLines, toggleLimited } from '../logic'
+import { formatRuDate, japanDone, onSayNo, onSayYes, secretDone, sportDone, summaryLines, toggleLimited } from '../logic'
 import { sendInvite } from '../mail'
 import { useInvite } from '../state'
 import { talkLock } from '../game/playerRef'
@@ -39,7 +38,6 @@ type Phase =
   | 'lines'
   | 'paper'
   | 'multi'
-  | 'sportMode'
   | 'custom'
   | 'yesno'
   | 'format'
@@ -99,10 +97,8 @@ export function Talk() {
             : phase === 'multi' && loc === 'japan'
               ? greetings.japan[1]
               : phase === 'multi' && loc === 'sport'
-                ? greetings.sport[0]
-                : phase === 'sportMode'
-                  ? greetings.sport[1]
-                  : phase === 'multi' && loc === 'secret'
+              ? greetings.sport[1]
+              : phase === 'multi' && loc === 'secret'
                     ? greetings.secret[1]
                     : phase === 'format'
                       ? dateAsk.format
@@ -262,11 +258,6 @@ export function Talk() {
               type="button"
               className="talk-btn is-on"
               onClick={() => {
-                if (loc === 'sport') {
-                  setReact('')
-                  setPhase('sportMode')
-                  return
-                }
                 patch({ toast: farewells[loc] })
                 close()
               }}
@@ -286,34 +277,6 @@ export function Talk() {
               Не сейчас
             </button>
           )}
-        </div>
-      )}
-
-      {phase === 'sportMode' && (
-        <div className="talk-choices">
-          {sportModeOptions.map((o) => (
-            <button
-              key={o.id}
-              type="button"
-              className={`talk-btn ${state.sportModeIds.includes(o.id) ? 'is-on' : ''}`}
-              onClick={() => {
-                setReact(o.npcReact)
-                patch({ sportModeIds: toggleLimited(state.sportModeIds, o.id, limits.sportMode.max) })
-              }}
-            >
-              {o.playerLine}
-            </button>
-          ))}
-          <button
-            type="button"
-            className="talk-btn is-on"
-            onClick={() => {
-              patch({ toast: farewells.sport })
-              close()
-            }}
-          >
-            Это всё
-          </button>
         </div>
       )}
 
@@ -380,18 +343,6 @@ export function Talk() {
               }}
             >
               Нет.
-            </button>
-          )}
-          {state.crashStage < 3 && (
-            <button
-              type="button"
-              className="talk-btn"
-              onClick={() => {
-                patch(onSayLater(state))
-                close()
-              }}
-            >
-              Пока не знаю.
             </button>
           )}
         </div>
