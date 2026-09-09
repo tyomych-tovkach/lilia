@@ -1,6 +1,6 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { CapsuleCollider, RigidBody, type RapierRigidBody } from '@react-three/rapier'
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useInvite } from '../state'
 import { control } from './input'
@@ -8,6 +8,20 @@ import { Lilia } from './Lilia'
 import { nearInteract } from './Interactable'
 import { wishXZ } from './move'
 import { groundedRef, PLACE, playerPos, playerYaw, talkLock, vyRef } from './playerRef'
+
+const BOOM = 3.7
+const LOOK_Y = 1.18
+const WARP_FRAMES = 18
+
+function placeCamera(camera: THREE.Camera, x: number, y: number, z: number, yaw: number, pitch: number) {
+  const desiredY = THREE.MathUtils.clamp(y + LOOK_Y + Math.sin(-pitch) * BOOM * 0.55 + 0.72, 1.5, 6.2)
+  camera.position.set(
+    x + Math.sin(yaw) * Math.cos(pitch) * BOOM,
+    desiredY,
+    z + Math.cos(yaw) * Math.cos(pitch) * BOOM,
+  )
+  camera.lookAt(x, y + LOOK_Y, z)
+}
 
 export function Player() {
   const body = useRef<RapierRigidBody>(null)
@@ -19,22 +33,26 @@ export function Player() {
   const booted = useRef(false)
   const look = useRef(new THREE.Vector3())
   const coyote = useRef(0)
+  const warp = useRef(0)
   const loc = state.location
   const spawn = PLACE[loc].spawn
   const half = PLACE[loc].half
 
-  useEffect(() => {
-    const rb = body.current
-    if (rb) {
-      rb.setTranslation({ x: spawn[0], y: spawn[1], z: spawn[2] }, true)
-      rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
-    }
+  useLayoutEffect(() => {
     playerPos.set(...spawn)
     playerYaw.current = Math.PI
     camYaw.current = loc === 'hub' ? 0.32 : 0.18
     camPitch.current = -0.28
     booted.current = false
-  }, [loc, spawn])
+    warp.current = WARP_FRAMES
+    const rb = body.current
+    if (rb) {
+      rb.setTranslation({ x: spawn[0], y: spawn[1], z: spawn[2] }, true)
+      rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
+      rb.setAngvel({ x: 0, y: 0, z: 0 }, true)
+    }
+    placeCamera(camera, spawn[0], spawn[1], spawn[2], camYaw.current, camPitch.current)
+  }, [loc, spawn, camera])
 
   useEffect(() => {
     const down = (e: PointerEvent) => {
@@ -60,9 +78,29 @@ export function Player() {
 
   useFrame((_, dt) => {
     const rb = body.current
+    if (warp.current > 0) {
+      if (rb) {
+        rb.setTranslation({ x: spawn[0], y: spawn[1], z: spawn[2] }, true)
+        rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
+        rb.setAngvel({ x: 0, y: 0, z: 0 }, true)
+      }
+      playerPos.set(...spawn)
+      placeCamera(camera, spawn[0], spawn[1], spawn[2], camYaw.current, camPitch.current)
+      warp.current -= 1
+      booted.current = true
+      walking.current = false
+      return
+    }
     if (!rb) return
     const t = rb.translation()
     const v = rb.linvel()
+    if (t.y < -0.6 || t.y > 7.5) {
+      rb.setTranslation({ x: spawn[0], y: spawn[1], z: spawn[2] }, true)
+      rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
+      playerPos.set(...spawn)
+      placeCamera(camera, spawn[0], spawn[1], spawn[2], camYaw.current, camPitch.current)
+      return
+    }
     const floor = 0.12
     const grounded = t.y <= floor + 0.22 && v.y <= 0.4
     groundedRef.current = grounded
@@ -92,12 +130,10 @@ export function Player() {
     rb.setLinvel({ x: wish.x * speed, y: Math.max(vy, -22), z: wish.z * speed }, true)
     if (walking.current) playerYaw.current = Math.atan2(wish.x, wish.z)
 
-    const boom = 3.7
-    const lookY = 1.18
     const desired = new THREE.Vector3(
-      x + Math.sin(camYaw.current) * Math.cos(camPitch.current) * boom,
-      t.y + lookY + Math.sin(-camPitch.current) * boom * 0.55 + 0.72,
-      z + Math.cos(camYaw.current) * Math.cos(camPitch.current) * boom,
+      x + Math.sin(camYaw.current) * Math.cos(camPitch.current) * BOOM,
+      t.y + LOOK_Y + Math.sin(-camPitch.current) * BOOM * 0.55 + 0.72,
+      z + Math.cos(camYaw.current) * Math.cos(camPitch.current) * BOOM,
     )
     desired.y = THREE.MathUtils.clamp(desired.y, 1.5, 6.2)
     if (!booted.current) {
@@ -106,10 +142,10 @@ export function Player() {
     } else {
       camera.position.lerp(desired, 1 - Math.exp(-dt * 9))
     }
-    camera.lookAt(x, t.y + lookY, z)
+    camera.lookAt(x, t.y + LOOK_Y, z)
     if (loc === 'yesno' && !state.saidYes && state.crashStage > 0) {
       const stage = state.crashStage
-      const amp = stage === 1 ? 0.014 : stage === 2 ? 0.055 : 0.08
+      const amp = stage === 1 ? 0.014 : stage === 2 ? 0.055 : stage === 3 ? 0.08 : 0
       const f = stage === 1 ? 18 : stage === 2 ? 9 : 12
       const clock = performance.now() / 1000
       camera.position.x += Math.sin(clock * f) * amp
@@ -119,6 +155,7 @@ export function Player() {
 
   return (
     <RigidBody
+      key={loc}
       ref={body}
       position={spawn}
       colliders={false}

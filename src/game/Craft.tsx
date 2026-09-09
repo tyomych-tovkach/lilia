@@ -349,7 +349,7 @@ export function GroundDisk({
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]}>
       <circleGeometry args={[radius, 56]} />
-      <Mat color={color} kind={kind} repeat={[12, 12]} roughness={0.95} />
+      <Mat color={color} kind={kind} repeat={[12, 12]} roughness={0.95} side={THREE.DoubleSide} />
     </mesh>
   )
 }
@@ -358,7 +358,7 @@ export function GroundSkirt({ radius = 36, color = '#243218', y = -0.05 }: { rad
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]}>
       <circleGeometry args={[radius, 56]} />
-      <meshStandardMaterial color={color} roughness={0.97} />
+      <meshStandardMaterial color={color} roughness={0.97} side={THREE.DoubleSide} />
     </mesh>
   )
 }

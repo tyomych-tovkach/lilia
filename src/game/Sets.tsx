@@ -125,7 +125,7 @@ function Floor({ half, color, kind = 'stone' }: { half: number; color: string; k
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
       <planeGeometry args={[half * 2 + 14, half * 2 + 14]} />
-      <Mat color={color} kind={kind} repeat={[8, 8]} roughness={0.95} />
+      <Mat color={color} kind={kind} repeat={[8, 8]} roughness={0.95} side={THREE.DoubleSide} />
     </mesh>
   )
 }
@@ -287,6 +287,7 @@ export function GardenSet({ half, children }: { half: number; children?: ReactNo
         dirPosition={[10, 7, -4]}
         skyDome
       />
+      <RoomBounds half={half} />
       <GroundSkirt radius={44} color="#2a4a28" y={-0.06} />
       <HedgeRing half={half} height={2.2} />
       <GroundDisk radius={half + 8} color="#3a5a32" kind="grass" />
@@ -368,7 +369,6 @@ export function GardenSet({ half, children }: { half: number; children?: ReactNo
           <Mat color="#6a655c" kind="stone" />
         </mesh>
       ))}
-      <RoomBounds half={half} />
       {children}
     </>
   )
@@ -638,6 +638,7 @@ export function RoofSet({ half, children }: { half: number; children?: ReactNode
         dirPosition={[10, 16, -12]}
         skyDome
       />
+      <RoomBounds half={half} wallH={1.6} />
       <GroundSkirt radius={48} color="#10141c" y={-0.06} />
       <mesh position={[0, -1.95, -16]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[48, 28]} />
@@ -750,7 +751,6 @@ export function RoofSet({ half, children }: { half: number; children?: ReactNode
       <Crate position={[3.35, 0, 2.4]} color="#3a2a48" />
       <Crate position={[-4.2, 0, -3.4]} color="#2a2438" />
       <Crate position={[4.1, 0, -3.15]} color="#3a3048" />
-      <RoomBounds half={half} wallH={1.6} />
       {children}
     </>
   )
@@ -836,6 +836,7 @@ export function BridgeSet({ half, children }: { half: number; children?: ReactNo
         dirPosition={[3, 14, -10]}
         skyDome
       />
+      <RoomBounds half={half} wallH={2} />
       <GroundSkirt radius={42} color={stage >= 2 ? '#080410' : '#0c1824'} y={-0.55} />
       <mesh ref={water} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.38, 0]}>
         <planeGeometry args={[half * 2 + 14, half * 2 + 14]} />
@@ -937,7 +938,6 @@ export function BridgeSet({ half, children }: { half: number; children?: ReactNo
         <meshBasicMaterial color="#6a5a48" />
       </instancedMesh>
       {tCrack(stage)}
-      <RoomBounds half={half} wallH={2} />
       {children}
     </>
   )
@@ -1209,6 +1209,7 @@ export function CampusSet({ half, children }: { half: number; children?: ReactNo
         dirPosition={[3, 7, 5]}
         skyDome
       />
+      <RoomBounds half={half} />
       <GroundSkirt radius={44} color="#5a6a48" y={-0.05} />
       <HedgeRing half={half} height={2.2} color="#2a4a28" />
       <GroundDisk radius={half + 8} color="#6a6a60" kind="stone" />
@@ -1294,7 +1295,6 @@ export function CampusSet({ half, children }: { half: number; children?: ReactNo
         <boxGeometry args={[0.18, 0.22, 0.12]} />
         <meshStandardMaterial color="#2a3a5a" />
       </mesh>
-      <RoomBounds half={half} />
       {children}
     </>
   )
@@ -1314,6 +1314,7 @@ export function StaffSet({ half, children }: { half: number; children?: ReactNod
         hemiIntensity={0.18}
         dirPosition={[3, 9, 2]}
       />
+      <RoomBounds half={half} />
       <Floor half={half} color="#3a4a38" kind="tile" />
       <WallRing half={half} color="#2a6a44" height={3.02} />
       <IndoorSkirting half={half} color="#0e2a1c" height={0.22} />
@@ -1409,7 +1410,6 @@ export function StaffSet({ half, children }: { half: number; children?: ReactNod
       <Kit file="vending-machine.glb" position={[2.5, 0, 0.55]} scale={0.95} />
       <WallNotice position={[-half + 0.28, 1.55, 2.4]} rotationY={Math.PI / 2} title="СМЕНА" />
       <Crate position={[-1.15, 0, 2.55]} color="#4a5048" />
-      <RoomBounds half={half} />
       {children}
     </>
   )
