@@ -1,5 +1,20 @@
 import type { ReactNode } from 'react'
 import { Archway, Bench, Kanji, Lantern, Mat, Planter, RoomBounds, RoomLights, RuSign } from './Craft'
+import {
+  Byobu,
+  Chochin,
+  FanWall,
+  Ikebana,
+  Kakemono,
+  LowTable,
+  Noren,
+  OrigamiString,
+  Petals,
+  SakuraTree,
+  Shoji,
+  Toro,
+  Tsukubai,
+} from './FoyerJapan'
 import { Kit } from './Kit'
 import type { SkinKind } from './skin'
 
@@ -131,67 +146,67 @@ function Place({ position }: { position: [number, number, number] }) {
 export function FoyerSet({ half, children }: { half: number; children?: ReactNode }) {
   return (
     <>
-      <RoomLights sky="#1a1020" fog={['#1a1020', 10, 28]} ambient={0.3} dirIntensity={0.4} dirColor="#8a90c8" />
-      <Floor half={half} color="#3a2a28" kind="carpet" />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0.4]}>
-        <planeGeometry args={[2.4, half * 1.7]} />
-        <Mat color="#7a2030" kind="carpet" repeat={[1, 6]} roughness={0.78} />
+      <RoomLights sky="#2a1824" fog={['#3a2430', 12, 32]} ambient={0.42} dirIntensity={0.55} dirColor="#ffd0dc" />
+      <Floor half={half} color="#e8d4c8" kind="wood" />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0.3]}>
+        <planeGeometry args={[2.2, half * 1.65]} />
+        <Mat color="#d4849a" kind="carpet" repeat={[1, 6]} roughness={0.78} />
       </mesh>
-      <mesh position={[0, 4.4, 0]}>
-        <boxGeometry args={[half * 2, 0.2, half * 2]} />
-        <meshStandardMaterial color="#2a1818" />
+      <mesh position={[0, 4.35, 0]}>
+        <boxGeometry args={[half * 2, 0.16, half * 2]} />
+        <Mat color="#f0d8d0" kind="wood" repeat={[8, 8]} />
       </mesh>
-      <mesh position={[0, 4.1, 0]}>
-        <sphereGeometry args={[0.28, 12, 10]} />
-        <meshStandardMaterial color="#ffd27a" emissive="#ffb020" emissiveIntensity={1.6} />
+      <mesh position={[0, 4.05, 0]}>
+        <sphereGeometry args={[0.32, 14, 12]} />
+        <meshStandardMaterial color="#ffd0dc" emissive="#f4b6c8" emissiveIntensity={1.35} />
       </mesh>
-      <pointLight position={[0, 3.8, 0]} color="#ffc070" intensity={1.1} distance={14} />
-      <mesh position={[-2.4, 1.8, -half + 1.1]}>
-        <cylinderGeometry args={[0.18, 0.22, 3.6, 12]} />
-        <Mat color="#efe6d2" kind="plaster" repeat={[1, 3]} />
+      <pointLight position={[0, 3.7, 0]} color="#ffb8c8" intensity={1.15} distance={16} />
+      <WallRing half={half} color="#f3ddd6" kind="plaster" />
+      <mesh position={[-2.35, 1.8, -half + 1.15]}>
+        <cylinderGeometry args={[0.16, 0.2, 3.5, 12]} />
+        <Mat color="#efe0d4" kind="plaster" repeat={[1, 3]} />
       </mesh>
-      <mesh position={[2.4, 1.8, -half + 1.1]}>
-        <cylinderGeometry args={[0.18, 0.22, 3.6, 12]} />
-        <Mat color="#efe6d2" kind="plaster" repeat={[1, 3]} />
+      <mesh position={[2.35, 1.8, -half + 1.15]}>
+        <cylinderGeometry args={[0.16, 0.2, 3.5, 12]} />
+        <Mat color="#efe0d4" kind="plaster" repeat={[1, 3]} />
       </mesh>
-      <WallRing half={half} color="#e8d5b8" />
-      <mesh position={[0, 2.6, -half + 0.22]}>
-        <boxGeometry args={[11, 3.4, 0.08]} />
-        <meshStandardMaterial color="#6a1424" />
-      </mesh>
-      <mesh position={[-4.4, 3.6, -half + 0.28]} rotation={[0.15, 0, 0]}>
-        <boxGeometry args={[3.2, 2.2, 0.04]} />
-        <meshStandardMaterial color="#c9a227" />
-      </mesh>
-      <mesh position={[4.4, 3.6, -half + 0.28]} rotation={[0.15, 0, 0]}>
-        <boxGeometry args={[3.2, 2.2, 0.04]} />
-        <meshStandardMaterial color="#c9a227" />
-      </mesh>
-      <mesh position={[0, 0.85, 2.6]}>
-        <boxGeometry args={[2.4, 0.08, 0.9]} />
-        <meshStandardMaterial color="#5a3a28" />
-      </mesh>
-      <mesh position={[-0.9, 0.42, 2.6]}>
-        <boxGeometry args={[0.12, 0.84, 0.8]} />
-        <meshStandardMaterial color="#3a2418" />
-      </mesh>
-      <mesh position={[0.9, 0.42, 2.6]}>
-        <boxGeometry args={[0.12, 0.84, 0.8]} />
-        <meshStandardMaterial color="#3a2418" />
-      </mesh>
-      <mesh position={[-3.4, 1.4, 3.2]}>
-        <boxGeometry args={[1.4, 2.2, 0.12]} />
-        <meshStandardMaterial color="#3a2418" />
-      </mesh>
-      <RuSign text="ВЕЧЕР В СЕМИ АКТАХ" position={[-3.4, 2.35, 3.28]} size={0.11} color="#ffd27a" />
-      <RuSign text="Афиша" position={[-3.4, 2.05, 3.28]} size={0.1} color="#f4ead8" />
-      <Lantern position={[-2.2, 2.4, -1]} />
-      <Lantern position={[2.2, 2.4, -1]} />
-      <Lantern position={[0, 2.2, 4.2]} />
-      <Bench position={[-2.8, 0, 4.4]} rotationY={0.2} />
-      <Bench position={[2.8, 0, 4.4]} rotationY={-0.2} />
-      <Planter position={[-5.2, 0, 1]} />
-      <Planter position={[5.2, 0, 1]} />
+      <Shoji position={[-6.6, 0, -half + 0.45]} width={2.2} height={2.8} />
+      <Shoji position={[6.6, 0, -half + 0.45]} width={2.2} height={2.8} />
+      <Shoji position={[-half + 0.42, 0, -5.4]} rotationY={Math.PI / 2} width={2.4} height={2.6} />
+      <Shoji position={[-half + 0.42, 0, 5.6]} rotationY={Math.PI / 2} width={2.2} height={2.6} />
+      <SakuraTree position={[-6.35, 0, -4.6]} scale={1.15} rotationY={0.4} />
+      <SakuraTree position={[6.4, 0, -4.4]} scale={1.2} rotationY={-0.5} />
+      <SakuraTree position={[-6.2, 0, 4.8]} scale={1.05} />
+      <SakuraTree position={[6.15, 0, 5]} scale={0.95} rotationY={0.7} />
+      <SakuraTree position={[-5.4, 0, 0.4]} scale={0.78} rotationY={1.1} />
+      <SakuraTree position={[5.35, 0, 1.6]} scale={0.72} />
+      <Kakemono position={[-6.5, 0.2, -1.6]} rotationY={Math.PI / 2} kind="sakura" kanji="桜" />
+      <Kakemono position={[-6.5, 0.15, 2.2]} rotationY={Math.PI / 2} kind="wave" kanji="春" />
+      <Kakemono position={[6.5, 0.2, -1.2]} rotationY={-Math.PI / 2} kind="crane" kanji="鶴" />
+      <Kakemono position={[6.5, 0.15, 2.8]} rotationY={-Math.PI / 2} kind="sakura" kanji="夢" />
+      <Byobu position={[-2.6, 0, 0.4]} rotationY={0.35} />
+      <LowTable position={[0, 0, 2.55]} />
+      <Ikebana position={[0.45, 0.35, 2.55]} />
+      <Tsukubai position={[1.7, 0, 3.4]} />
+      <Toro position={[-1.85, 0, 3.5]} />
+      <Kakemono position={[-3.55, 0.1, 3.15]} kind="sakura" />
+      <RuSign text="ВЕЧЕР В СЕМИ АКТАХ" position={[-3.55, 2.45, 3.22]} size={0.1} color="#c45c7a" />
+      <RuSign text="Афиша" position={[-3.55, 2.18, 3.22]} size={0.09} color="#5a3a28" />
+      <FanWall position={[-half + 0.5, 1.8, 0.8]} rotationY={Math.PI / 2} />
+      <FanWall position={[half - 0.5, 1.9, -5.2]} rotationY={-Math.PI / 2} />
+      <OrigamiString position={[-1.4, 0, -2]} />
+      <OrigamiString position={[1.5, 0, -1.6]} />
+      <Chochin position={[-2.1, 2.55, -1.1]} />
+      <Chochin position={[2.1, 2.55, -1.1]} />
+      <Chochin position={[0, 2.45, 4.3]} />
+      <Chochin position={[-4.2, 2.35, 2.2]} />
+      <Chochin position={[4.3, 2.35, 2.4]} />
+      <Noren position={[-4.8, 0, 6.6]} rotationY={Math.PI} label="桜" />
+      <Noren position={[4.8, 0, 6.6]} rotationY={Math.PI} label="春" />
+      <Bench position={[-2.7, 0, 4.55]} rotationY={0.15} />
+      <Bench position={[2.7, 0, 4.55]} rotationY={-0.15} />
+      <Petals />
+      <Kanji text="桜" position={[0, 0.08, -2.2]} rotation={[-Math.PI / 2, 0, 0]} size={0.55} color="#e8a0b4" />
       <RoomBounds half={half} wallH={4} />
       {children}
     </>
