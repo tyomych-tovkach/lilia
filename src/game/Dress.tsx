@@ -475,3 +475,87 @@ export function HungChochin({ position, lit = false }: { position: [number, numb
     </group>
   )
 }
+
+export function Reeds({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      {[0, 0.07, -0.08, 0.12, -0.14].map((x, i) => (
+        <mesh key={i} position={[x, 0.38, (i % 3) * 0.05]} rotation={[0.04, 0, 0.1 * (i - 2)]}>
+          <cylinderGeometry args={[0.01, 0.016, 0.78 + (i % 3) * 0.08, 6]} />
+          <meshStandardMaterial color={i % 2 ? '#3a5a32' : '#2a4a28'} roughness={0.9} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+export function BikeRack({ position, rotationY = 0 }: { position: [number, number, number]; rotationY?: number }) {
+  return (
+    <group position={position} rotation={[0, rotationY, 0]}>
+      <mesh position={[0, 0.06, 0]}>
+        <boxGeometry args={[1.55, 0.06, 0.28]} />
+        <meshStandardMaterial color="#3a3a42" metalness={0.4} roughness={0.5} />
+      </mesh>
+      {[-0.5, 0, 0.5].map((x) => (
+        <mesh key={x} position={[x, 0.38, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.28, 0.02, 8, 20]} />
+          <meshStandardMaterial color="#2a2a32" metalness={0.45} roughness={0.45} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+export function WallNotice({
+  position,
+  rotationY = 0,
+  title,
+  color = '#f4ead8',
+}: {
+  position: [number, number, number]
+  rotationY?: number
+  title: string
+  color?: string
+}) {
+  return (
+    <group position={position} rotation={[0, rotationY, 0]}>
+      <mesh>
+        <boxGeometry args={[0.62, 0.82, 0.025]} />
+        <Mat color={color} kind="paper" />
+      </mesh>
+      <mesh position={[0, 0.28, 0.02]}>
+        <boxGeometry args={[0.5, 0.08, 0.01]} />
+        <meshStandardMaterial color="#c41e3a" />
+      </mesh>
+      <RuSign text={title} position={[0, -0.05, 0.03]} size={0.07} color="#2a1810" />
+    </group>
+  )
+}
+
+export function Crate({ position, color = '#6a4a32' }: { position: [number, number, number]; color?: string }) {
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.16, 0]}>
+        <boxGeometry args={[0.48, 0.32, 0.38]} />
+        <Mat color={color} kind="wood" />
+      </mesh>
+      <mesh position={[0, 0.34, 0]}>
+        <boxGeometry args={[0.5, 0.04, 0.4]} />
+        <Mat color="#4a3224" kind="wood" />
+      </mesh>
+    </group>
+  )
+}
+
+export function PaperStack({ position, rotationY = 0 }: { position: [number, number, number]; rotationY?: number }) {
+  return (
+    <group position={position} rotation={[0, rotationY, 0]}>
+      {[0, 0.012, 0.024].map((y, i) => (
+        <mesh key={y} position={[i * 0.01, y, i * 0.008]} rotation={[0, i * 0.08, 0]}>
+          <boxGeometry args={[0.22, 0.01, 0.16]} />
+          <Mat color="#f7f0e4" kind="paper" />
+        </mesh>
+      ))}
+    </group>
+  )
+}

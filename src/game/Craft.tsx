@@ -208,7 +208,7 @@ export function ShopBay({
   )
 }
 
-export function Lantern({ position }: { position: [number, number, number] }) {
+export function Lantern({ position, lit = true }: { position: [number, number, number]; lit?: boolean }) {
   return (
     <group position={position}>
       <mesh>
@@ -217,9 +217,9 @@ export function Lantern({ position }: { position: [number, number, number] }) {
       </mesh>
       <mesh position={[0, 0.22, 0]}>
         <sphereGeometry args={[0.14, 12, 12]} />
-        <meshStandardMaterial color="#ffb020" emissive="#ff8a00" emissiveIntensity={1.6} />
+        <meshStandardMaterial color="#ffb020" emissive="#ff8a00" emissiveIntensity={lit ? 1.6 : 1.05} />
       </mesh>
-      <pointLight color="#ffc070" intensity={0.55} distance={4.2} />
+      {lit && <pointLight color="#ffc070" intensity={0.55} distance={4.2} />}
     </group>
   )
 }
@@ -328,6 +328,25 @@ export function SkyDome({ color, radius = 52 }: { color: string; radius?: number
     <mesh>
       <sphereGeometry args={[radius, 28, 18]} />
       <meshBasicMaterial color={color} side={THREE.BackSide} depthWrite={false} />
+    </mesh>
+  )
+}
+
+export function GroundDisk({
+  radius,
+  color,
+  kind = 'grass',
+  y = 0,
+}: {
+  radius: number
+  color: string
+  kind?: SkinKind
+  y?: number
+}) {
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]}>
+      <circleGeometry args={[radius, 56]} />
+      <Mat color={color} kind={kind} repeat={[12, 12]} roughness={0.95} />
     </mesh>
   )
 }

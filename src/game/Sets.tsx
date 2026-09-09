@@ -7,6 +7,7 @@ import {
   Archway,
   Bench,
   Cornice,
+  GroundDisk,
   GroundSkirt,
   HedgeRing,
   IndoorSkirting,
@@ -21,9 +22,11 @@ import {
 import {
   Ball,
   Beam,
+  BikeRack,
   Candle,
   CityBlock,
   Column,
+  Crate,
   FairyWire,
   GetaPair,
   GymFixture,
@@ -34,12 +37,15 @@ import {
   Lockers,
   Mailbox,
   Maple,
+  PaperStack,
   PlaceSetting,
   Pot,
+  Reeds,
   StoneLantern,
   Tsuitate,
   VolleyNet,
   VkusnoLogo,
+  WallNotice,
   Zabuton,
 } from './Dress'
 import {
@@ -245,6 +251,8 @@ export function FoyerSet({ half, children }: { half: number; children?: ReactNod
       <GetaPair position={[-0.95, 0, -half + 2.15]} />
       <GetaPair position={[0.95, 0, -half + 2.15]} />
       <Zabuton position={[0, 0.04, 0.35]} color="#c45c7a" />
+      <Zabuton position={[-2.9, 0.04, 1.55]} color="#8a143c" />
+      <PaperStack position={[-2.2, 0.38, 1.72]} />
       <Petals />
       <Kanji text="桜" position={[0, 0.08, -2.2]} rotation={[-Math.PI / 2, 0, 0]} size={0.55} color="#e8a0b4" />
       <RoomBounds half={half} wallH={4.3} />
@@ -270,7 +278,7 @@ export function GardenSet({ half, children }: { half: number; children?: ReactNo
       />
       <GroundSkirt radius={34} color="#2a4a28" y={-0.06} />
       <HedgeRing half={half} />
-      <Floor half={half} color="#3a5a32" kind="grass" />
+      <GroundDisk radius={half + 6} color="#3a5a32" kind="grass" />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.42, 0.02, 1.35]}>
         <planeGeometry args={[1.45, 6.4]} />
         <meshStandardMaterial color="#c4b8a0" roughness={0.92} />
@@ -326,6 +334,9 @@ export function GardenSet({ half, children }: { half: number; children?: ReactNo
       </mesh>
       <Tsukubai position={[-3.6, 0, -0.4]} />
       <Tsukubai position={[3.15, 0, 1.55]} />
+      <Reeds position={[-3.55, 0, -2.15]} />
+      <Reeds position={[0.15, 0, -3.55]} />
+      <Reeds position={[-3.9, 0, -0.15]} />
       <Bench position={[2.15, 0, 4.05]} rotationY={-0.4} />
       <Bench position={[-3.35, 0, 4.2]} rotationY={0.35} />
       <Planter position={[5.2, 0, 2.1]} />
@@ -386,6 +397,7 @@ export function TeaSet({ half, children }: { half: number; children?: ReactNode 
       </mesh>
       <GetaPair position={[-0.35, 0, 1.55]} />
       <GetaPair position={[0.4, 0, 1.55]} />
+      <Crate position={[2.35, 0, 2.95]} />
       <mesh position={[0, 0.3, -1.12]}>
         <boxGeometry args={[0.92, 0.05, 0.92]} />
         <Mat color="#2a1810" kind="lacquer" />
@@ -454,7 +466,7 @@ export function TeaSet({ half, children }: { half: number; children?: ReactNode 
       <pointLight position={[0, 1.6, -6.4]} color="#f0d8b0" intensity={0.45} distance={7} />
       <Lantern position={[-1.7, 1.4, 0.15]} />
       <Lantern position={[1.7, 1.4, 0.15]} />
-      <Lantern position={[-0.4, 1.35, -2.85]} />
+      <Lantern position={[-0.4, 1.35, -2.85]} lit={false} />
       <Bench position={[-2.6, 0, 3.35]} />
       <Ikebana position={[2.4, 0, 2.85]} />
       <RoomBounds half={half} wallH={3} />
@@ -560,6 +572,8 @@ export function CourtSet({ half, children }: { half: number; children?: ReactNod
         <cylinderGeometry args={[0.22, 0.22, 0.95, 32]} />
         <meshStandardMaterial color="#d8e4ec" />
       </mesh>
+      <Crate position={[-5.55, 0, 5.15]} />
+      <WallNotice position={[-half + 0.28, 1.55, 5.2]} rotationY={Math.PI / 2} title="ТРЕНИРОВКА" />
       <RoomBounds half={half} wallH={5.2} />
       {children}
     </>
@@ -578,7 +592,7 @@ export function RoofSet({ half, children }: { half: number; children?: ReactNode
         hemiSky="#2a3458"
         hemiGround="#121018"
         hemiIntensity={0.1}
-        dirPosition={[-8, 16, -6]}
+        dirPosition={[8, 15, -10]}
         skyDome
       />
       <GroundSkirt radius={40} color="#0c1018" y={-2.05} />
@@ -672,19 +686,21 @@ export function RoofSet({ half, children }: { half: number; children?: ReactNode
         <sphereGeometry args={[1.15, 32, 24]} />
         <meshStandardMaterial color="#f4ead8" emissive="#f0e8d0" emissiveIntensity={0.85} />
       </mesh>
-      <CityBlock position={[-6.2, 0, -9.2]} size={[2.2, 3.4, 1.4]} />
-      <CityBlock position={[-4.1, 0, -9.6]} size={[2.4, 4.8, 1.5]} />
-      <CityBlock position={[-2, 0, -8.8]} size={[1.8, 2.6, 1.2]} />
-      <CityBlock position={[0.2, 0, -10]} size={[2.6, 5.4, 1.6]} />
-      <CityBlock position={[2.3, 0, -9.1]} size={[2, 3.1, 1.3]} />
-      <CityBlock position={[4.4, 0, -9.5]} size={[2.2, 4.2, 1.4]} />
-      <CityBlock position={[6.5, 0, -8.9]} size={[1.8, 2.8, 1.2]} />
-      <CityBlock position={[-11.2, 0, -4.2]} size={[2.4, 4.1, 1.6]} />
-      <CityBlock position={[-10.6, 0, 1.4]} size={[2, 3.2, 1.4]} />
-      <CityBlock position={[11.1, 0, -3.8]} size={[2.2, 4.6, 1.5]} />
-      <CityBlock position={[10.4, 0, 2.2]} size={[1.9, 2.9, 1.3]} />
+      <CityBlock position={[-6.2, -2.05, -11.4]} size={[2.2, 3.4, 1.4]} />
+      <CityBlock position={[-4.1, -2.05, -12.1]} size={[2.4, 4.8, 1.5]} />
+      <CityBlock position={[-2, -2.05, -10.8]} size={[1.8, 2.6, 1.2]} />
+      <CityBlock position={[0.2, -2.05, -12.6]} size={[2.6, 5.4, 1.6]} />
+      <CityBlock position={[2.3, -2.05, -11.2]} size={[2, 3.1, 1.3]} />
+      <CityBlock position={[4.4, -2.05, -12]} size={[2.2, 4.2, 1.4]} />
+      <CityBlock position={[6.5, -2.05, -10.9]} size={[1.8, 2.8, 1.2]} />
+      <CityBlock position={[-11.2, -2.05, -4.2]} size={[2.4, 4.1, 1.6]} />
+      <CityBlock position={[-10.6, -2.05, 1.4]} size={[2, 3.2, 1.4]} />
+      <CityBlock position={[11.1, -2.05, -3.8]} size={[2.2, 4.6, 1.5]} />
+      <CityBlock position={[10.4, -2.05, 2.2]} size={[1.9, 2.9, 1.3]} />
       <Lantern position={[-1.6, 1.5, -1.8]} />
-      <Lantern position={[1.6, 1.5, -1.8]} />
+      <Lantern position={[1.6, 1.5, -1.8]} lit={false} />
+      <WallNotice position={[-3.4, 1.35, -half + 0.38]} title="КРЫША ОТКРЫТА" />
+      <Crate position={[3.35, 0, 2.4]} color="#3a2a48" />
       <pointLight position={[0, 2.4, 3.2]} color="#ffc070" intensity={0.35} distance={9} />
       <RoomBounds half={half} wallH={1.6} />
       {children}
@@ -845,6 +861,9 @@ export function BridgeSet({ half, children }: { half: number; children?: ReactNo
       <Koi position={[1.8, -0.22, 0.4]} />
       <Koi position={[-2.1, -0.24, -0.8]} color="#c45c4a" />
       <Koi position={[0.6, -0.21, -2.6]} />
+      <Reeds position={[-2.05, 0.02, 2.4]} />
+      <Reeds position={[2.15, 0.02, -1.6]} />
+      <Reeds position={[-2.35, 0.02, -3.2]} />
       <StoneLantern position={[-3.1, 0.64, -2.8]} />
       <StoneLantern position={[3.15, 0.64, 2.4]} />
       <group position={[0, 0, -5.55]}>
@@ -987,11 +1006,13 @@ export function TableSet({ half, children }: { half: number; children?: ReactNod
         <boxGeometry args={[1.35, 1.22, 0.48]} />
         <Mat color="#5a3a28" kind="wood" />
       </mesh>
+      <PaperStack position={[-3.05, 1.28, 0.05]} rotationY={0.2} />
+      <PaperStack position={[-3.28, 1.28, 0.22]} rotationY={-0.35} />
       <Planter position={[3.4, 0, 1.4]} />
       <Planter position={[-3.5, 0, 2.4]} />
       <RuSign text="СТОЛ НА ДВОИХ" position={[0, 2.88, -half + 0.42]} size={0.14} color="#ffd27a" />
       <Lantern position={[-1.5, 2.4, -0.3]} />
-      <Lantern position={[1.15, 2.4, -0.15]} />
+      <Lantern position={[1.15, 2.4, -0.15]} lit={false} />
       <pointLight position={[-0.2, 2.55, -1.55]} color="#ffd8a8" intensity={0.55} distance={7} />
       <RoomBounds half={half} />
       {children}
@@ -1115,6 +1136,8 @@ export function PostSet({ half, children }: { half: number; children?: ReactNode
       <RuSign text="ПОЧТА" position={[2.45, 2.48, -2.48]} size={0.16} color="#ffd27a" />
       <RuSign text="Одно письмо" position={[2.45, 2.18, -2.48]} size={0.1} color="#f4ead8" />
       <RuSign text="ШТЕМПЕЛЬ — ТОЛЬКО С ТВОЕЙ РУКИ" position={[0.15, 2.98, -2.35]} size={0.09} color="#ffd27a" />
+      <WallNotice position={[half - 0.28, 1.55, 1.1]} rotationY={-Math.PI / 2} title="ОЧЕРЕДЬ — ОДНО" />
+      <Crate position={[-3.35, 0, 1.85]} />
       <Kanji text="〒" position={[-2.9, 2.2, -2.5]} size={0.22} color="#c41e3a" />
       <pointLight position={[0.55, 1.85, -2.05]} color="#ffd27a" intensity={0.4} distance={4} />
       <RoomBounds half={half} />
@@ -1130,17 +1153,17 @@ export function CampusSet({ half, children }: { half: number; children?: ReactNo
         sky="#9eb8cc"
         fog={['#b8c8d4', 16, 38]}
         ambient={0.42}
-        dirIntensity={0.85}
-        dirColor="#fff1d2"
-        hemiSky="#d0dce8"
+        dirIntensity={0.55}
+        dirColor="#e8e0d0"
+        hemiSky="#c8d4de"
         hemiGround="#4a4a38"
-        hemiIntensity={0.32}
-        dirPosition={[5, 8, 4]}
+        hemiIntensity={0.28}
+        dirPosition={[3, 7, 5]}
         skyDome
       />
       <GroundSkirt radius={36} color="#5a6a48" y={-0.05} />
       <HedgeRing half={half} height={1.15} color="#2a4a28" />
-      <Floor half={half} color="#6a6a60" kind="stone" />
+      <GroundDisk radius={half + 7} color="#6a6a60" kind="stone" />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0.4]}>
         <planeGeometry args={[2.4, 8.2]} />
         <meshStandardMaterial color="#c4b8a0" roughness={0.9} />
@@ -1203,6 +1226,8 @@ export function CampusSet({ half, children }: { half: number; children?: ReactNo
       <Maple position={[-6.2, 0, 3.4]} scale={0.78} />
       <Maple position={[6.1, 0, 3.8]} scale={0.7} />
       <SakuraTree position={[-6.4, 0, -1.2]} scale={0.55} />
+      <BikeRack position={[4.35, 0, -1.55]} rotationY={0.2} />
+      <Crate position={[-5.4, 0, 1.15]} />
       <Bench position={[-3.35, 0, 0.25]} rotationY={0.4} />
       <Bench position={[3.45, 0, 0.55]} rotationY={-0.35} />
       <Bench position={[-2.6, 0, 3.35]} rotationY={0.15} />
@@ -1328,6 +1353,8 @@ export function StaffSet({ half, children }: { half: number; children?: ReactNod
         <Mat color="#1a4a32" kind="cloth" />
       </mesh>
       <Kit file="vending-machine.glb" position={[2.5, 0, 0.55]} scale={0.95} />
+      <WallNotice position={[-half + 0.28, 1.55, 2.4]} rotationY={Math.PI / 2} title="СМЕНА" />
+      <Crate position={[-1.15, 0, 2.55]} color="#4a5048" />
       <RoomBounds half={half} />
       {children}
     </>
