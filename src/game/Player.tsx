@@ -11,7 +11,7 @@ import { groundedRef, PLACE, playerPos, playerYaw, talkLock, vyRef } from './pla
 
 const BOOM = 3.7
 const LOOK_Y = 1.18
-const WARP_FRAMES = 18
+const WARP_FRAMES = 10
 
 function placeCamera(camera: THREE.Camera, x: number, y: number, z: number, yaw: number, pitch: number) {
   const desiredY = THREE.MathUtils.clamp(y + LOOK_Y + Math.sin(-pitch) * BOOM * 0.55 + 0.72, 1.5, 6.2)
@@ -21,6 +21,19 @@ function placeCamera(camera: THREE.Camera, x: number, y: number, z: number, yaw:
     z + Math.cos(yaw) * Math.cos(pitch) * BOOM,
   )
   camera.lookAt(x, y + LOOK_Y, z)
+}
+
+function live(rb: RapierRigidBody | null): rb is RapierRigidBody {
+  try {
+    return Boolean(rb && rb.isValid())
+  } catch {
+    return false
+  }
+}
+
+function snapBody(rb: RapierRigidBody, spawn: [number, number, number]) {
+  rb.setTranslation({ x: spawn[0], y: spawn[1], z: spawn[2] }, true)
+  rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
 }
 
 export function Player() {
@@ -45,12 +58,6 @@ export function Player() {
     camPitch.current = -0.28
     booted.current = false
     warp.current = WARP_FRAMES
-    const rb = body.current
-    if (rb) {
-      rb.setTranslation({ x: spawn[0], y: spawn[1], z: spawn[2] }, true)
-      rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
-      rb.setAngvel({ x: 0, y: 0, z: 0 }, true)
-    }
     placeCamera(camera, spawn[0], spawn[1], spawn[2], camYaw.current, camPitch.current)
   }, [loc, spawn, camera])
 
@@ -79,24 +86,21 @@ export function Player() {
   useFrame((_, dt) => {
     const rb = body.current
     if (warp.current > 0) {
-      if (rb) {
-        rb.setTranslation({ x: spawn[0], y: spawn[1], z: spawn[2] }, true)
-        rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
-        rb.setAngvel({ x: 0, y: 0, z: 0 }, true)
-      }
       playerPos.set(...spawn)
       placeCamera(camera, spawn[0], spawn[1], spawn[2], camYaw.current, camPitch.current)
-      warp.current -= 1
-      booted.current = true
       walking.current = false
+      if (live(rb)) {
+        snapBody(rb, spawn)
+        warp.current -= 1
+        booted.current = true
+      }
       return
     }
-    if (!rb) return
+    if (!live(rb)) return
     const t = rb.translation()
     const v = rb.linvel()
     if (t.y < -0.6 || t.y > 7.5) {
-      rb.setTranslation({ x: spawn[0], y: spawn[1], z: spawn[2] }, true)
-      rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
+      snapBody(rb, spawn)
       playerPos.set(...spawn)
       placeCamera(camera, spawn[0], spawn[1], spawn[2], camYaw.current, camPitch.current)
       return
@@ -155,7 +159,6 @@ export function Player() {
 
   return (
     <RigidBody
-      key={loc}
       ref={body}
       position={spawn}
       colliders={false}
