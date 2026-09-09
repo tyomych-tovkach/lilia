@@ -45,7 +45,7 @@ export function Koi({ position, color = '#f4ead8' }: { position: [number, number
   )
 }
 
-export function StoneLantern({ position }: { position: [number, number, number] }) {
+export function StoneLantern({ position, lit = false }: { position: [number, number, number]; lit?: boolean }) {
   return (
     <group position={position}>
       <mesh position={[0, 0.12, 0]}>
@@ -58,13 +58,13 @@ export function StoneLantern({ position }: { position: [number, number, number] 
       </mesh>
       <mesh position={[0, 0.74, 0]}>
         <boxGeometry args={[0.34, 0.28, 0.34]} />
-        <meshStandardMaterial color="#f4ead8" emissive="#ffc070" emissiveIntensity={0.45} />
+        <meshStandardMaterial color="#f4ead8" emissive="#ffc070" emissiveIntensity={lit ? 0.7 : 0.35} />
       </mesh>
       <mesh position={[0, 0.94, 0]}>
         <cylinderGeometry args={[0.22, 0.12, 0.12, 32]} />
         <Mat color="#7a7468" kind="stone" />
       </mesh>
-      <pointLight position={[0, 0.74, 0]} color="#ffc070" intensity={0.45} distance={3.5} />
+      {lit && <pointLight position={[0, 0.74, 0]} color="#ffc070" intensity={0.4} distance={3.5} />}
     </group>
   )
 }
@@ -93,14 +93,14 @@ export function Kotoji({ position, letter = false }: { position: [number, number
         <Mat color="#7a7468" kind="stone" />
       </mesh>
       {letter && (
-        <mesh position={[0.12, 1.05, 0.02]} rotation={[-0.08, 0.12, 0]}>
-          <boxGeometry args={[0.2, 0.012, 0.14]} />
+        <mesh position={[0.12, 1.08, 0.04]} rotation={[-0.12, 0.18, 0]}>
+          <boxGeometry args={[0.34, 0.018, 0.24]} />
           <Mat color="#f7f0e4" kind="paper" />
         </mesh>
       )}
       {letter && (
-        <mesh position={[0.16, 1.06, 0.04]}>
-          <circleGeometry args={[0.018, 16]} />
+        <mesh position={[0.18, 1.1, 0.08]}>
+          <circleGeometry args={[0.028, 16]} />
           <meshStandardMaterial color="#c41e3a" />
         </mesh>
       )}
@@ -224,12 +224,12 @@ export function GymHoop({ position }: { position: [number, number, number] }) {
         <boxGeometry args={[0.22, 0.08, 0.18]} />
         <meshStandardMaterial color="#fff4d0" emissive="#fff0c0" emissiveIntensity={0.85} />
       </mesh>
-      <pointLight position={[0, 2.55, 0.45]} color="#fff4d0" intensity={0.38} distance={5.5} />
+      <pointLight position={[0, 2.55, 0.45]} color="#fff4d0" intensity={0.2} distance={4.2} />
     </group>
   )
 }
 
-export function GymFixture({ position }: { position: [number, number, number] }) {
+export function GymFixture({ position, lit = true }: { position: [number, number, number]; lit?: boolean }) {
   return (
     <group position={position}>
       <mesh>
@@ -238,9 +238,9 @@ export function GymFixture({ position }: { position: [number, number, number] })
       </mesh>
       <mesh position={[0, -0.07, 0]}>
         <boxGeometry args={[0.52, 0.04, 0.3]} />
-        <meshStandardMaterial color="#fff4d0" emissive="#fff0c0" emissiveIntensity={1.05} />
+        <meshStandardMaterial color="#fff4d0" emissive="#fff0c0" emissiveIntensity={lit ? 1.05 : 0.35} />
       </mesh>
-      <pointLight position={[0, -0.18, 0]} color="#fff4d0" intensity={0.52} distance={8} />
+      {lit && <pointLight position={[0, -0.18, 0]} color="#fff4d0" intensity={0.52} distance={8} />}
     </group>
   )
 }

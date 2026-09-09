@@ -15,6 +15,7 @@ export function Mat({
   opacity,
   emissive,
   emissiveIntensity,
+  side,
 }: {
   color: string
   kind?: SkinKind
@@ -25,6 +26,7 @@ export function Mat({
   opacity?: number
   emissive?: string
   emissiveIntensity?: number
+  side?: THREE.Side
 }) {
   const map = kind ? skin(kind, color, repeat) : undefined
   return (
@@ -37,6 +39,7 @@ export function Mat({
       opacity={opacity}
       emissive={emissive}
       emissiveIntensity={emissiveIntensity}
+      side={side}
     />
   )
 }
@@ -360,7 +363,7 @@ export function GroundSkirt({ radius = 36, color = '#243218', y = -0.05 }: { rad
   )
 }
 
-export function HedgeRing({ half, height = 1.42, color = '#1a4630' }: { half: number; height?: number; color?: string }) {
+export function HedgeRing({ half, height = 2.18, color = '#1a4630' }: { half: number; height?: number; color?: string }) {
   const t = 0.62
   const outer = half + 1.05
   const span = outer * 2 + 1.4

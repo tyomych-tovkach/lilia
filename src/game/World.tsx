@@ -178,7 +178,7 @@ export function World() {
   return (
     <StaffSet half={half}>
       <Back half={half} />
-      <Taiwi loc="vkusno" position={[0.4, 0, 0.6]} />
+        <Taiwi loc="vkusno" position={[2.4, 0, -0.9]} />
     </StaffSet>
   )
 }
