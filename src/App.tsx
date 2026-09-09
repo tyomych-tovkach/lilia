@@ -105,6 +105,7 @@ function Shell() {
           <p className="hud-title">{state.location === 'yesno' && state.crashStage >= 2 && !state.saidYes ? copy.crashHud : sign.uiTitle}</p>
           <p className="hud-obj">{objective}</p>
           <ol className="hud-playbill">
+            <li className="hud-playbill-label">афиша</li>
             {ACT_ORDER.map((id) => {
               const st = actChipStatus(state, id)
               const mark =
