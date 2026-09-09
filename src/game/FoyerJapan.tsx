@@ -35,7 +35,7 @@ export function SakuraTree({
   return (
     <group position={position} rotation={[0, rotationY, 0]} scale={scale}>
       <mesh position={[0, 0.7, 0]}>
-        <cylinderGeometry args={[0.08, 0.14, 1.4, 8]} />
+        <cylinderGeometry args={[0.08, 0.14, 1.4, 32]} />
         <meshStandardMaterial color={WOOD} roughness={0.85} />
       </mesh>
       <mesh position={[0.22, 1.45, 0]} rotation={[0, 0, 0.7]}>
@@ -48,7 +48,7 @@ export function SakuraTree({
       </mesh>
       {clusters.map(([x, y, z, r, c], i) => (
         <mesh key={i} position={[x, y, z]}>
-          <sphereGeometry args={[r, 10, 8]} />
+          <sphereGeometry args={[r, 24, 16]} />
           <meshStandardMaterial color={c} roughness={0.7} emissive={PINK} emissiveIntensity={0.12} />
         </mesh>
       ))}
@@ -96,7 +96,7 @@ export function Kakemono({
         <meshStandardMaterial map={map} roughness={0.72} />
       </mesh>
       <mesh position={[0, 2.22, 0]}>
-        <cylinderGeometry args={[0.04, 0.04, 0.82, 10]} />
+        <cylinderGeometry args={[0.04, 0.04, 0.82, 24]} />
         <meshStandardMaterial color={WOOD} />
       </mesh>
       <mesh position={[0, 0.12, 0]}>
@@ -141,7 +141,7 @@ export function Chochin({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
       <mesh>
-        <sphereGeometry args={[0.16, 12, 10]} />
+        <sphereGeometry args={[0.16, 24, 18]} />
         <meshStandardMaterial color={PINK_LIT} emissive={PINK} emissiveIntensity={0.85} roughness={0.45} />
       </mesh>
       <mesh position={[0, 0.14, 0]}>

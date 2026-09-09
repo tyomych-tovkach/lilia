@@ -104,6 +104,14 @@ export function Player() {
       camera.position.lerp(desired, 1 - Math.exp(-dt * 9))
     }
     camera.lookAt(x, t.y + lookY, z)
+    if (loc === 'yesno' && !state.saidYes && state.crashStage > 0) {
+      const stage = state.crashStage
+      const amp = stage === 1 ? 0.014 : stage === 2 ? 0.055 : 0.08
+      const f = stage === 1 ? 18 : stage === 2 ? 9 : 12
+      const clock = performance.now() / 1000
+      camera.position.x += Math.sin(clock * f) * amp
+      camera.position.y += Math.cos(clock * f * 1.31) * amp * 0.62
+    }
   })
 
   return (

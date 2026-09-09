@@ -322,14 +322,111 @@ body,
   font-size: 13px;
 }
 
-.talk-note {
-  margin: 0;
-  color: #7dffb3;
-  font-size: 14px;
+.toast.is-warm {
+  border-color: #7dffb3;
+}
+
+.crash-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 28;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 4, 16, 0.84);
+}
+
+.crash-overlay__scan {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(255, 74, 170, 0.08) 0 2px, transparent 2px 6px);
+  animation: crash-scan 6s linear infinite;
+}
+
+.crash-overlay__frame {
+  position: relative;
+  max-width: 440px;
+  margin: 18px;
+  padding: 22px 24px;
+  border: 1px solid rgba(255, 74, 170, 0.45);
+  background: rgba(12, 8, 28, 0.92);
+  clip-path: polygon(0 8px, 8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+}
+
+.crash-overlay__kicker {
+  margin: 0 0 8px;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.crash-overlay__title {
+  margin: 0 0 10px;
+  font-size: 22px;
+  text-shadow: 3px 0 #ff4ad2, -3px 0 #7ecbff;
+  animation: crash-tear 0.16s steps(2) infinite;
+}
+
+.crash-overlay__body {
+  margin: 0 0 16px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #f7f0e4;
+}
+
+.crash-overlay__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.crash-overlay__yes {
+  padding: 12px 28px;
+}
+
+.crash-overlay__no.is-dead {
+  opacity: 0.32;
+  transform: translate(18px, 6px) skewX(-12deg) rotate(-2deg);
+  text-decoration: line-through;
+  cursor: not-allowed;
+  filter: hue-rotate(160deg);
+}
+
+.app.is-crash-2 .hud-title,
+.app.is-crash-3 .hud-title {
+  text-shadow: 3px 0 #ff4ad2, -3px 0 #7ecbff;
+  animation: hud-tear 0.18s steps(2) infinite;
+}
+
+.app.is-crash-3 .hud {
+  filter: hue-rotate(80deg) contrast(1.35);
+}
+
+@keyframes crash-scan {
+  to {
+    background-position: 0 24px;
+  }
+}
+
+@keyframes crash-tear {
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes hud-tear {
+  50% {
+    transform: translateX(-2px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loader-orb {
+  .loader-orb,
+  .crash-overlay__scan,
+  .crash-overlay__title,
+  .app.is-crash-2 .hud-title,
+  .app.is-crash-3 .hud-title {
     animation: none;
   }
 }

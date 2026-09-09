@@ -1,8 +1,9 @@
 import { Component, lazy, Suspense, useCallback, useEffect, useState, type ReactNode } from 'react'
 import { ACT_ORDER, copy, OPTIONAL_ACTS, signs } from './content/evening'
-import { actChipStatus, detectWebGL, locationObjective } from './logic'
+import { actChipStatus, detectWebGL, locationObjective, onSayYes, showCrashOverlay } from './logic'
 import { InviteProvider, useInvite } from './state'
 import { Talk } from './ui/Talk'
+import { talkLock } from './game/playerRef'
 
 const GameCanvas = lazy(() => import('./game/GameCanvas').then((m) => ({ default: m.GameCanvas })))
 
@@ -60,6 +61,11 @@ function Shell() {
     }
   }, [state.toast, patch])
 
+  const overlay = showCrashOverlay(state)
+  useEffect(() => {
+    if (overlay) talkLock.current = true
+  }, [overlay])
+
   if (!webgl) {
     return (
       <main className="app fallback">
@@ -78,9 +84,11 @@ function Shell() {
 
   const sign = signs[state.location]
   const objective = locationObjective(state)
+  const crashClass =
+    state.location === 'yesno' && !state.saidYes && state.crashStage >= 1 ? `is-crash-${state.crashStage}` : ''
 
   return (
-    <main className="app">
+    <main className={`app ${crashClass}`}>
       <Guard onError={() => setBroken(true)}>
         <Suspense fallback={null}>
           <GameCanvas onReady={onReady} />
@@ -94,7 +102,7 @@ function Shell() {
       )}
       {ready && (
         <div className="hud">
-          <p className="hud-title">{sign.uiTitle}</p>
+          <p className="hud-title">{state.location === 'yesno' && state.crashStage >= 2 && !state.saidYes ? copy.crashHud : sign.uiTitle}</p>
           <p className="hud-obj">{objective}</p>
           <ol className="hud-playbill">
             {ACT_ORDER.map((id) => {
@@ -113,7 +121,34 @@ function Shell() {
       )}
       {ready && hint && <p className="hint">{copy.hint}</p>}
       {narrow && <p className="pc-note">{copy.pcNote}</p>}
-      {state.toast && <p className="toast">{state.toast}</p>}
+      {state.toast && <p className={`toast ${state.saidYes ? 'is-warm' : ''}`}>{state.toast}</p>}
+      {overlay && (
+        <div className="crash-overlay" role="alertdialog" aria-modal="true" aria-labelledby="crash-title">
+          <div className="crash-overlay__scan" aria-hidden="true" />
+          <div className="crash-overlay__frame">
+            <p className="crash-overlay__kicker">{copy.crashOverlayKicker}</p>
+            <h1 id="crash-title" className="crash-overlay__title">
+              {copy.crashOverlayTitle}
+            </h1>
+            <p className="crash-overlay__body">{copy.crashOverlayBody}</p>
+            <div className="crash-overlay__actions">
+              <button
+                type="button"
+                className="talk-btn is-on crash-overlay__yes"
+                onClick={() => {
+                  talkLock.current = false
+                  patch(onSayYes(state))
+                }}
+              >
+                {copy.crashOverlayYes}
+              </button>
+              <button type="button" className="talk-btn crash-overlay__no is-dead" disabled>
+                {copy.crashOverlayNo}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Talk />
     </main>
   )

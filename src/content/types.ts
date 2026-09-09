@@ -18,16 +18,6 @@ export type CustomTalk = {
   stateKey: 'japanCustom' | 'sportCustom' | 'secretCustom' | 'customPlace'
 }
 
-export type NpcCast = {
-  id: string
-  name: string
-  role: string
-  skin: string
-  hair: string
-  cloth: string
-  accent: string
-}
-
 export type Sign = {
   arch: string
   uiTitle: string

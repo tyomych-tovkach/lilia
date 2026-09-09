@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   copy,
   DATE_CHIPS,
@@ -13,7 +13,7 @@ import {
   japanOptions,
   letterPaper,
   limits,
-  npcs,
+  TAIWI_NAME,
   placeCustom,
   secretCustom,
   secretOptions,
@@ -24,23 +24,15 @@ import {
   dateAsk,
 } from '../content/evening'
 import type { DateFormatId, LocationId } from '../content/types'
-import { formatRuDate, japanDone, secretDone, sportDone, summaryLines, toggleLimited } from '../logic'
+import { formatRuDate, japanDone, onSayLater, onSayNo, onSayYes, secretDone, sportDone, summaryLines, toggleLimited } from '../logic'
 import { sendInvite } from '../mail'
 import { useInvite } from '../state'
 import { talkLock } from '../game/playerRef'
+import { bumpCrash } from '../game/crashFx'
 import { onTalk } from '../game/talkBus'
 
-function npcName(loc: LocationId) {
-  if (loc === 'hub') return npcs.tanya.name
-  if (loc === 'letter') return npcs.sonya.name
-  if (loc === 'japan') return npcs.aya.name
-  if (loc === 'sport') return npcs.rita.name
-  if (loc === 'secret') return npcs.nina.name
-  if (loc === 'yesno') return npcs.olya.name
-  if (loc === 'date') return npcs.katya.name
-  if (loc === 'send') return npcs.gena.name
-  if (loc === 'kubgu') return npcs.max.name
-  return npcs.lena.name
+function npcName(_loc: LocationId) {
+  return TAIWI_NAME
 }
 
 type Phase =
@@ -67,6 +59,7 @@ export function Talk() {
   const [react, setReact] = useState('')
   const [sendError, setSendError] = useState('')
   const [otherDay, setOtherDay] = useState(false)
+  const noLock = useRef(0)
 
   const close = () => {
     setOpen(false)
@@ -360,34 +353,47 @@ export function Talk() {
         <div className="talk-choices">
           <button
             type="button"
-            className="talk-btn"
+            className="talk-btn is-on"
             onClick={() => {
-              patch({ saidYes: true, toast: farewells.yesno })
+              patch(onSayYes(state))
               close()
             }}
           >
             Да.
           </button>
-          <button
-            type="button"
-            className="talk-btn"
-            onClick={() => {
-              patch({ noAttempts: state.noAttempts + 1, toast: copy.noClose })
-              close()
-            }}
-          >
-            Нет.
-          </button>
-          <button
-            type="button"
-            className="talk-btn"
-            onClick={() => {
-              patch({ toast: copy.laterClose })
-              close()
-            }}
-          >
-            Пока не знаю.
-          </button>
+          {state.crashStage < 3 && (
+            <button
+              type="button"
+              className="talk-btn"
+              onClick={() => {
+                const now = Date.now()
+                if (now - noLock.current < 320) return
+                noLock.current = now
+                const next = onSayNo(state)
+                bumpCrash((next.crashStage as number) ?? 1)
+                patch(next)
+                if ((next.crashStage ?? 0) >= 3) {
+                  close()
+                  return
+                }
+                setReact((next.crashStage ?? 0) === 1 ? copy.crashDodge : copy.crashFall)
+              }}
+            >
+              Нет.
+            </button>
+          )}
+          {state.crashStage < 3 && (
+            <button
+              type="button"
+              className="talk-btn"
+              onClick={() => {
+                patch(onSayLater(state))
+                close()
+              }}
+            >
+              Пока не знаю.
+            </button>
+          )}
         </div>
       )}
 

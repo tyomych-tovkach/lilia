@@ -24,6 +24,8 @@ export const DATE_MIN_ISO = DATE_MIN
 export const DATE_MAX_ISO = DATE_MAX
 export const MAIL_TO = CONTENT_MAIL
 
+export type CrashStage = 0 | 1 | 2 | 3
+
 export type InviteState = {
   location: LocationId
   letterDone: boolean
@@ -35,6 +37,7 @@ export type InviteState = {
   secretIds: string[]
   secretCustom: string
   noAttempts: number
+  crashStage: CrashStage
   saidYes: boolean
   format: DateFormatId | null
   flavorId: string
@@ -56,6 +59,7 @@ export const INITIAL_STATE: InviteState = {
   secretIds: [],
   secretCustom: '',
   noAttempts: 0,
+  crashStage: 0,
   saidYes: false,
   format: null,
   flavorId: '',
@@ -130,6 +134,35 @@ export function canSend(s: InviteState): boolean {
   return s.letterDone && s.saidYes && dateDone(s)
 }
 
+export function nextCrashStage(s: CrashStage): CrashStage {
+  return (s < 3 ? ((s + 1) as CrashStage) : 3)
+}
+
+export function onSayNo(s: InviteState): Partial<InviteState> {
+  const crashStage = nextCrashStage((s.crashStage ?? 0) as CrashStage)
+  return {
+    noAttempts: s.noAttempts + 1,
+    crashStage,
+    toast: crashStage === 1 ? copy.crashDodge : crashStage === 2 ? copy.crashFall : '',
+  }
+}
+
+export function onSayYes(_s: InviteState): Partial<InviteState> {
+  return { saidYes: true, crashStage: 0, toast: farewells.yesno }
+}
+
+export function onSayLater(_s: InviteState): Partial<InviteState> {
+  return { toast: copy.laterClose }
+}
+
+export function crashVisualT(stage: CrashStage): number {
+  return ([0, 0.18, 0.62, 1] as const)[stage]
+}
+
+export function showCrashOverlay(s: InviteState): boolean {
+  return s.location === 'yesno' && !s.saidYes && s.crashStage === 3
+}
+
 export function labelFor(list: { id: string; playerLine: string }[], ids: string[], extra: string): string {
   const parts = ids.map((id) => list.find((o) => o.id === id)?.playerLine.replace(/\.$/, '') || id)
   if (extra.trim()) parts.push(extra.trim())
@@ -185,7 +218,7 @@ export function summaryLines(s: InviteState): string[] {
   const sport = `${labelFor(sportKindOptions, s.sportIds, s.sportCustom)}${s.sportModeIds.length ? ` · ${labelFor(sportModeOptions, s.sportModeIds, '')}` : ''}`
   const extra = labelFor(secretOptions, s.secretIds, s.secretCustom)
   return [
-    'Вот как я это слышу — своими словами, не полями.',
+    'Собрал, как слышал. Не графы — вечер словами. Глянь. Улетит, только если нажмёшь.',
     japan === '—' ? 'Японию оставила в стороне. Так и уйдёт — тоже ответ.' : `Про Японию: ${japan}`,
     sport === '—' ? 'Спорт не отмечала.' : `Спорт: ${sport}`,
     extra === '—' ? 'Про «ещё люблю» — тишина. Нормально.' : `Ещё любит: ${extra}`,

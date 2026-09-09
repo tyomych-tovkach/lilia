@@ -11,6 +11,11 @@ import {
   isDateAllowed,
   locationObjective,
   lockedToast,
+  nextCrashStage,
+  onSayLater,
+  onSayNo,
+  onSayYes,
+  showCrashOverlay,
 } from './logic.ts'
 
 function assert(cond: boolean, msg: string) {
@@ -67,6 +72,23 @@ assert(!mail.includes('Слот:'), 'no slot jargon')
 assert(mail.includes('Время дня: вечер'), 'daypart label')
 assert(mail.includes('Письмо от Лилии'), 'subject voice')
 assert(mail.includes('нажала отправить сама'), 'consent stamp')
+
+assert(nextCrashStage(0) === 1, 'crash 0 to 1')
+assert(nextCrashStage(3) === 3, 'crash caps at 3')
+const no1 = onSayNo(afterLetter)
+assert(no1.crashStage === 1, 'first no is dodge')
+assert(no1.saidYes !== true, 'first no is not yes')
+const no2 = onSayNo({ ...afterLetter, crashStage: 1, noAttempts: 1 })
+assert(no2.crashStage === 2, 'second no collapses')
+const no3 = onSayNo({ ...afterLetter, crashStage: 2, noAttempts: 2, location: 'yesno' })
+assert(no3.crashStage === 3, 'third no overlays')
+assert(showCrashOverlay({ ...afterLetter, location: 'yesno', crashStage: 3 }), 'overlay at 3')
+assert(!showCrashOverlay({ ...afterLetter, location: 'yesno', crashStage: 2 }), 'no overlay at 2')
+assert(!showCrashOverlay({ ...afterLetter, location: 'hub', crashStage: 3 }), 'overlay only on bridge')
+const later = onSayLater({ ...afterLetter, crashStage: 1 })
+assert(later.crashStage === undefined, 'later does not bump crash')
+assert(onSayYes(afterLetter).saidYes === true, 'yes saves')
+assert(onSayYes(afterLetter).crashStage === 0, 'yes resets crash')
 
 assert(lockedToast(s0).includes('САД'), 'lock names current act')
 

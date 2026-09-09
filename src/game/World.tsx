@@ -17,7 +17,7 @@ import {
   TeaSet,
 } from './Sets'
 import { Archway } from './Craft'
-import { Npc } from './Npc'
+import { Taiwi } from './Taiwi'
 import { PLACE } from './playerRef'
 
 function doorStatus(open: boolean, now: boolean, done: boolean, staff = false): DoorStatus {
@@ -89,7 +89,7 @@ export function World() {
     const easter = easterUnlocked(state)
     return (
       <FoyerSet half={half}>
-        <Npc loc="hub" position={[0, 0, 1.55]} />
+        <Taiwi loc="hub" position={[0, 0, 1.55]} />
         <Gate to="yesno" position={[-4.4, 0, -half + 1.25]} open={open('yesno')} now={now === 'yesno'} done={chip('yesno') === 'done'} />
         <Gate to="letter" position={[0, 0, -half + 1.25]} open={open('letter')} now={now === 'letter'} done={chip('letter') === 'done'} />
         <Gate to="date" position={[3.2, 0, -half + 1.25]} open={open('date')} now={now === 'date'} done={chip('date') === 'done'} />
@@ -107,7 +107,7 @@ export function World() {
     return (
       <GardenSet half={half}>
         <Back half={half} />
-        <Npc loc="letter" position={[0.8, 0, 0.3]} />
+        <Taiwi loc="letter" position={[0.8, 0, 0.3]} />
       </GardenSet>
     )
   }
@@ -116,7 +116,7 @@ export function World() {
     return (
       <TeaSet half={half}>
         <Back half={half} />
-        <Npc loc="japan" position={[1.45, 0, -0.35]} />
+        <Taiwi loc="japan" position={[1.45, 0, -0.35]} />
       </TeaSet>
     )
   }
@@ -125,7 +125,7 @@ export function World() {
     return (
       <CourtSet half={half}>
         <Back half={half} />
-        <Npc loc="sport" position={[0.9, 0, -1.2]} />
+        <Taiwi loc="sport" position={[0.9, 0, -1.2]} />
       </CourtSet>
     )
   }
@@ -134,7 +134,7 @@ export function World() {
     return (
       <RoofSet half={half}>
         <Back half={half} />
-        <Npc loc="secret" position={[0, 0, -0.8]} />
+        <Taiwi loc="secret" position={[0, 0, -0.8]} />
       </RoofSet>
     )
   }
@@ -143,7 +143,7 @@ export function World() {
     return (
       <BridgeSet half={half}>
         <Back half={half} />
-        <Npc loc="yesno" position={[0, 0, -1.2]} />
+        <Taiwi loc="yesno" position={[0, 0, -1.2]} />
       </BridgeSet>
     )
   }
@@ -152,7 +152,7 @@ export function World() {
     return (
       <TableSet half={half}>
         <Back half={half} />
-        <Npc loc="date" position={[1.55, 0, -1.05]} />
+        <Taiwi loc="date" position={[1.55, 0, -1.05]} />
       </TableSet>
     )
   }
@@ -161,7 +161,7 @@ export function World() {
     return (
       <PostSet half={half}>
         <Back half={half} />
-        <Npc loc="send" position={[-0.35, 0, -1.05]} />
+        <Taiwi loc="send" position={[-0.35, 0, -1.05]} />
       </PostSet>
     )
   }
@@ -170,7 +170,7 @@ export function World() {
     return (
       <CampusSet half={half}>
         <Back half={half} />
-        <Npc loc="kubgu" position={[1.2, 0, 1.4]} />
+        <Taiwi loc="kubgu" position={[1.2, 0, 1.4]} />
       </CampusSet>
     )
   }
@@ -178,7 +178,7 @@ export function World() {
   return (
     <StaffSet half={half}>
       <Back half={half} />
-      <Npc loc="vkusno" position={[0.4, 0, 0.6]} />
+      <Taiwi loc="vkusno" position={[0.4, 0, 0.6]} />
     </StaffSet>
   )
 }
