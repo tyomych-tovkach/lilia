@@ -173,22 +173,22 @@ export function Mailbox({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
       <mesh position={[0, 0.03, 0]}>
-        <cylinderGeometry args={[0.28, 0.28, 0.05, 32]} />
-        <meshStandardMaterial color="#8a2030" metalness={0.35} roughness={0.45} />
+        <boxGeometry args={[0.52, 0.05, 0.34]} />
+        <meshStandardMaterial color="#6a1824" metalness={0.25} roughness={0.5} />
       </mesh>
-      <mesh position={[0, 0.62, 0]}>
-        <cylinderGeometry args={[0.23, 0.25, 1.18, 32]} />
-        <meshStandardMaterial color="#c41e3a" metalness={0.35} roughness={0.42} />
+      <mesh position={[0, 0.58, 0]}>
+        <boxGeometry args={[0.58, 1.08, 0.36]} />
+        <meshStandardMaterial color="#c41e3a" metalness={0.28} roughness={0.42} />
       </mesh>
-      <mesh position={[0, 1.24, 0]}>
-        <cylinderGeometry args={[0.29, 0.29, 0.07, 32]} />
-        <meshStandardMaterial color="#a01830" metalness={0.4} roughness={0.4} />
+      <mesh position={[0, 1.16, 0]}>
+        <boxGeometry args={[0.64, 0.08, 0.42]} />
+        <meshStandardMaterial color="#a01830" metalness={0.35} roughness={0.4} />
       </mesh>
-      <mesh position={[0, 1.02, 0.2]}>
-        <boxGeometry args={[0.16, 0.04, 0.06]} />
+      <mesh position={[0, 0.96, 0.2]}>
+        <boxGeometry args={[0.34, 0.05, 0.04]} />
         <meshStandardMaterial color="#1a0c0c" />
       </mesh>
-      <Kanji text="〒" position={[0, 0.88, 0.26]} size={0.12} color="#f4ead8" />
+      <Kanji text="〒" position={[0, 0.72, 0.2]} size={0.16} color="#f4ead8" />
     </group>
   )
 }
@@ -220,6 +220,50 @@ export function GymHoop({ position }: { position: [number, number, number] }) {
         <coneGeometry args={[0.2, 0.38, 12, 1, true]} />
         <meshStandardMaterial color="#f4f0e8" transparent opacity={0.35} side={THREE.DoubleSide} />
       </mesh>
+      <mesh position={[0, 2.72, 0.12]}>
+        <boxGeometry args={[0.22, 0.08, 0.18]} />
+        <meshStandardMaterial color="#fff4d0" emissive="#fff0c0" emissiveIntensity={0.85} />
+      </mesh>
+      <pointLight position={[0, 2.55, 0.45]} color="#fff4d0" intensity={0.38} distance={5.5} />
+    </group>
+  )
+}
+
+export function GymFixture({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <mesh>
+        <boxGeometry args={[0.62, 0.14, 0.38]} />
+        <meshStandardMaterial color="#2e322e" roughness={0.55} metalness={0.2} />
+      </mesh>
+      <mesh position={[0, -0.07, 0]}>
+        <boxGeometry args={[0.52, 0.04, 0.3]} />
+        <meshStandardMaterial color="#fff4d0" emissive="#fff0c0" emissiveIntensity={1.05} />
+      </mesh>
+      <pointLight position={[0, -0.18, 0]} color="#fff4d0" intensity={0.52} distance={8} />
+    </group>
+  )
+}
+
+export function FairyWire({ from, to }: { from: [number, number, number]; to: [number, number, number] }) {
+  const dx = to[0] - from[0]
+  const dy = to[1] - from[1]
+  const dz = to[2] - from[2]
+  const len = Math.hypot(dx, dy, dz) || 1
+  const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(dx, dy, dz).normalize())
+  const bulbs = Array.from({ length: 9 }, (_, i) => (i + 1) / 10)
+  return (
+    <group>
+      <mesh position={[(from[0] + to[0]) / 2, (from[1] + to[1]) / 2 - 0.08, (from[2] + to[2]) / 2]} quaternion={quat}>
+        <cylinderGeometry args={[0.012, 0.012, len, 8]} />
+        <meshStandardMaterial color="#2a2420" />
+      </mesh>
+      {bulbs.map((t, i) => (
+        <mesh key={i} position={[from[0] + dx * t, from[1] + dy * t - 0.12 - Math.sin(t * Math.PI) * 0.18, from[2] + dz * t]}>
+          <sphereGeometry args={[0.045, 12, 10]} />
+          <meshStandardMaterial color="#ffd27a" emissive="#ffb020" emissiveIntensity={1.15} />
+        </mesh>
+      ))}
     </group>
   )
 }
@@ -416,7 +460,7 @@ export function Beam({ z, half }: { z: number; half: number }) {
   )
 }
 
-export function HungChochin({ position }: { position: [number, number, number] }) {
+export function HungChochin({ position, lit = false }: { position: [number, number, number]; lit?: boolean }) {
   return (
     <group position={position}>
       <mesh position={[0, 0.28, 0]}>
@@ -425,9 +469,9 @@ export function HungChochin({ position }: { position: [number, number, number] }
       </mesh>
       <mesh>
         <sphereGeometry args={[0.16, 24, 18]} />
-        <meshStandardMaterial color="#ffd0dc" emissive="#f4b6c8" emissiveIntensity={0.85} roughness={0.45} />
+        <meshStandardMaterial color="#ffd0dc" emissive="#f4b6c8" emissiveIntensity={lit ? 1.05 : 0.72} roughness={0.45} />
       </mesh>
-      <pointLight color="#ffb8c8" intensity={0.45} distance={4.2} />
+      {lit && <pointLight color="#ffb8c8" intensity={0.42} distance={4} />}
     </group>
   )
 }

@@ -13,7 +13,7 @@ export const PLACE: Record<LocationId, { half: number; spawn: [number, number, n
   japan: { half: 7.2, spawn: [0, 0.05, 2.2] },
   sport: { half: 7.4, spawn: [0, 0.05, 2.2] },
   secret: { half: 7, spawn: [0, 0.05, 2.1] },
-  yesno: { half: 7.2, spawn: [0, 0.05, 2.2] },
+  yesno: { half: 7.2, spawn: [0, 0.05, 3.55] },
   date: { half: 7.2, spawn: [0, 0.05, 2.2] },
   send: { half: 6.8, spawn: [0, 0.05, 2.0] },
   kubgu: { half: 8, spawn: [0, 0.05, 2.4] },

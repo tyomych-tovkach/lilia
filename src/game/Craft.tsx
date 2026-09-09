@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Text } from '@react-three/drei'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
+import * as THREE from 'three'
 import { FONT, RU_FONT } from './layout'
 import { skin, type SkinKind } from './skin'
 
@@ -322,26 +323,127 @@ export function RoomBounds({ half, wallH = 3.4 }: { half: number; wallH?: number
   )
 }
 
+export function SkyDome({ color, radius = 52 }: { color: string; radius?: number }) {
+  return (
+    <mesh>
+      <sphereGeometry args={[radius, 28, 18]} />
+      <meshBasicMaterial color={color} side={THREE.BackSide} depthWrite={false} />
+    </mesh>
+  )
+}
+
+export function GroundSkirt({ radius = 36, color = '#243218', y = -0.05 }: { radius?: number; color?: string; y?: number }) {
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]}>
+      <circleGeometry args={[radius, 56]} />
+      <meshStandardMaterial color={color} roughness={0.97} />
+    </mesh>
+  )
+}
+
+export function HedgeRing({ half, height = 1.42, color = '#1a4630' }: { half: number; height?: number; color?: string }) {
+  const t = 0.62
+  const outer = half + 1.05
+  const span = outer * 2 + 1.4
+  const parts: [number, number, number, number, number, number][] = [
+    [0, height / 2, outer, span, height, t],
+    [0, height / 2, -outer, span, height, t],
+    [outer, height / 2, 0, t, height, outer * 2],
+    [-outer, height / 2, 0, t, height, outer * 2],
+  ]
+  return (
+    <group>
+      {parts.map((p, i) => (
+        <mesh key={i} position={[p[0], p[1], p[2]]}>
+          <boxGeometry args={[p[3], p[4], p[5]]} />
+          <meshStandardMaterial color={color} roughness={0.92} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+export function IndoorSkirting({ half, color = '#5a3a28', height = 0.14 }: { half: number; color?: string; height?: number }) {
+  const t = 0.07
+  const inset = half - 0.22
+  return (
+    <group>
+      <mesh position={[0, height / 2, -inset]}>
+        <boxGeometry args={[half * 2 - 0.28, height, t]} />
+        <meshStandardMaterial color={color} roughness={0.82} />
+      </mesh>
+      <mesh position={[0, height / 2, inset]}>
+        <boxGeometry args={[half * 2 - 0.28, height, t]} />
+        <meshStandardMaterial color={color} roughness={0.82} />
+      </mesh>
+      <mesh position={[-inset, height / 2, 0]}>
+        <boxGeometry args={[t, height, half * 2 - 0.28]} />
+        <meshStandardMaterial color={color} roughness={0.82} />
+      </mesh>
+      <mesh position={[inset, height / 2, 0]}>
+        <boxGeometry args={[t, height, half * 2 - 0.28]} />
+        <meshStandardMaterial color={color} roughness={0.82} />
+      </mesh>
+    </group>
+  )
+}
+
+export function Cornice({ half, y, color = '#e8c8c0' }: { half: number; y: number; color?: string }) {
+  const t = 0.16
+  const inset = half - 0.18
+  return (
+    <group>
+      <mesh position={[0, y, -inset]}>
+        <boxGeometry args={[half * 2 - 0.1, 0.1, t]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
+      </mesh>
+      <mesh position={[0, y, inset]}>
+        <boxGeometry args={[half * 2 - 0.1, 0.1, t]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
+      </mesh>
+      <mesh position={[-inset, y, 0]}>
+        <boxGeometry args={[t, 0.1, half * 2 - 0.1]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
+      </mesh>
+      <mesh position={[inset, y, 0]}>
+        <boxGeometry args={[t, 0.1, half * 2 - 0.1]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
+      </mesh>
+    </group>
+  )
+}
+
 export function RoomLights({
   sky,
   fog,
   ambient = 0.72,
   dirIntensity = 1.2,
   dirColor = '#ffe2c4',
+  hemiSky = '#c8d4f0',
+  hemiGround = '#4a3020',
+  hemiIntensity = 0.18,
+  dirPosition = [6, 14, 8],
+  skyDome = false,
 }: {
   sky: string
   fog: [string, number, number]
   ambient?: number
   dirIntensity?: number
   dirColor?: string
+  hemiSky?: string
+  hemiGround?: string
+  hemiIntensity?: number
+  dirPosition?: [number, number, number]
+  skyDome?: boolean
 }) {
   return (
     <>
       <color attach="background" args={[sky]} />
       <fog attach="fog" args={fog} />
       <ambientLight intensity={ambient} />
-      <hemisphereLight args={['#c8d4f0', '#4a3020', 0.55]} />
-      <directionalLight position={[6, 14, 8]} intensity={dirIntensity} color={dirColor} />
+      <hemisphereLight args={[hemiSky, hemiGround, hemiIntensity]} />
+      <directionalLight position={dirPosition} intensity={dirIntensity} color={dirColor} />
+      {skyDome && <SkyDome color={sky} />}
     </>
   )
 }

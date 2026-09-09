@@ -137,12 +137,12 @@ export function Shoji({
   )
 }
 
-export function Chochin({ position }: { position: [number, number, number] }) {
+export function Chochin({ position, lit = false }: { position: [number, number, number]; lit?: boolean }) {
   return (
     <group position={position}>
       <mesh>
         <sphereGeometry args={[0.16, 24, 18]} />
-        <meshStandardMaterial color={PINK_LIT} emissive={PINK} emissiveIntensity={0.85} roughness={0.45} />
+        <meshStandardMaterial color={PINK_LIT} emissive={PINK} emissiveIntensity={lit ? 1.05 : 0.7} roughness={0.45} />
       </mesh>
       <mesh position={[0, 0.14, 0]}>
         <cylinderGeometry args={[0.07, 0.07, 0.04, 10]} />
@@ -152,7 +152,7 @@ export function Chochin({ position }: { position: [number, number, number] }) {
         <cylinderGeometry args={[0.07, 0.07, 0.04, 10]} />
         <meshStandardMaterial color="#2a1810" />
       </mesh>
-      <pointLight color="#ffb8c8" intensity={0.55} distance={4.5} />
+      {lit && <pointLight color="#ffb8c8" intensity={0.5} distance={4.2} />}
     </group>
   )
 }

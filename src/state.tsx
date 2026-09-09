@@ -1,14 +1,31 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
-import { INITIAL_STATE, SESSION_KEY, type InviteState } from './logic'
+import type { LocationId } from './content/types'
+import { DATE_MIN_ISO, INITIAL_STATE, SESSION_KEY, type InviteState } from './logic'
+
+const SHOT_LOCS: LocationId[] = ['hub', 'letter', 'japan', 'sport', 'secret', 'yesno', 'date', 'send', 'kubgu', 'vkusno']
+
+function applyShot(state: InviteState): InviteState {
+  const loc = new URLSearchParams(window.location.search).get('loc') as LocationId | null
+  if (!loc || !SHOT_LOCS.includes(loc)) return state
+  const next: InviteState = { ...state, location: loc, toast: '' }
+  if (loc !== 'hub') next.letterDone = true
+  if (loc === 'date' || loc === 'send') {
+    next.saidYes = true
+    next.format = next.format ?? 'calm'
+    next.date = next.date || DATE_MIN_ISO
+    next.slot = next.slot ?? 'evening'
+  }
+  return next
+}
 
 function loadState(): InviteState {
   try {
     const raw = sessionStorage.getItem(SESSION_KEY)
-    if (!raw) return { ...INITIAL_STATE }
+    if (!raw) return applyShot({ ...INITIAL_STATE })
     const parsed = JSON.parse(raw) as Partial<InviteState>
-    return { ...INITIAL_STATE, ...parsed, toast: '' }
+    return applyShot({ ...INITIAL_STATE, ...parsed, toast: '' })
   } catch {
-    return { ...INITIAL_STATE }
+    return applyShot({ ...INITIAL_STATE })
   }
 }
 

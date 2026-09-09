@@ -89,7 +89,7 @@ export function World() {
     const easter = easterUnlocked(state)
     return (
       <FoyerSet half={half}>
-        <Taiwi loc="hub" position={[0, 0, 1.55]} />
+        <Taiwi loc="hub" position={[0, 0, 0.35]} />
         <Gate to="yesno" position={[-4.4, 0, -half + 1.25]} open={open('yesno')} now={now === 'yesno'} done={chip('yesno') === 'done'} />
         <Gate to="letter" position={[0, 0, -half + 1.25]} open={open('letter')} now={now === 'letter'} done={chip('letter') === 'done'} />
         <Gate to="date" position={[3.2, 0, -half + 1.25]} open={open('date')} now={now === 'date'} done={chip('date') === 'done'} />
@@ -170,7 +170,7 @@ export function World() {
     return (
       <CampusSet half={half}>
         <Back half={half} />
-        <Taiwi loc="kubgu" position={[1.2, 0, 1.4]} />
+        <Taiwi loc="kubgu" position={[2.2, 0, 0.2]} />
       </CampusSet>
     )
   }
