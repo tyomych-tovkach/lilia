@@ -453,7 +453,7 @@ export function Tsuitate({ position }: { position: [number, number, number] }) {
 
 export function Beam({ z, half }: { z: number; half: number }) {
   return (
-    <mesh position={[0, 4.18, z]}>
+    <mesh position={[0, 5.05, z]}>
       <boxGeometry args={[half * 1.92, 0.12, 0.18]} />
       <Mat color="#6a4a32" kind="wood" repeat={[8, 1]} />
     </mesh>

@@ -165,13 +165,13 @@ export function FoyerSet({ half, children }: { half: number; children?: ReactNod
     <>
       <RoomLights
         sky="#2a1824"
-        fog={['#3a2430', 14, 34]}
-        ambient={0.38}
-        dirIntensity={0.42}
+        fog={['#3a2430', 22, 55]}
+        ambient={0.55}
+        dirIntensity={0.55}
         dirColor="#ffd0dc"
         hemiSky="#ffd4e4"
         hemiGround="#5a2838"
-        hemiIntensity={0.16}
+        hemiIntensity={0.28}
         dirPosition={[-1.5, 10, 7]}
       />
       <Floor half={half} color="#e8d4c8" kind="wood" />
@@ -186,26 +186,26 @@ export function FoyerSet({ half, children }: { half: number; children?: ReactNod
           <meshStandardMaterial color="#c45c7a" />
         </mesh>
       ))}
-      <mesh position={[0, 4.35, 0]}>
-        <boxGeometry args={[half * 2 + 0.7, 0.2, half * 2 + 0.7]} />
+      <mesh position={[0, 5.22, 0]}>
+        <boxGeometry args={[half * 2 + 0.7, 0.22, half * 2 + 0.7]} />
         <Mat color="#f0d8d0" kind="wood" repeat={[8, 8]} />
       </mesh>
-      <Cornice half={half} y={4.22} color="#e8c0c8" />
+      <Cornice half={half} y={5.08} color="#e8c0c8" />
       {[-5.2, -2.4, 0.6, 3.4].map((z) => (
         <Beam key={z} z={z} half={half} />
       ))}
-      <mesh position={[0, 4.05, 0]}>
+      <mesh position={[0, 4.85, 0]}>
         <sphereGeometry args={[0.32, 32, 24]} />
         <meshStandardMaterial color="#ffd0dc" emissive="#f4b6c8" emissiveIntensity={1.35} />
       </mesh>
-      <pointLight position={[0, 3.7, 0]} color="#ffb8c8" intensity={0.95} distance={16} />
-      <WallRing half={half} color="#f3ddd6" height={4.28} kind="plaster" />
-      <mesh position={[-2.35, 2.15, -half + 1.15]}>
-        <cylinderGeometry args={[0.16, 0.2, 4.2, 32]} />
+      <pointLight position={[0, 4.5, 0]} color="#ffb8c8" intensity={0.95} distance={16} />
+      <WallRing half={half} color="#f3ddd6" height={5.15} kind="plaster" />
+      <mesh position={[-2.35, 2.55, -half + 1.15]}>
+        <cylinderGeometry args={[0.16, 0.2, 5.1, 32]} />
         <Mat color="#efe0d4" kind="plaster" repeat={[1, 3]} />
       </mesh>
-      <mesh position={[2.35, 2.15, -half + 1.15]}>
-        <cylinderGeometry args={[0.16, 0.2, 4.2, 32]} />
+      <mesh position={[2.35, 2.55, -half + 1.15]}>
+        <cylinderGeometry args={[0.16, 0.2, 5.1, 32]} />
         <Mat color="#efe0d4" kind="plaster" repeat={[1, 3]} />
       </mesh>
       <Shoji position={[-6.6, 0, -half + 0.45]} width={2.2} height={2.8} />
@@ -266,7 +266,7 @@ export function FoyerSet({ half, children }: { half: number; children?: ReactNod
       <PaperStack position={[-2.2, 0.38, 1.72]} />
       <Petals />
       <Kanji text="桜" position={[0, 0.08, -2.2]} rotation={[-Math.PI / 2, 0, 0]} size={0.55} color="#e8a0b4" />
-      <RoomBounds half={half} wallH={4.3} />
+      <RoomBounds half={half} wallH={5.2} />
       {children}
     </>
   )
@@ -276,14 +276,14 @@ export function GardenSet({ half, children }: { half: number; children?: ReactNo
   return (
     <>
       <RoomLights
-        sky="#c48a58"
-        fog={['#d4a878', 16, 40]}
-        ambient={0.36}
-        dirIntensity={1.05}
-        dirColor="#ffc878"
-        hemiSky="#f0c890"
-        hemiGround="#3a4028"
-        hemiIntensity={0.28}
+        sky="#e8b888"
+        fog={['#e0c4a0', 22, 52]}
+        ambient={0.55}
+        dirIntensity={1.25}
+        dirColor="#ffd090"
+        hemiSky="#f8d8a8"
+        hemiGround="#4a5030"
+        hemiIntensity={0.42}
         dirPosition={[10, 7, -4]}
         skyDome
       />
@@ -379,13 +379,13 @@ export function TeaSet({ half, children }: { half: number; children?: ReactNode 
     <>
       <RoomLights
         sky="#140c0a"
-        fog={['#1c100c', 10, 26]}
-        ambient={0.14}
-        dirIntensity={0.06}
+        fog={['#2a1810', 18, 48]}
+        ambient={0.32}
+        dirIntensity={0.12}
         dirColor="#ffb070"
         hemiSky="#f0d0a8"
         hemiGround="#3a2418"
-        hemiIntensity={0.12}
+        hemiIntensity={0.22}
         dirPosition={[2, 8, 4]}
       />
       <Floor half={half} color="#6a5230" kind="wood" />
@@ -513,13 +513,13 @@ export function CourtSet({ half, children }: { half: number; children?: ReactNod
     <>
       <RoomLights
         sky="#141820"
-        fog={['#2a3038', 12, 30]}
-        ambient={0.22}
-        dirIntensity={0.18}
+        fog={['#3a4048', 18, 48]}
+        ambient={0.42}
+        dirIntensity={0.28}
         dirColor="#c8d4e0"
-        hemiSky="#3a4450"
+        hemiSky="#4a5460"
         hemiGround="#1a1810"
-        hemiIntensity={0.08}
+        hemiIntensity={0.18}
         dirPosition={[4, 12, 2]}
       />
       <Floor half={half} color="#c4a060" kind="wood" />
@@ -627,14 +627,14 @@ export function RoofSet({ half, children }: { half: number; children?: ReactNode
   return (
     <>
       <RoomLights
-        sky="#0a0e1c"
-        fog={['#101628', 14, 38]}
-        ambient={0.1}
-        dirIntensity={0.38}
+        sky="#0e1428"
+        fog={['#182038', 18, 52]}
+        ambient={0.22}
+        dirIntensity={0.48}
         dirColor="#d8e0ff"
-        hemiSky="#3a4a78"
+        hemiSky="#4a5a88"
         hemiGround="#121018"
-        hemiIntensity={0.16}
+        hemiIntensity={0.24}
         dirPosition={[10, 16, -12]}
         skyDome
       />
@@ -805,7 +805,7 @@ export function BridgeSet({ half, children }: { half: number; children?: ReactNo
       water.current.position.y = -0.38 - 0.16 * t
       const mat = water.current.material as THREE.MeshStandardMaterial
       mat.opacity = 0.72 + 0.23 * t
-      mat.color.set(t > 0.5 ? '#120018' : '#16344c')
+      mat.color.set(t > 0.5 ? '#120018' : '#2a6a88')
     }
     if (ghost.current) ghost.current.visible = t > 0.35
     if (chips.current && t > 0.35) {
@@ -826,20 +826,20 @@ export function BridgeSet({ half, children }: { half: number; children?: ReactNo
     <>
       <RoomLights
         sky={sky}
-        fog={[stage >= 2 ? '#1a0810' : '#1c2438', stage >= 2 ? 10 : 14, stage >= 2 ? 28 : 36]}
-        ambient={stage >= 2 ? 0.08 : 0.12}
-        dirIntensity={stage >= 2 ? 0.2 : 0.42}
+        fog={[stage >= 2 ? '#1a0810' : '#243048', stage >= 2 ? 14 : 18, stage >= 2 ? 40 : 50]}
+        ambient={stage >= 2 ? 0.14 : 0.24}
+        dirIntensity={stage >= 2 ? 0.28 : 0.55}
         dirColor={stage >= 2 ? '#c070ff' : '#e0e8ff'}
-        hemiSky={stage >= 2 ? '#3a1830' : '#3a4a70'}
+        hemiSky={stage >= 2 ? '#3a1830' : '#4a5a80'}
         hemiGround="#0a1218"
-        hemiIntensity={0.14}
+        hemiIntensity={0.22}
         dirPosition={[3, 14, -10]}
         skyDome
       />
       <GroundSkirt radius={42} color={stage >= 2 ? '#080410' : '#0c1824'} y={-0.55} />
       <mesh ref={water} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.38, 0]}>
         <planeGeometry args={[half * 2 + 14, half * 2 + 14]} />
-        <meshStandardMaterial color="#16344c" roughness={0.18} metalness={0.28} transparent opacity={0.72} />
+        <meshStandardMaterial color="#2a6a88" roughness={0.16} metalness={0.32} transparent opacity={0.82} />
       </mesh>
       <mesh ref={ghost} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.36, 0]} visible={false}>
         <planeGeometry args={[half * 2 + 14, half * 2 + 14]} />
@@ -968,13 +968,13 @@ export function TableSet({ half, children }: { half: number; children?: ReactNod
     <>
       <RoomLights
         sky="#1c1410"
-        fog={['#241818', 10, 26]}
-        ambient={0.16}
-        dirIntensity={0.06}
+        fog={['#3a2820', 18, 48]}
+        ambient={0.34}
+        dirIntensity={0.12}
         dirColor="#ffc070"
         hemiSky="#f0d0b0"
         hemiGround="#3a2418"
-        hemiIntensity={0.1}
+        hemiIntensity={0.2}
         dirPosition={[-3, 9, 5]}
       />
       <Floor half={half} color="#4a3228" kind="wood" />
@@ -1081,13 +1081,13 @@ export function PostSet({ half, children }: { half: number; children?: ReactNode
     <>
       <RoomLights
         sky="#181820"
-        fog={['#1c1824', 10, 26]}
-        ambient={0.2}
-        dirIntensity={0.1}
+        fog={['#2a2830', 18, 48]}
+        ambient={0.4}
+        dirIntensity={0.18}
         dirColor="#c8b898"
         hemiSky="#e8dcc8"
         hemiGround="#2a2420"
-        hemiIntensity={0.1}
+        hemiIntensity={0.2}
         dirPosition={[2, 10, 4]}
       />
       <Floor half={half} color="#6a6258" kind="tile" />
@@ -1198,14 +1198,14 @@ export function CampusSet({ half, children }: { half: number; children?: ReactNo
   return (
     <>
       <RoomLights
-        sky="#9eb8cc"
-        fog={['#b8c8d4', 16, 38]}
-        ambient={0.42}
-        dirIntensity={0.55}
-        dirColor="#d8dce4"
-        hemiSky="#c8d4de"
-        hemiGround="#4a4a38"
-        hemiIntensity={0.28}
+        sky="#b8d0e4"
+        fog={['#c8d8e8', 22, 52]}
+        ambient={0.62}
+        dirIntensity={0.85}
+        dirColor="#fff4e0"
+        hemiSky="#d8e4ee"
+        hemiGround="#5a5a48"
+        hemiIntensity={0.4}
         dirPosition={[3, 7, 5]}
         skyDome
       />
@@ -1305,17 +1305,17 @@ export function StaffSet({ half, children }: { half: number; children?: ReactNod
     <>
       <RoomLights
         sky="#152018"
-        fog={['#1a2420', 10, 26]}
-        ambient={0.24}
-        dirIntensity={0.1}
+        fog={['#2a3830', 18, 48]}
+        ambient={0.42}
+        dirIntensity={0.18}
         dirColor="#c8d8c0"
         hemiSky="#c8d8c0"
         hemiGround="#1a2418"
-        hemiIntensity={0.08}
+        hemiIntensity={0.18}
         dirPosition={[3, 9, 2]}
       />
       <Floor half={half} color="#3a4a38" kind="tile" />
-      <WallRing half={half} color="#1a4a32" height={3.02} />
+      <WallRing half={half} color="#2a6a44" height={3.02} />
       <IndoorSkirting half={half} color="#0e2a1c" height={0.22} />
       {[-half + 0.22, half - 0.22].map((x, i) => (
         <mesh key={`wain${i}`} position={[x, 0.55, 0]}>
