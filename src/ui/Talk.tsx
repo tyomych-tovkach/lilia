@@ -85,44 +85,42 @@ export function Talk() {
   if (!open) return null
 
   const lines = greetings[loc]
-  const text =
+  const prompt =
     phase === 'paper'
       ? ''
-      : react
-        ? react
-        : phase === 'lines'
-          ? lines[Math.min(line, lines.length - 1)]
-          : phase === 'yesno'
-            ? copy.yesAsk
-            : phase === 'multi' && loc === 'japan'
-              ? greetings.japan[1]
-              : phase === 'multi' && loc === 'sport'
+      : phase === 'lines'
+        ? lines[Math.min(line, lines.length - 1)]
+        : phase === 'yesno'
+          ? copy.yesAsk
+          : phase === 'multi' && loc === 'japan'
+            ? greetings.japan[1]
+            : phase === 'multi' && loc === 'sport'
               ? greetings.sport[1]
               : phase === 'multi' && loc === 'secret'
-                    ? greetings.secret[1]
-                    : phase === 'format'
-                      ? dateAsk.format
-                      : phase === 'flavor'
-                        ? state.format && state.format !== 'custom'
-                          ? dateAsk.flavor[state.format]
-                          : ''
-                        : phase === 'place'
-                          ? placeCustom.npcAsk
-                          : phase === 'when'
-                            ? dateAsk.when
-                            : phase === 'slot'
-                              ? dateAsk.slot
-                              : phase === 'send'
-                                ? greetings.send[greetings.send.length - 1]
-                                : phase === 'custom'
-                                  ? loc === 'japan'
-                                    ? japanCustom.npcAsk
-                                    : loc === 'sport'
-                                      ? sportCustom.npcAsk
-                                      : loc === 'date'
-                                        ? placeCustom.npcAsk
-                                        : secretCustom.npcAsk
-                                  : lines[0]
+                ? greetings.secret[1]
+                : phase === 'format'
+                  ? dateAsk.format
+                  : phase === 'flavor'
+                    ? state.format && state.format !== 'custom'
+                      ? dateAsk.flavor[state.format]
+                      : ''
+                    : phase === 'place'
+                      ? placeCustom.npcAsk
+                      : phase === 'when'
+                        ? dateAsk.when
+                        : phase === 'slot'
+                          ? dateAsk.slot
+                          : phase === 'send'
+                            ? greetings.send[greetings.send.length - 1]
+                            : phase === 'custom'
+                              ? loc === 'japan'
+                                ? japanCustom.npcAsk
+                                : loc === 'sport'
+                                  ? sportCustom.npcAsk
+                                  : loc === 'date'
+                                    ? placeCustom.npcAsk
+                                    : secretCustom.npcAsk
+                              : lines[0]
 
   const advanceLines = () => {
     if (line + 1 < lines.length) {
@@ -192,24 +190,27 @@ export function Talk() {
       ) : (
         <>
           <p className="talk-name">{npcName(loc)}</p>
-          <p className="talk-body">{text}</p>
+          <p className="talk-body">{prompt}</p>
+          {react ? <p className="talk-react">{react}</p> : null}
         </>
       )}
 
       {phase === 'lines' && loc !== 'letter' && line >= lines.length - 1 && (loc === 'hub' || loc === 'kubgu' || loc === 'vkusno') && (
-        <button type="button" className="talk-btn" onClick={close}>
-          Ясно.
-        </button>
+        <div className="talk-nav">
+          <button type="button" className="talk-nav-btn" onClick={close}>
+            Ясно.
+          </button>
+        </div>
       )}
       {phase === 'lines' && loc !== 'letter' && !(loc === 'hub' || loc === 'kubgu' || loc === 'vkusno') && (
-        <>
-          <button type="button" className="talk-btn" onClick={advanceLines}>
+        <div className="talk-nav">
+          <button type="button" className="talk-nav-btn" onClick={advanceLines}>
             Дальше
           </button>
           {(loc === 'japan' || loc === 'sport' || loc === 'secret') && (
             <button
               type="button"
-              className="talk-btn"
+              className="talk-nav-btn"
               onClick={() => {
                 patch({ toast: 'Можно вернуться сюда позже.' })
                 close()
@@ -218,17 +219,21 @@ export function Talk() {
               Не сейчас
             </button>
           )}
-        </>
+        </div>
       )}
       {phase === 'lines' && loc === 'letter' && (
-        <button type="button" className="talk-btn" onClick={advanceLines}>
-          {line + 1 < lines.length ? 'Дальше' : 'Письмо'}
-        </button>
+        <div className="talk-nav">
+          <button type="button" className="talk-nav-btn" onClick={advanceLines}>
+            {line + 1 < lines.length ? 'Дальше' : 'Письмо'}
+          </button>
+        </div>
       )}
       {phase === 'lines' && (loc === 'hub' || loc === 'kubgu' || loc === 'vkusno') && line < lines.length - 1 && (
-        <button type="button" className="talk-btn" onClick={() => setLine(line + 1)}>
-          Дальше
-        </button>
+        <div className="talk-nav">
+          <button type="button" className="talk-nav-btn" onClick={() => setLine(line + 1)}>
+            Дальше
+          </button>
+        </div>
       )}
 
       {phase === 'multi' && (
@@ -253,10 +258,14 @@ export function Talk() {
           >
             {loc === 'secret' ? secretCustom.playerLine : loc === 'sport' ? sportCustom.playerLine : japanCustom.playerLine}
           </button>
+        </div>
+      )}
+      {phase === 'multi' && (
+        <div className="talk-nav">
           {doneMulti && (
             <button
               type="button"
-              className="talk-btn is-on"
+              className="talk-nav-btn is-done"
               onClick={() => {
                 patch({ toast: farewells[loc] })
                 close()
@@ -268,7 +277,7 @@ export function Talk() {
           {(loc === 'japan' || loc === 'sport' || loc === 'secret') && (
             <button
               type="button"
-              className="talk-btn"
+              className="talk-nav-btn"
               onClick={() => {
                 patch({ toast: 'Можно вернуться сюда позже.' })
                 close()
@@ -298,7 +307,7 @@ export function Talk() {
           />
           <button
             type="button"
-            className="talk-btn"
+            className="talk-nav-btn"
             disabled={!customOk}
             onClick={() => {
               if (!customOk) return

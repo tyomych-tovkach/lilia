@@ -26,7 +26,7 @@ function put(data: Uint8ClampedArray, i: number, r: number, g: number, b: number
   data[p + 3] = a
 }
 
-function paint(kind: SkinKind, hex: string, size = 128) {
+function paint(kind: SkinKind, hex: string, size = 256) {
   const c = document.createElement('canvas')
   c.width = size
   c.height = size

@@ -176,6 +176,15 @@ export function Player() {
 
 function Yawed({ walking }: { walking: { current: boolean } }) {
   const ref = useRef<THREE.Group>(null)
+  useLayoutEffect(() => {
+    ref.current?.traverse((obj) => {
+      const mesh = obj as THREE.Mesh
+      if (mesh.isMesh) {
+        mesh.castShadow = true
+        mesh.receiveShadow = true
+      }
+    })
+  }, [])
   useFrame(() => {
     if (ref.current) ref.current.rotation.y = playerYaw.current
   })

@@ -34,22 +34,26 @@ export function SakuraTree({
   )
   return (
     <group position={position} rotation={[0, rotationY, 0]} scale={scale}>
-      <mesh position={[0, 0.7, 0]}>
-        <cylinderGeometry args={[0.08, 0.14, 1.4, 32]} />
-        <meshStandardMaterial color={WOOD} roughness={0.85} />
+      <mesh position={[0, 0.7, 0]} castShadow>
+        <cylinderGeometry args={[0.07, 0.15, 1.4, 8]} />
+        <meshStandardMaterial color={WOOD} roughness={0.88} />
       </mesh>
-      <mesh position={[0.22, 1.45, 0]} rotation={[0, 0, 0.7]}>
-        <cylinderGeometry args={[0.04, 0.06, 0.7, 6]} />
+      <mesh position={[0.22, 1.45, 0]} rotation={[0, 0, 0.7]} castShadow>
+        <cylinderGeometry args={[0.035, 0.06, 0.78, 6]} />
         <meshStandardMaterial color="#4a3020" />
       </mesh>
-      <mesh position={[-0.2, 1.5, 0.08]} rotation={[0.2, 0, -0.65]}>
-        <cylinderGeometry args={[0.035, 0.055, 0.62, 6]} />
+      <mesh position={[-0.2, 1.5, 0.08]} rotation={[0.2, 0, -0.65]} castShadow>
+        <cylinderGeometry args={[0.03, 0.055, 0.7, 6]} />
+        <meshStandardMaterial color="#4a3020" />
+      </mesh>
+      <mesh position={[0.08, 1.62, 0.28]} rotation={[0.5, 0.3, 0.2]} castShadow>
+        <cylinderGeometry args={[0.025, 0.045, 0.58, 6]} />
         <meshStandardMaterial color="#4a3020" />
       </mesh>
       {clusters.map(([x, y, z, r, c], i) => (
-        <mesh key={i} position={[x, y, z]}>
-          <sphereGeometry args={[r, 24, 16]} />
-          <meshStandardMaterial color={c} roughness={0.7} emissive={PINK} emissiveIntensity={0.12} />
+        <mesh key={i} position={[x, y, z]} scale={[1.15, 0.68, 1.1]} castShadow>
+          <sphereGeometry args={[r, 12, 8]} />
+          <meshStandardMaterial color={c} roughness={0.74} emissive={PINK} emissiveIntensity={0.1} />
         </mesh>
       ))}
     </group>

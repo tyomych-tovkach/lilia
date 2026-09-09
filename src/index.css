@@ -264,9 +264,20 @@ body,
   white-space: pre-wrap;
 }
 
+.talk-react {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border-left: 2px solid var(--gold);
+  color: #e4d4bc;
+  font-size: 14px;
+  line-height: 1.4;
+  background: rgba(255, 210, 122, 0.06);
+  border-radius: 0 10px 10px 0;
+}
+
 .talk-choices {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
 }
 
@@ -275,11 +286,13 @@ body,
   border: 1px solid rgba(255, 210, 122, 0.35);
   background: rgba(255, 255, 255, 0.06);
   color: var(--ink);
-  border-radius: 999px;
-  padding: 8px 12px;
+  border-radius: 12px;
+  padding: 10px 12px;
   cursor: pointer;
   font: inherit;
   font-size: 13px;
+  text-align: left;
+  width: 100%;
 }
 
 .talk-btn:disabled {
@@ -290,6 +303,35 @@ body,
 .talk-btn.is-on {
   border-color: #7dffb3;
   color: #7dffb3;
+}
+
+.talk-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.talk-nav-btn {
+  appearance: none;
+  border: 1px solid rgba(201, 180, 138, 0.45);
+  background: rgba(8, 6, 20, 0.55);
+  color: #d8c8b0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+
+.talk-nav-btn.is-done {
+  border-color: #7dffb3;
+  color: #7dffb3;
+}
+
+.talk-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 .talk-input {

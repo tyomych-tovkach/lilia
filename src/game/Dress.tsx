@@ -1,29 +1,46 @@
+import { useFrame } from '@react-three/fiber'
+import { useRef } from 'react'
 import { Kanji, Mat, RuSign } from './Craft'
 import * as THREE from 'three'
 
 export function Maple({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) {
+  const leaves: [number, number, number, number, string][] = [
+    [0, 2.15, 0, 0.62, '#c45c28'],
+    [0.48, 2.28, 0.18, 0.42, '#a83818'],
+    [-0.46, 2.18, -0.12, 0.4, '#d46830'],
+    [0.18, 2.52, -0.32, 0.36, '#c45c28'],
+    [-0.22, 2.48, 0.32, 0.34, '#8a2810'],
+    [0.55, 1.92, -0.22, 0.3, '#b84820'],
+    [-0.52, 1.88, 0.22, 0.28, '#e07038'],
+    [0.08, 1.72, 0.42, 0.26, '#c45c28'],
+    [-0.1, 2.62, 0.05, 0.24, '#9a3010'],
+  ]
   return (
     <group position={position} scale={scale}>
-      <mesh position={[0, 0.85, 0]}>
-        <cylinderGeometry args={[0.1, 0.16, 1.7, 32]} />
-        <meshStandardMaterial color="#5a3a22" roughness={0.86} />
+      <mesh position={[0, 0.08, 0]} castShadow>
+        <cylinderGeometry args={[0.22, 0.28, 0.16, 10]} />
+        <meshStandardMaterial color="#3a2418" roughness={0.95} />
       </mesh>
-      <mesh position={[0.28, 1.55, 0.05]} rotation={[0, 0, 0.55]}>
-        <cylinderGeometry args={[0.04, 0.07, 0.8, 16]} />
-        <meshStandardMaterial color="#4a3020" />
+      <mesh position={[0, 0.95, 0]} castShadow>
+        <cylinderGeometry args={[0.08, 0.18, 1.85, 8]} />
+        <meshStandardMaterial color="#5a3a22" roughness={0.9} />
       </mesh>
-      {(
-        [
-          [0, 2.05, 0, 0.72, '#c45c28'],
-          [0.42, 2.2, 0.12, 0.5, '#a83818'],
-          [-0.4, 2.1, -0.08, 0.48, '#d46830'],
-          [0.15, 2.4, -0.28, 0.4, '#c45c28'],
-          [-0.2, 2.35, 0.28, 0.38, '#8a2810'],
-        ] as [number, number, number, number, string][]
-      ).map(([x, y, z, r, c], i) => (
-        <mesh key={i} position={[x, y, z]} scale={[1.15, 0.7, 1.1]}>
-          <sphereGeometry args={[r, 32, 20]} />
-          <meshStandardMaterial color={c} roughness={0.72} />
+      <mesh position={[0.32, 1.62, 0.08]} rotation={[0.15, 0.2, 0.62]} castShadow>
+        <cylinderGeometry args={[0.035, 0.07, 0.95, 6]} />
+        <meshStandardMaterial color="#4a3020" roughness={0.9} />
+      </mesh>
+      <mesh position={[-0.28, 1.7, -0.1]} rotation={[-0.1, -0.15, -0.7]} castShadow>
+        <cylinderGeometry args={[0.03, 0.065, 0.88, 6]} />
+        <meshStandardMaterial color="#4a3020" roughness={0.9} />
+      </mesh>
+      <mesh position={[0.05, 1.85, 0.28]} rotation={[0.55, 0.4, -0.15]} castShadow>
+        <cylinderGeometry args={[0.025, 0.05, 0.7, 6]} />
+        <meshStandardMaterial color="#4a3020" roughness={0.9} />
+      </mesh>
+      {leaves.map(([x, y, z, r, c], i) => (
+        <mesh key={i} position={[x, y, z]} scale={[1.2, 0.62, 1.15]} castShadow>
+          <sphereGeometry args={[r, 14, 10]} />
+          <meshStandardMaterial color={c} roughness={0.78} />
         </mesh>
       ))}
     </group>
@@ -463,8 +480,8 @@ export function Beam({ z, half }: { z: number; half: number }) {
 export function HungChochin({ position, lit = false }: { position: [number, number, number]; lit?: boolean }) {
   return (
     <group position={position}>
-      <mesh position={[0, 0.28, 0]}>
-        <cylinderGeometry args={[0.008, 0.008, 0.55, 8]} />
+      <mesh position={[0, 1.18, 0]}>
+        <cylinderGeometry args={[0.008, 0.008, 2.35, 8]} />
         <meshStandardMaterial color="#2a1810" />
       </mesh>
       <mesh>
@@ -556,6 +573,31 @@ export function PaperStack({ position, rotationY = 0 }: { position: [number, num
           <Mat color="#f7f0e4" kind="paper" />
         </mesh>
       ))}
+    </group>
+  )
+}
+
+export function Siren({ position }: { position: [number, number, number] }) {
+  const arm = useRef<THREE.Group>(null)
+  const lamp = useRef<THREE.PointLight>(null)
+  useFrame((st) => {
+    const t = st.clock.elapsedTime
+    if (arm.current) arm.current.rotation.y = t * 3.4
+    if (lamp.current) lamp.current.intensity = 1.35 + Math.sin(t * 9) * 0.85
+  })
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.06, 0]} castShadow>
+        <cylinderGeometry args={[0.1, 0.14, 0.1, 12]} />
+        <meshStandardMaterial color="#2a2020" metalness={0.55} roughness={0.4} />
+      </mesh>
+      <group ref={arm} position={[0, 0.16, 0]}>
+        <mesh position={[0.1, 0.04, 0]}>
+          <sphereGeometry args={[0.11, 16, 12]} />
+          <meshStandardMaterial color="#c41e3a" emissive="#ff2040" emissiveIntensity={1.6} />
+        </mesh>
+        <pointLight ref={lamp} position={[0.28, 0.04, 0]} color="#ff2038" distance={16} intensity={1.6} />
+      </group>
     </group>
   )
 }

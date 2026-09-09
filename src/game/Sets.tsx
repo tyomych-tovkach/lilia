@@ -18,6 +18,7 @@ import {
   RoomBounds,
   RoomLights,
   RuSign,
+  SignBoard,
 } from './Craft'
 import {
   Ball,
@@ -40,6 +41,7 @@ import {
   PaperStack,
   Pot,
   Reeds,
+  Siren,
   StoneLantern,
   Tsuitate,
   VolleyNet,
@@ -49,7 +51,6 @@ import {
 } from './Dress'
 import {
   Byobu,
-  Chochin,
   FanWall,
   Ikebana,
   Kakemono,
@@ -92,28 +93,54 @@ function WallRing({
   height = 3.6,
   thick = 0.4,
   kind = 'plaster',
+  doorSouth = false,
 }: {
   half: number
   color: string
   height?: number
   thick?: number
   kind?: SkinKind
+  doorSouth?: boolean
 }) {
+  const doorW = 2.25
+  const doorH = 2.55
+  const side = (half * 2 - doorW) / 2
   return (
     <>
-      <mesh position={[0, height / 2, -half]}>
+      <mesh position={[0, height / 2, -half]} receiveShadow>
         <boxGeometry args={[half * 2 + 0.4, height, thick]} />
         <Mat color={color} kind={kind} repeat={[6, 2]} roughness={0.84} side={THREE.DoubleSide} />
       </mesh>
-      <mesh position={[0, height / 2, half]}>
-        <boxGeometry args={[half * 2 + 0.4, height, thick]} />
-        <Mat color={color} kind={kind} repeat={[6, 2]} roughness={0.84} side={THREE.DoubleSide} />
-      </mesh>
-      <mesh position={[-half, height / 2, 0]}>
+      {doorSouth ? (
+        <>
+          <mesh position={[-(doorW / 2 + side / 2), height / 2, half]} receiveShadow>
+            <boxGeometry args={[side, height, thick]} />
+            <Mat color={color} kind={kind} repeat={[4, 2]} roughness={0.84} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[doorW / 2 + side / 2, height / 2, half]} receiveShadow>
+            <boxGeometry args={[side, height, thick]} />
+            <Mat color={color} kind={kind} repeat={[4, 2]} roughness={0.84} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[0, doorH + (height - doorH) / 2, half]} receiveShadow>
+            <boxGeometry args={[doorW + 0.08, height - doorH, thick]} />
+            <Mat color={color} kind={kind} repeat={[2, 1]} roughness={0.84} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[0, doorH / 2, half + 0.02]}>
+            <boxGeometry args={[doorW - 0.08, doorH - 0.06, 0.05]} />
+            <meshStandardMaterial color="#140e10" />
+          </mesh>
+        </>
+      ) : (
+        <mesh position={[0, height / 2, half]} receiveShadow>
+          <boxGeometry args={[half * 2 + 0.4, height, thick]} />
+          <Mat color={color} kind={kind} repeat={[6, 2]} roughness={0.84} side={THREE.DoubleSide} />
+        </mesh>
+      )}
+      <mesh position={[-half, height / 2, 0]} receiveShadow>
         <boxGeometry args={[thick, height, half * 2]} />
         <Mat color={color} kind={kind} repeat={[6, 2]} roughness={0.84} side={THREE.DoubleSide} />
       </mesh>
-      <mesh position={[half, height / 2, 0]}>
+      <mesh position={[half, height / 2, 0]} receiveShadow>
         <boxGeometry args={[thick, height, half * 2]} />
         <Mat color={color} kind={kind} repeat={[6, 2]} roughness={0.84} side={THREE.DoubleSide} />
       </mesh>
@@ -123,7 +150,7 @@ function WallRing({
 
 function Floor({ half, color, kind = 'stone' }: { half: number; color: string; kind?: SkinKind }) {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
       <planeGeometry args={[half * 2 + 14, half * 2 + 14]} />
       <Mat color={color} kind={kind} repeat={[8, 8]} roughness={0.95} side={THREE.DoubleSide} />
     </mesh>
@@ -239,9 +266,9 @@ export function FoyerSet({ half, children }: { half: number; children?: ReactNod
       <HungChochin position={[0, 2.45, 4.3]} />
       <HungChochin position={[-4.2, 2.35, 2.2]} />
       <HungChochin position={[4.3, 2.35, 2.4]} />
-      <Chochin position={[-3.2, 2.2, -3.4]} />
-      <Chochin position={[3.4, 2.2, -3.2]} />
-      <Chochin position={[0, 2.3, -4.6]} lit />
+      <HungChochin position={[-3.2, 2.55, -3.4]} />
+      <HungChochin position={[3.4, 2.55, -3.2]} />
+      <HungChochin position={[0, 2.65, -4.6]} lit />
       <Noren position={[-4.8, 0, 6.6]} rotationY={Math.PI} label="桜" />
       <Noren position={[4.8, 0, 6.6]} rotationY={Math.PI} label="春" />
       <Bench position={[-2.7, 0, 4.55]} rotationY={0.15} />
@@ -390,7 +417,7 @@ export function TeaSet({ half, children }: { half: number; children?: ReactNode 
       />
       <Floor half={half} color="#6a5230" kind="wood" />
       <TatamiGrid half={half} />
-      <WallRing half={half} color="#f0e0d0" height={2.9} kind="plaster" />
+      <WallRing half={half} color="#f0e0d0" height={2.9} kind="plaster" doorSouth />
       <IndoorSkirting half={half} color="#4a3020" height={0.18} />
       {[-half + 0.28, half - 0.28].map((_, i) => (
         <mesh key={`dado${i}`} position={[0, 0.95, i === 0 ? -half + 0.28 : half - 0.28]}>
@@ -532,7 +559,7 @@ export function CourtSet({ half, children }: { half: number; children?: ReactNod
         <circleGeometry args={[0.85, 24]} />
         <meshStandardMaterial color="#8a7048" roughness={0.95} />
       </mesh>
-      <WallRing half={half} color="#e8dcc8" height={5.28} kind="plaster" />
+      <WallRing half={half} color="#e8dcc8" height={5.28} kind="plaster" doorSouth />
       <mesh position={[0, 5.28, 0]}>
         <boxGeometry args={[half * 2 + 0.9, 0.2, half * 2 + 0.9]} />
         <meshStandardMaterial color="#3a4038" />
@@ -572,9 +599,9 @@ export function CourtSet({ half, children }: { half: number; children?: ReactNod
       ))}
       <VolleyNet />
       <GymHoop position={[0, 0, -half + 0.28]} />
-      <RuSign text="0 : 0" position={[0, 3.85, -half + 0.25]} size={0.22} color="#6a6858" />
-      <RuSign text="ВОЛЕЙБОЛ" position={[-half + 0.35, 2.6, -3.2]} size={0.14} color="#7dffb3" />
-      <RuSign text="БРОСОК" position={[half - 0.35, 2.6, -3.2]} size={0.14} color="#e8782c" />
+      <RuSign text="0 : 0" position={[0, 2.72, -half + 0.18]} size={0.18} color="#6a6858" />
+      <SignBoard text="ВОЛЕЙБОЛ" position={[-half + 0.28, 2.55, -3.2]} rotationY={Math.PI / 2} size={0.11} color="#7dffb3" width={1.35} height={0.38} />
+      <SignBoard text="БРОСОК" position={[half - 0.28, 2.55, -3.2]} rotationY={-Math.PI / 2} size={0.11} color="#e8782c" width={1.2} height={0.38} />
       {[-4.4, -1.5, 1.4, 4.3].map((z) => (
         <mesh key={`wL${z}`} position={[-half + 0.22, 3.35, z]}>
           <boxGeometry args={[0.06, 1.6, 2.1]} />
@@ -747,7 +774,7 @@ export function RoofSet({ half, children }: { half: number; children?: ReactNode
         <boxGeometry args={[1.05, 0.28, 0.8]} />
         <meshStandardMaterial color="#2e2a3a" metalness={0.2} />
       </mesh>
-      <WallNotice position={[-3.4, 1.35, -half + 0.38]} title="КРЫША ОТКРЫТА" />
+      <WallNotice position={[-3.4, 0.82, -half + 0.38]} title="КРЫША ОТКРЫТА" />
       <Crate position={[3.35, 0, 2.4]} color="#3a2a48" />
       <Crate position={[-4.2, 0, -3.4]} color="#2a2438" />
       <Crate position={[4.1, 0, -3.15]} color="#3a3048" />
@@ -851,8 +878,8 @@ export function BridgeSet({ half, children }: { half: number; children?: ReactNo
         <sphereGeometry args={[0.55, 32, 24]} />
         <meshStandardMaterial color="#f4ead8" emissive="#f4ead8" emissiveIntensity={0.9} />
       </mesh>
-      <mesh position={[0, 0.05, 4.05]}>
-        <boxGeometry args={[3.4, 0.12, 2.6]} />
+      <mesh position={[0, 0.05, 4.35]}>
+        <boxGeometry args={[3.4, 0.12, 3.35]} />
         <Mat color="#8a8580" kind="stone" />
       </mesh>
       <mesh position={[0, 0.05, -5.15]}>
@@ -978,7 +1005,7 @@ export function TableSet({ half, children }: { half: number; children?: ReactNod
         dirPosition={[-3, 9, 5]}
       />
       <Floor half={half} color="#4a3228" kind="wood" />
-      <WallRing half={half} color="#f0e4d0" height={3.34} kind="plaster" />
+      <WallRing half={half} color="#f0e4d0" height={3.34} kind="plaster" doorSouth />
       <IndoorSkirting half={half} color="#5a3a28" />
       <mesh position={[0, 3.42, 0]}>
         <boxGeometry args={[half * 2 + 0.7, 0.16, half * 2 + 0.7]} />
@@ -1048,7 +1075,7 @@ export function TableSet({ half, children }: { half: number; children?: ReactNod
       <PaperStack position={[-3.28, 1.28, 0.22]} rotationY={-0.35} />
       <Planter position={[3.4, 0, 1.4]} />
       <Planter position={[-3.5, 0, 2.4]} />
-      <RuSign text="СТОЛ НА ДВОИХ" position={[0, 2.88, -half + 0.42]} size={0.14} color="#ffd27a" />
+      <SignBoard text="СТОЛ НА ДВОИХ" position={[0, 2.72, -half + 0.28]} size={0.12} color="#ffd27a" width={2.15} height={0.4} />
       <mesh position={[-1.5, 1.15, -0.3]}>
         <cylinderGeometry args={[0.03, 0.04, 2.2, 8]} />
         <Mat color="#3a2418" kind="wood" />
@@ -1091,7 +1118,7 @@ export function PostSet({ half, children }: { half: number; children?: ReactNode
         dirPosition={[2, 10, 4]}
       />
       <Floor half={half} color="#6a6258" kind="tile" />
-      <WallRing half={half} color="#d8d0c0" height={3.24} kind="plaster" />
+      <WallRing half={half} color="#d8d0c0" height={3.24} kind="plaster" doorSouth />
       <IndoorSkirting half={half} color="#4a4038" />
       <mesh position={[0, 3.32, 0]}>
         <boxGeometry args={[half * 2 + 0.7, 0.14, half * 2 + 0.7]} />
@@ -1173,12 +1200,12 @@ export function PostSet({ half, children }: { half: number; children?: ReactNode
         <boxGeometry args={[0.85, 0.52, 0.7]} />
         <Mat color="#5a3a28" kind="wood" />
       </mesh>
-      <RuSign text="ПОЧТА" position={[0, 2.92, -half + 0.32]} size={0.16} color="#ffd27a" />
-      <RuSign text="Одно письмо" position={[0, 2.62, -half + 0.32]} size={0.1} color="#f4ead8" />
-      <RuSign text="ШТЕМПЕЛЬ — ТОЛЬКО С ТВОЕЙ РУКИ" position={[0.15, 2.98, -2.35]} size={0.09} color="#ffd27a" />
+      <SignBoard text="ПОЧТА" position={[0, 2.85, -half + 0.28]} size={0.14} color="#ffd27a" width={1.6} height={0.36} />
+      <SignBoard text="Одно письмо" position={[0, 2.48, -half + 0.28]} size={0.09} color="#f4ead8" width={1.55} height={0.28} />
+      <SignBoard text="ШТЕМПЕЛЬ — ТОЛЬКО С ТВОЕЙ РУКИ" position={[0.15, 2.78, -2.28]} size={0.075} color="#ffd27a" width={2.55} height={0.28} />
       <WallNotice position={[half - 0.28, 1.55, 1.1]} rotationY={-Math.PI / 2} title="РЕЖИМ" />
       <Crate position={[-3.35, 0, 1.85]} />
-      <Kanji text="〒" position={[-2.9, 2.2, -2.5]} size={0.22} color="#c41e3a" />
+      <Kanji text="〒" position={[-half + 0.38, 2.15, -2.4]} rotation={[0, Math.PI / 2, 0]} size={0.22} color="#c41e3a" />
       <mesh position={[0.55, 1.82, -2.05]}>
         <cylinderGeometry args={[0.012, 0.018, 0.22, 8]} />
         <meshStandardMaterial color="#2a2420" metalness={0.4} />
@@ -1241,6 +1268,14 @@ export function CampusSet({ half, children }: { half: number; children?: ReactNo
         <boxGeometry args={[12.6, 0.35, 2]} />
         <meshStandardMaterial color="#d9cbb0" />
       </mesh>
+      {[-4.8, -3.2, -1.6, 1.6, 3.2, 4.8].map((x) =>
+        [1.35, 2.55, 3.75].map((y) => (
+          <mesh key={`${x}:${y}`} position={[x, y, -5.62]}>
+            <boxGeometry args={[0.85, 0.95, 0.05]} />
+            <meshStandardMaterial color="#3a5a78" roughness={0.35} metalness={0.15} />
+          </mesh>
+        )),
+      )}
       {[-2.7, -0.9, 0.9, 2.7].map((x) => (
         <Column key={x} position={[x, 0, -5.35]} />
       ))}
@@ -1254,8 +1289,8 @@ export function CampusSet({ half, children }: { half: number; children?: ReactNo
         <boxGeometry args={[1.5, 2.4, 0.2]} />
         <meshStandardMaterial color="#3a3428" />
       </mesh>
-      <RuSign text="КУБГУ" position={[0, 4.42, -5.22]} size={0.28} color="#2a3a58" />
-      <RuSign text="СТАВРОПОЛЬСКАЯ, 149" position={[0, 4.12, -5.22]} size={0.09} color="#4a4a40" />
+      <SignBoard text="КУБГУ" position={[0, 4.28, -5.48]} size={0.22} color="#f4ead8" width={3.2} height={0.48} />
+      <SignBoard text="СТАВРОПОЛЬСКАЯ, 149" position={[0, 3.88, -5.48]} size={0.08} color="#d8d0c0" width={2.6} height={0.28} />
       <mesh position={[-4.35, 2.6, -5.62]}>
         <boxGeometry args={[2.6, 3.2, 0.06]} />
         <meshStandardMaterial color="#3a5a7a" />
@@ -1290,7 +1325,7 @@ export function CampusSet({ half, children }: { half: number; children?: ReactNo
         <boxGeometry args={[1.3, 1.6, 0.08]} />
         <meshStandardMaterial color="#5a5040" />
       </mesh>
-      <RuSign text="РАСПИСАНИЕ" position={[-4.9, 2.05, -2.14]} size={0.1} color="#f4ead8" />
+      <SignBoard text="РАСПИСАНИЕ" position={[-4.9, 2.05, -2.14]} size={0.09} color="#f4ead8" width={1.45} height={0.32} />
       <mesh position={[-3.2, 0.48, 0.3]}>
         <boxGeometry args={[0.18, 0.22, 0.12]} />
         <meshStandardMaterial color="#2a3a5a" />
@@ -1304,45 +1339,49 @@ export function StaffSet({ half, children }: { half: number; children?: ReactNod
   return (
     <>
       <RoomLights
-        sky="#152018"
-        fog={['#2a3830', 18, 48]}
-        ambient={0.42}
-        dirIntensity={0.18}
-        dirColor="#c8d8c0"
-        hemiSky="#c8d8c0"
-        hemiGround="#1a2418"
-        hemiIntensity={0.18}
-        dirPosition={[3, 9, 2]}
+        sky="#08040a"
+        fog={['#1a0810', 8, 28]}
+        ambient={0.12}
+        dirIntensity={0.04}
+        dirColor="#ff3040"
+        hemiSky="#401018"
+        hemiGround="#080408"
+        hemiIntensity={0.08}
+        dirPosition={[2, 8, 1]}
       />
       <RoomBounds half={half} />
-      <Floor half={half} color="#3a4a38" kind="tile" />
-      <WallRing half={half} color="#2a6a44" height={3.02} />
-      <IndoorSkirting half={half} color="#0e2a1c" height={0.22} />
+      <Floor half={half} color="#1a1214" kind="tile" />
+      <WallRing half={half} color="#1a1014" height={3.02} doorSouth />
+      <IndoorSkirting half={half} color="#10080c" height={0.22} />
       {[-half + 0.22, half - 0.22].map((x, i) => (
         <mesh key={`wain${i}`} position={[x, 0.55, 0]}>
           <boxGeometry args={[0.08, 1.1, half * 2 - 0.3]} />
-          <meshStandardMaterial color="#0e301c" />
+          <meshStandardMaterial color="#14080c" />
         </mesh>
       ))}
       <mesh position={[0, 0.55, -half + 0.22]}>
         <boxGeometry args={[half * 2 - 0.3, 1.1, 0.08]} />
-        <meshStandardMaterial color="#0e301c" />
+        <meshStandardMaterial color="#14080c" />
       </mesh>
       <mesh position={[0, 3.08, 0]}>
         <boxGeometry args={[half * 2 + 0.7, 0.14, half * 2 + 0.7]} />
-        <meshStandardMaterial color="#2a3028" />
+        <meshStandardMaterial color="#120810" />
       </mesh>
       {[-2.2, 0, 2.2].map((x) => (
         <group key={x}>
           <mesh position={[x, 2.92, -1.4]}>
             <boxGeometry args={[1.15, 0.04, 0.08]} />
-            <meshStandardMaterial color="#e8f0d8" emissive="#e8f4d0" emissiveIntensity={0.9} />
+            <meshStandardMaterial color="#3a2020" emissive="#ff2030" emissiveIntensity={x === 0 ? 0.15 : 0.55} />
           </mesh>
-          {x !== 0 && <pointLight position={[x, 2.85, -1.2]} color="#e8f4d0" intensity={0.42} distance={7} />}
         </group>
       ))}
+      <Siren position={[0, 2.82, -0.2]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0.2]} position={[0.35, 0.03, 1.15]}>
+        <circleGeometry args={[0.85, 24]} />
+        <meshStandardMaterial color="#2a1014" transparent opacity={0.55} />
+      </mesh>
+      <SignBoard text="СМЕНА ЗАКРЫТА" position={[0, 2.55, -half + 0.32]} size={0.11} color="#ff6a70" width={2.2} height={0.36} />
       <VkusnoLogo position={[-0.15, 1.95, -half + 0.28]} />
-      <RuSign text="ПЕРСОНАЛ" position={[1.15, 2.72, -half + 0.32]} size={0.15} color="#f4ead8" />
       <mesh position={[2.15, 1.55, -1.35]}>
         <boxGeometry args={[1.75, 0.08, 0.95]} />
         <meshStandardMaterial color="#3a4044" metalness={0.55} roughness={0.4} />
@@ -1351,7 +1390,7 @@ export function StaffSet({ half, children }: { half: number; children?: ReactNod
         <boxGeometry args={[1.55, 0.55, 0.08]} />
         <meshStandardMaterial color="#2a3034" metalness={0.4} />
       </mesh>
-      <pointLight position={[2.15, 1.7, -1.2]} color="#e8f4d0" intensity={0.32} distance={4.5} />
+      <pointLight position={[2.15, 1.7, -1.2]} color="#ff4050" intensity={0.22} distance={4.5} />
       <mesh position={[2.15, 0.92, -1.35]}>
         <boxGeometry args={[1.55, 0.06, 0.78]} />
         <meshStandardMaterial color="#8a9094" metalness={0.72} roughness={0.28} />

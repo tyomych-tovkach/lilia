@@ -46,6 +46,38 @@ export function Mat({
 
 export const FONT_CJK = FONT
 
+export function SignBoard({
+  text,
+  position,
+  rotationY = 0,
+  size = 0.12,
+  color = '#ffd27a',
+  width = 1.85,
+  height = 0.42,
+}: {
+  text: string
+  position: [number, number, number]
+  rotationY?: number
+  size?: number
+  color?: string
+  width?: number
+  height?: number
+}) {
+  return (
+    <group position={position} rotation={[0, rotationY, 0]}>
+      <mesh castShadow>
+        <boxGeometry args={[width, height, 0.07]} />
+        <meshStandardMaterial color="#2a1814" roughness={0.82} />
+      </mesh>
+      <mesh position={[0, 0, 0.04]}>
+        <boxGeometry args={[width - 0.08, height - 0.08, 0.02]} />
+        <meshStandardMaterial color="#3a2418" roughness={0.78} />
+      </mesh>
+      <RuSign text={text} position={[0, 0, 0.06]} size={size} color={color} />
+    </group>
+  )
+}
+
 export function RuSign({
   text,
   position,
@@ -347,7 +379,7 @@ export function GroundDisk({
   y?: number
 }) {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]} receiveShadow>
       <circleGeometry args={[radius, 56]} />
       <Mat color={color} kind={kind} repeat={[12, 12]} roughness={0.95} side={THREE.DoubleSide} />
     </mesh>
@@ -356,7 +388,7 @@ export function GroundDisk({
 
 export function GroundSkirt({ radius = 36, color = '#243218', y = -0.05 }: { radius?: number; color?: string; y?: number }) {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]} receiveShadow>
       <circleGeometry args={[radius, 56]} />
       <meshStandardMaterial color={color} roughness={0.97} side={THREE.DoubleSide} />
     </mesh>
@@ -464,7 +496,21 @@ export function RoomLights({
       <fog attach="fog" args={fog} />
       <ambientLight intensity={ambient} />
       <hemisphereLight args={[hemiSky, hemiGround, hemiIntensity]} />
-      <directionalLight position={dirPosition} intensity={dirIntensity} color={dirColor} />
+      <directionalLight
+        position={dirPosition}
+        intensity={dirIntensity}
+        color={dirColor}
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-bias={-0.00035}
+        shadow-normalBias={0.035}
+        shadow-camera-near={0.4}
+        shadow-camera-far={42}
+        shadow-camera-left={-18}
+        shadow-camera-right={18}
+        shadow-camera-top={18}
+        shadow-camera-bottom={-18}
+      />
       {skyDome && <SkyDome color={sky} />}
     </>
   )
