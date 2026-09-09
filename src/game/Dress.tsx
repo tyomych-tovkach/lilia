@@ -104,7 +104,7 @@ export function Kotoji({ position, letter = false }: { position: [number, number
           <meshStandardMaterial color="#c41e3a" />
         </mesh>
       )}
-      <pointLight position={[0.12, 0.92, 0]} color="#ffc070" intensity={0.55} distance={3.5} />
+      {letter && <pointLight position={[0.12, 0.92, 0]} color="#ffc070" intensity={0.55} distance={3.5} />}
     </group>
   )
 }

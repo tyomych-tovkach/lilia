@@ -71,6 +71,9 @@ export function Player() {
 
     let x = THREE.MathUtils.clamp(t.x, -half + 0.45, half - 0.45)
     let z = THREE.MathUtils.clamp(t.z, -half + 0.45, half - 0.45)
+    if (loc === 'yesno' && z < 3.35 && z > -4.45 && Math.abs(x) < 2.15) {
+      x = THREE.MathUtils.clamp(x, -0.92, 0.92)
+    }
     if (x !== t.x || z !== t.z) rb.setTranslation({ x, y: t.y, z }, true)
     playerPos.set(x, t.y, z)
 

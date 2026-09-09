@@ -211,7 +211,7 @@ export function ShopBay({
   )
 }
 
-export function Lantern({ position, lit = true }: { position: [number, number, number]; lit?: boolean }) {
+export function Lantern({ position, lit = false }: { position: [number, number, number]; lit?: boolean }) {
   return (
     <group position={position}>
       <mesh>
